@@ -1,0 +1,26 @@
+{
+    "contracts":
+    {
+        "A":
+        {
+            "C":
+            {
+                "zvm":
+                {
+                    "bytecode":
+                    {
+                        "linkReferences": {},
+                        "object": "<BYTECODE REMOVED>"
+                    }
+                }
+            }
+        }
+    },
+    "sources":
+    {
+        "A":
+        {
+            "id": 0
+        }
+    }
+}
