@@ -1,0 +1,24 @@
+
+======= linking_hyperion_unresolved_references/input.hyp:C =======
+Binary:
+<BYTECODE REMOVED>__$98930d50347bca90f9e7908904660e5783$__<BYTECODE REMOVED>__$98930d50347bca90f9e7908904660e5783$__<BYTECODE REMOVED>
+
+// $98930d50347bca90f9e7908904660e5783$ -> linking_hyperion_unresolved_references/input.hyp:L2
+// $98930d50347bca90f9e7908904660e5783$ -> linking_hyperion_unresolved_references/input.hyp:L2
+Binary of the runtime part:
+<BYTECODE REMOVED>__$98930d50347bca90f9e7908904660e5783$__<BYTECODE REMOVED>__$98930d50347bca90f9e7908904660e5783$__<BYTECODE REMOVED>
+
+// $98930d50347bca90f9e7908904660e5783$ -> linking_hyperion_unresolved_references/input.hyp:L2
+// $98930d50347bca90f9e7908904660e5783$ -> linking_hyperion_unresolved_references/input.hyp:L2
+
+======= linking_hyperion_unresolved_references/input.hyp:L1 =======
+Binary:
+<BYTECODE REMOVED>
+Binary of the runtime part:
+<BYTECODE REMOVED>
+
+======= linking_hyperion_unresolved_references/input.hyp:L2 =======
+Binary:
+<BYTECODE REMOVED>
+Binary of the runtime part:
+<BYTECODE REMOVED>
