@@ -102,6 +102,7 @@ enum LiteralType
 {
 	LITERAL_TYPE_STRING,
 	LITERAL_TYPE_NUMBER, // not really different from string type in behaviour
+	LITERAL_TYPE_ADDRESS,
 	LITERAL_TYPE_COMMENT
 };
 
@@ -708,6 +709,18 @@ void Scanner::scanToken()
 		case '~':
 			token = selectToken(Token::BitNot);
 			break;
+		case 'Z':
+			// Address
+			token = scanAddress();
+			break;
+			/*
+			// Address literal exception
+			// if not address format than we will consider it an identifier
+			if (scanAddress()) {
+				token = Token::AddressLiteral;
+				break;
+			}
+			*/
 		default:
 			if (isIdentifierStart(m_char))
 			{
@@ -1009,6 +1022,61 @@ Token Scanner::scanNumber(char _charSeen)
 	literal.complete();
 	return Token::Number;
 }
+
+Token Scanner::scanAddress()
+{
+	LiteralScope literal(this, LITERAL_TYPE_ADDRESS);
+
+	addLiteralCharAndAdvance();
+	if (!isHexDigit(m_char))
+		return setError(ScannerError::IllegalHexDigit); // we must have at least one hex digit after 'x'
+
+	while (isHexDigit(m_char) || m_char == '_') // We keep the underscores for later validation
+		addLiteralCharAndAdvance();
+
+	// The source character immediately following an address literal must
+	// not be an identifier start or a decimal digit; see ECMA-262
+	// section 7.8.3, page 17 (note that we read only one decimal digit
+	// if the value is 0).
+	if (isDecimalDigit(m_char) || isIdentifierStart(m_char))
+		return setError(ScannerError::IllegalNumberEnd);
+	literal.complete();
+	return Token::AddressLiteral;
+}
+
+// TODO(rgeraldes24)
+/*
+bool Scanner::scanAddress(char& o_scannedByte)
+{
+	advance();
+	size_t i = 0;
+	while (isHexDigit(m_char)) {
+		advance();
+		i++;
+	}
+	rollback(i+1);
+
+	if (i != 40) {
+		return false;
+	}
+
+	LiteralScope literal(this, LITERAL_TYPE_ADDRESS);
+	addLiteralCharAndAdvance();
+	while (isHexDigit(m_char))
+		addLiteralCharAndAdvance();
+
+	// The source character immediately following an address literal must
+	// not be an identifier start or a decimal digit; see ECMA-262
+	// section 7.8.3, page 17 (note that we read only one decimal digit
+	// if the value is 0).
+	if (isDecimalDigit(m_char) || isIdentifierStart(m_char))
+		return setError(ScannerError::IllegalNumberEnd);
+
+	literal.complete();
+
+	return true;
+}
+*/
 
 std::tuple<Token, unsigned, unsigned> Scanner::scanIdentifierOrKeyword()
 {

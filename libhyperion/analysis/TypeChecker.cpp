@@ -3684,6 +3684,7 @@ void TypeChecker::endVisit(ElementaryTypeNameExpression const& _expr)
 	_expr.annotation().isConstant = false;
 }
 
+// TODO(rgeraldes24): review
 void TypeChecker::endVisit(Literal const& _literal)
 {
 	if (_literal.looksLikeAddress())
@@ -3692,11 +3693,11 @@ void TypeChecker::endVisit(Literal const& _literal)
 		_literal.annotation().type = TypeProvider::address();
 
 		std::string msg;
-		if (_literal.valueWithoutUnderscores().length() != 42) // "0x" + 40 hex digits
-			// looksLikeAddress enforces that it is a hex literal starting with "0x"
+		if (_literal.valueWithoutUnderscores().length() != 41) // "Z" + 40 hex digits
+			// looksLikeAddress enforces that it is a hex literal starting with "Z"
 			msg =
 				"This looks like an address but is not exactly 40 hex digits. It is " +
-				std::to_string(_literal.valueWithoutUnderscores().length() - 2) +
+				std::to_string(_literal.valueWithoutUnderscores().length() - 1) +
 				" hex digits.";
 		else if (!_literal.passesAddressChecksum())
 		{
@@ -3721,13 +3722,6 @@ void TypeChecker::endVisit(Literal const& _literal)
 			_literal.location(),
 			"Hexadecimal numbers cannot be used with unit denominations. "
 			"You can use an expression of the form \"0x1234 * 1 day\" instead."
-		);
-
-	if (_literal.subDenomination() == Literal::SubDenomination::Year)
-		m_errorReporter.typeError(
-			4820_error,
-			_literal.location(),
-			"Using \"years\" as a unit denomination is deprecated."
 		);
 
 	if (!_literal.annotation().type)

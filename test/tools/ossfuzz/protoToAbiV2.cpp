@@ -1273,6 +1273,7 @@ std::string ValueGetterVisitor::hexValueAsString(
 			("isHex", _isHexLiteral)
 			.render();
 
+	// TODO(rgeraldes24)
 	// This is needed because hyperion interprets a 20-byte 0x prefixed hex literal as an address
 	// payable type.
 	return Whiskers(R"(<?decorate><?isHex>hex</isHex>"</decorate><value><?decorate>"</decorate>)")
@@ -1300,11 +1301,12 @@ std::string ValueGetterVisitor::isabelleAddressValueAsString(std::string& _hypAd
 {
 	// Isabelle encoder expects address literal to be exactly
 	// 20 bytes and a hex string.
-	// Example: 0x0102030405060708090a0102030405060708090a
+	// Example: 0x0102030405060708090a0102030405060708090a // TODO(rgeraldes24)
 	std::regex const addressPattern("address\\((.*)\\)");
 	std::smatch match;
 	hypAssert(std::regex_match(_hypAddressString, match, addressPattern), "Abiv2 fuzzer: Invalid address string");
 	std::string addressHex = match[1].str();
+	// TODO(rgeraldes24)
 	addressHex.erase(2, 24);
 	return addressHex;
 }

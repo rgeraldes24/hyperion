@@ -2397,8 +2397,7 @@ public:
 		Minute = static_cast<int>(Token::SubMinute),
 		Hour = static_cast<int>(Token::SubHour),
 		Day = static_cast<int>(Token::SubDay),
-		Week = static_cast<int>(Token::SubWeek),
-		Year = static_cast<int>(Token::SubYear)
+		Week = static_cast<int>(Token::SubWeek)
 	};
 	Literal(
 		int64_t _id,
@@ -2421,6 +2420,8 @@ public:
 
 	/// @returns true if this is a number with a hex prefix.
 	bool isHexNumber() const;
+	// TODO(rgeraldes24): desc
+	bool isAddress() const;
 
 	/// @returns true if this looks like a checksummed address.
 	bool looksLikeAddress() const;
