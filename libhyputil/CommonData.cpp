@@ -123,32 +123,31 @@ bytes hyperion::util::fromHex(std::string const& _s, WhenError _throw)
 	return ret;
 }
 
-
 bool hyperion::util::passesAddressChecksum(std::string const& _str, bool _strict)
 {
-	std::string s = _str.substr(0, 2) == "0x" ? _str : "0x" + _str;
-
-	if (s.length() != 42)
+	if (_str.length() != 41 || !boost::starts_with(_str, "Z"))
 		return false;
-
+	
+	std::string s = _str.substr(1);
 	if (!_strict && (
 		s.find_first_of("abcdef") == std::string::npos ||
 		s.find_first_of("ABCDEF") == std::string::npos
 	))
 		return true;
 
-	return s == hyperion::util::getChecksummedAddress(s);
+	return _str == hyperion::util::getChecksummedAddress(_str);
 }
 
 std::string hyperion::util::getChecksummedAddress(std::string const& _addr)
 {
-	std::string s = _addr.substr(0, 2) == "0x" ? _addr.substr(2) : _addr;
-	assertThrow(s.length() == 40, InvalidAddress, "");
+	assertThrow(_addr.length() == 41, InvalidAddress, _addr);
+	assertThrow(boost::starts_with(_addr, "Z"), InvalidAddress, "");
+	std::string s = _addr.substr(1);
 	assertThrow(s.find_first_not_of("0123456789abcdefABCDEF") == std::string::npos, InvalidAddress, "");
 
 	h256 hash = keccak256(boost::algorithm::to_lower_copy(s, std::locale::classic()));
 
-	std::string ret = "0x";
+	std::string ret = "Z";
 	for (unsigned i = 0; i < 40; ++i)
 	{
 		char addressCharacter = s[i];

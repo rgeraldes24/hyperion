@@ -1017,27 +1017,19 @@ bool Literal::looksLikeAddress() const
 	if (subDenomination() != SubDenomination::None)
 		return false;
 
-	if (!isHexNumber())
-		return false;
-
-	return abs(int(valueWithoutUnderscores().length()) - 42) <= 1;
+	return token() == Token::AddressLiteral;
 }
 
 bool Literal::passesAddressChecksum() const
 {
-	hypAssert(isHexNumber(), "Expected hex number");
-	return util::passesAddressChecksum(valueWithoutUnderscores(), true);
+	hypAssert(looksLikeAddress(), "Expected address");
+	return util::passesAddressChecksum(value(), true);
 }
 
 std::string Literal::getChecksummedAddress() const
 {
-	hypAssert(isHexNumber(), "Expected hex number");
-	/// Pad literal to be a proper hex address.
-	std::string address = valueWithoutUnderscores().substr(2);
-	if (address.length() > 40)
-		return std::string();
-	address.insert(address.begin(), 40 - address.size(), '0');
-	return util::getChecksummedAddress(address);
+	hypAssert(looksLikeAddress(), "Expected address");
+	return util::getChecksummedAddress(value());
 }
 
 TryCatchClause const* TryStatement::successClause() const

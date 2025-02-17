@@ -102,6 +102,7 @@ enum LiteralType
 {
 	LITERAL_TYPE_STRING,
 	LITERAL_TYPE_NUMBER, // not really different from string type in behaviour
+	LITERAL_TYPE_ADDRESS,
 	LITERAL_TYPE_COMMENT
 };
 
@@ -708,6 +709,14 @@ void Scanner::scanToken()
 		case '~':
 			token = selectToken(Token::BitNot);
 			break;
+		case 'Z':
+			// NOTE(rgeraldes24): address literal exception: if not exactly 40 
+			// hex chars it will fallthrough and go through the identifier flow
+			if (scanAddress()) {
+				token = Token::AddressLiteral;
+				break;
+			}
+			[[fallthrough]];
 		default:
 			if (isIdentifierStart(m_char))
 			{
@@ -1008,6 +1017,34 @@ Token Scanner::scanNumber(char _charSeen)
 		return setError(ScannerError::IllegalNumberEnd);
 	literal.complete();
 	return Token::Number;
+}
+
+bool Scanner::scanAddress()
+{
+	advance();
+	size_t i = 0;
+	while (isHexDigit(m_char)) {
+		advance();
+		i++;
+	}
+	// The source character immediately following an address literal must
+	// not be an identifier start or a decimal digit; see ECMA-262
+	// section 7.8.3, page 17 (note that we read only one decimal digit
+	// if the value is 0).
+	if (i != 40 || isDecimalDigit(m_char) || isIdentifierStart(m_char)) {
+		rollback(i+1);
+		return false;
+	}
+	rollback(i+1);
+
+	LiteralScope literal(this, LITERAL_TYPE_ADDRESS);
+	addLiteralCharAndAdvance();
+	while (isHexDigit(m_char))
+		addLiteralCharAndAdvance();
+
+	literal.complete();
+
+	return true;
 }
 
 std::tuple<Token, unsigned, unsigned> Scanner::scanIdentifierOrKeyword()

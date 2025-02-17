@@ -1126,6 +1126,8 @@ Token ASTJsonImporter::literalTokenKind(Json::Value const& _node)
 	Token tok;
 	if (_node["kind"].asString() == "number")
 		tok = Token::Number;
+	else if (_node["kind"].asString() == "address")
+		tok = Token::AddressLiteral;
 	else if (_node["kind"].asString() == "string")
 		tok = Token::StringLiteral;
 	else if (_node["kind"].asString() == "unicodeString")
@@ -1212,8 +1214,6 @@ Literal::SubDenomination ASTJsonImporter::subdenomination(Json::Value const& _no
 		return Literal::SubDenomination::Day;
 	else if (subDenStr == "weeks")
 		return Literal::SubDenomination::Week;
-	else if (subDenStr == "years")
-		return Literal::SubDenomination::Year;
 	else
 		astAssert(false, "Unknown subdenomination");
 

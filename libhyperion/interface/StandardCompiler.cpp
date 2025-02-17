@@ -40,6 +40,7 @@
 #include <libhyputil/CommonData.h>
 
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 #include <algorithm>
 #include <optional>
@@ -881,13 +882,13 @@ std::variant<StandardCompiler::InputsAndSettings, Json::Value> StandardCompiler:
 				return formatFatalError(Error::Type::JSONError, "Library address must be a string.");
 			std::string address = jsonSourceName[library].asString();
 
-			if (!boost::starts_with(address, "0x"))
+			if (!boost::starts_with(address, "Z"))
 				return formatFatalError(
 					Error::Type::JSONError,
-					"Library address is not prefixed with \"0x\"."
+					"Library address is not prefixed with \"Z\"."
 				);
 
-			if (address.length() != 42)
+			if (address.length() != 41)
 				return formatFatalError(
 					Error::Type::JSONError,
 					"Library address is of invalid length."
@@ -895,7 +896,7 @@ std::variant<StandardCompiler::InputsAndSettings, Json::Value> StandardCompiler:
 
 			try
 			{
-				ret.libraries[sourceName + ":" + library] = util::h160(address);
+				ret.libraries[sourceName + ":" + library] = util::h160(boost::replace_all_copy(address, "Z", "0x"));
 			}
 			catch (util::BadHexCharacter const&)
 			{

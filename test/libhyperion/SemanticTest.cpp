@@ -219,6 +219,13 @@ std::string SemanticTest::formatEventParameter(std::optional<AnnotatedEventSigna
 			if (types.at(_index) == "bool")
 				abiType = ABIType(ABIType::Type::Boolean);
 		}
+		if (_indexed)
+			_index = _index - 1;
+
+		if (_index < types.size()) {
+			if (types.at(_index) == "address")
+				abiType = ABIType(ABIType::Type::Address);
+		}	
 	}
 	return BytesUtils::formatBytes(_data, abiType);
 }
@@ -240,7 +247,7 @@ std::vector<std::string> SemanticTest::eventSideEffectHook(FunctionCall const&) 
 			sideEffect << "<anonymous>";
 
 		if (m_contractAddress != log.creator)
-			sideEffect << " from 0x" << log.creator;
+			sideEffect << " from Z" << log.creator;
 
 		std::vector<std::string> eventStrings;
 		size_t index{0};

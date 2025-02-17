@@ -3692,27 +3692,18 @@ void TypeChecker::endVisit(Literal const& _literal)
 		_literal.annotation().type = TypeProvider::address();
 
 		std::string msg;
-		if (_literal.valueWithoutUnderscores().length() != 42) // "0x" + 40 hex digits
-			// looksLikeAddress enforces that it is a hex literal starting with "0x"
-			msg =
-				"This looks like an address but is not exactly 40 hex digits. It is " +
-				std::to_string(_literal.valueWithoutUnderscores().length() - 2) +
-				" hex digits.";
-		else if (!_literal.passesAddressChecksum())
+		if (!_literal.passesAddressChecksum())
 		{
 			msg = "This looks like an address but has an invalid checksum.";
 			if (!_literal.getChecksummedAddress().empty())
 				msg += " Correct checksummed address: \"" + _literal.getChecksummedAddress() + "\".";
-		}
 
-		if (!msg.empty())
 			m_errorReporter.syntaxError(
 				9429_error,
 				_literal.location(),
-				msg +
-				" If this is not used as an address, please prepend '00'. " +
-				"For more information please see https://docs.soliditylang.org/en/develop/types.html#address-literals"
+				msg
 			);
+		}	
 	}
 
 	if (_literal.isHexNumber() && _literal.subDenomination() != Literal::SubDenomination::None)
@@ -3721,13 +3712,6 @@ void TypeChecker::endVisit(Literal const& _literal)
 			_literal.location(),
 			"Hexadecimal numbers cannot be used with unit denominations. "
 			"You can use an expression of the form \"0x1234 * 1 day\" instead."
-		);
-
-	if (_literal.subDenomination() == Literal::SubDenomination::Year)
-		m_errorReporter.typeError(
-			4820_error,
-			_literal.location(),
-			"Using \"years\" as a unit denomination is deprecated."
 		);
 
 	if (!_literal.annotation().type)
