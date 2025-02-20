@@ -69,7 +69,7 @@ function setup_hypc
     local test_dir="$1"
     local binary_type="$2"
     local binary_path="$3"
-    local hypcjs_branch="${4:-master}"
+    local hypcjs_branch="${4:-main}"
     local install_dir="${5:-hypc/}"
     local hypcjs_dir="$6"
 
