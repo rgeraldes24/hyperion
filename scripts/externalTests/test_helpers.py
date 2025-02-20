@@ -96,7 +96,7 @@ def parse_command_line(description: str, args: List[str]):
     return arg_parser.parse_args(args)
 
 
-def download_project(test_dir: Path, repo_url: str, ref_type: str = "branch", ref: str = "master"):
+def download_project(test_dir: Path, repo_url: str, ref_type: str = "branch", ref: str = "main"):
     assert ref_type in ("commit", "branch", "tag")
 
     print(f"Cloning {ref_type} {ref} of {repo_url}...")

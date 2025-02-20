@@ -36,7 +36,7 @@ function hypcjs_test
     HYPCJS_INPUT_DIR="$TEST_DIR"/test/externalTests/hypc-js
 
     # set up hypc-js on the branch specified
-    setup_hypc "$DIR" hypcjs "$HYPJSON" master hypc/ "$HYPCJS_CHECKOUT"
+    setup_hypc "$DIR" hypcjs "$HYPJSON" main hypc/ "$HYPCJS_CHECKOUT"
     cd hypc/
 
     printLog "Updating index.js file..."
