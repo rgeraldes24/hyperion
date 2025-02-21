@@ -21,7 +21,7 @@ include(ZondPolicy)
 zond_policy()
 
 # project name and version should be set after cmake_policy CMP0048
-set(PROJECT_VERSION "0.0.2")
+set(PROJECT_VERSION "0.1.0")
 # OSX target needed in order to support std::visit
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
 project(hyperion VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
