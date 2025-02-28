@@ -263,7 +263,7 @@ commands:
                   paths:
                       - hypc/hypc
                       - test/hyptest
-                      - test/tools/solfuzzer
+                      - test/tools/hypfuzzer
 
     persist_executables_to_workspace_osx:
         description: Persist compiled target executables to workspace on macOS
@@ -273,7 +273,7 @@ commands:
                   paths:
                       - build/hypc/hypc
                       - build/test/hyptest
-                      - build/test/tools/solfuzzer
+                      - build/test/tools/hypfuzzer
 
     persist_ossfuzz_executables_to_workspace:
         description: Persist compiled OSSFUZZ executables to workspace
@@ -293,7 +293,7 @@ commands:
                       - test/tools/ossfuzz/yul_proto_diff_ossfuzz
                       - test/tools/ossfuzz/yul_proto_diff_custom_mutate_ossfuzz
                       - test/tools/ossfuzz/yul_proto_ossfuzz
-                      - test/tools/ossfuzz/sol_proto_ossfuzz
+                      - test/tools/ossfuzz/hyp_proto_ossfuzz
 
     store_artifacts_test_results:
         description: Store test output dir as artifact
@@ -810,7 +810,7 @@ jobs:
                   at: build
             - run:
                   name: JS deps
-                  command: sudo npm install -g solhint
+                  command: sudo npm install -g hyphint
             - run:
                   name: Test Docs examples
                   command: test/docsCodeStyle.sh
@@ -924,6 +924,9 @@ jobs:
         steps:
             - run: git config --global core.autocrlf false
             - checkout
+            - run:
+                  name: Install dependencies
+                  command: python -m pip install --user requests parsec tabulate
             - run:
                   name: Python unit tests
                   command: python.exe test/pyscriptTests.py
@@ -1145,15 +1148,15 @@ jobs:
                   command: |
                       scripts/ci/build_emscripten.sh
             - store_artifacts:
-                  path: upload/soljson.js
-                  destination: soljson.js
+                  path: upload/hypjson.js
+                  destination: hypjson.js
             - run: mkdir -p workspace
-            - run: cp upload/soljson.js workspace/soljson.js
+            - run: cp upload/hypjson.js workspace/hypjson.js
             - run: scripts/get_version.sh > workspace/version.txt
             - persist_to_workspace:
                   root: workspace
                   paths:
-                      - soljson.js
+                      - hypjson.js
                       - version.txt
             - matrix_notify_failure_unless_pr
 
@@ -1308,7 +1311,7 @@ jobs:
                   command: |
                       node --version
                       npm --version
-                      test/externalTests/hypc-js/hypc-js.sh /tmp/workspace/soljson.js $(cat /tmp/workspace/version.txt)
+                      test/externalTests/hypc-js/hypc-js.sh /tmp/workspace/hypjson.js $(cat /tmp/workspace/version.txt)
             - matrix_notify_failure_unless_pr
 
     t_ems_ext_hardhat:
@@ -1317,7 +1320,7 @@ jobs:
             - image: cimg/node:18.16
         environment:
             <<: *base_node_small_env
-            HARDHAT_TESTS_HYPC_PATH: /tmp/workspace/soljson.js
+            HARDHAT_TESTS_HYPC_PATH: /tmp/workspace/hypjson.js
         steps:
             - checkout
             - attach_workspace:
@@ -1399,7 +1402,7 @@ jobs:
                       - run:
                             name: External << parameters.project >> tests (<< parameters.binary_type >>)
                             command: |
-                                test/external_tests.py test --hypc-binary-type "<< parameters.binary_type >>" --hypc-binary-path /tmp/workspace/soljson.js --run "<< parameters.project >>"
+                                test/external_tests.py test --hypc-binary-type "<< parameters.binary_type >>" --hypc-binary-path /tmp/workspace/hypjson.js --run "<< parameters.project >>"
             - when:
                   condition:
                       equal: [<< parameters.binary_type >>, "native"]
@@ -1633,7 +1636,7 @@ jobs:
             - prepare_bytecode_report:
                   label: "emscripten"
                   binary_type: hypcjs
-                  binary_path: "emscripten_build/libhypc/soljson.js"
+                  binary_path: "emscripten_build/libhypc/hypjson.js"
                   preset: "<< parameters.preset >>"
 
     t_bytecode_compare:
@@ -1665,7 +1668,7 @@ jobs:
                       cp workspace/hypc/hypc-static-linux github/hypc-static-linux
                       cp workspace/build/hypc/hypc        github/hypc-macos
                       cp workspace/hypc/Release/hypc.exe  github/hypc-windows.exe
-                      cp workspace/soljson.js             github/soljson.js
+                      cp workspace/hypjson.js             github/hypjson.js
 
                       cd github/
                       tar --create --file ../github-binaries.tar *
@@ -1684,7 +1687,7 @@ jobs:
                       mv github/hypc-static-linux "hypc-bin/linux-amd64/hypc-linux-amd64-v${full_version}"
                       mv github/hypc-macos        "hypc-bin/macosx-amd64/hypc-macosx-amd64-v${full_version}"
                       mv github/hypc-windows.exe  "hypc-bin/windows-amd64/hypc-windows-amd64-v${full_version}.exe"
-                      mv github/soljson.js        "hypc-bin/bin/soljson-v${full_version}.js"
+                      mv github/hypjson.js        "hypc-bin/bin/hypjson-v${full_version}.js"
 
                       cd hypc-bin/
                       tar --create --file ../hypc-bin-binaries.tar *
