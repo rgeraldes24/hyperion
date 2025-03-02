@@ -35,7 +35,7 @@ This means that cyclic creation dependencies are impossible.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.4.22 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
 
     contract OwnedToken {

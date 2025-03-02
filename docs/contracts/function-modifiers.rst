@@ -18,7 +18,7 @@ if they are marked ``virtual``. For details, please see
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.7.1 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract owned {
         constructor() { owner = payable(msg.sender); }

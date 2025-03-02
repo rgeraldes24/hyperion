@@ -42,7 +42,7 @@ Hyperion language without a compiler change.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.4.16 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     library GetCode {
         function at(address addr) public view returns (bytes memory code) {
@@ -68,7 +68,7 @@ efficient code, for example:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.4.16 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
 
     library VectorSum {
@@ -145,7 +145,7 @@ Both values can be assigned to. For example:
     :force:
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.8.10 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract C {
         // Assigns a new selector and address to the return variable @fun
@@ -180,7 +180,7 @@ Local Hyperion variables are available for assignments, for example:
     :force:
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.7.0 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract C {
         uint b;

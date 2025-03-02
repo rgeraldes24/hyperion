@@ -28,7 +28,7 @@ you receive the funds of the person who is now the richest.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.8.4;
+    pragma hyperion ^0.1.0;
 
     contract WithdrawalContract {
         address public richest;
@@ -66,7 +66,7 @@ This is as opposed to the more intuitive sending pattern:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.8.4;
+    pragma hyperion ^0.1.0;
 
     contract SendContract {
         address payable public richest;
@@ -133,7 +133,7 @@ restrictions highly readable.
     :force:
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.8.4;
+    pragma hyperion ^0.1.0;
 
     contract AccessRestriction {
         // These will be assigned at the construction
@@ -297,7 +297,7 @@ function finishes.
     :force:
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.8.4;
+    pragma hyperion ^0.1.0;
 
     contract StateMachine {
         enum Stages {

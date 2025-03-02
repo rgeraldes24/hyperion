@@ -243,7 +243,7 @@ Given the contract:
     :force:
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.4.16 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract Foo {
         function bar(bytes3[2] memory) public pure {}
@@ -519,7 +519,7 @@ reverts with a custom error of "insufficient balance":
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.8.4;
+    pragma hyperion ^0.1.0;
 
     contract TestToken {
         error InsufficientBalance(uint256 available, uint256 required);
@@ -608,7 +608,7 @@ For example,
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.8.4;
+    pragma hyperion ^0.1.0;
 
 
     contract Test {
@@ -662,7 +662,7 @@ As an example, the code
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.7.5 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
     pragma abicoder v2;
 
     contract Test {

@@ -15,7 +15,7 @@ that call them, similar to internal library functions.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.7.1 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     function sum(uint[] memory arr) pure returns (uint s) {
         for (uint i = 0; i < arr.length; i++)
@@ -61,7 +61,7 @@ with two integers, you would use something like the following:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.4.16 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract Simple {
         uint sum;
@@ -86,7 +86,7 @@ two integers passed as function parameters, then you use something like:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.4.16 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract Simple {
         function arithmetic(uint a, uint b)
@@ -113,7 +113,7 @@ statement:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.4.16 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract Simple {
         function arithmetic(uint a, uint b)
@@ -184,7 +184,7 @@ The following statements are considered modifying the state:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.5.0 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract C {
         function f(uint a, uint b) public view returns (uint) {
@@ -233,7 +233,7 @@ In addition to the list of state modifying statements explained above, the follo
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.5.0 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract C {
         function f(uint a, uint b) public pure returns (uint) {
@@ -335,7 +335,7 @@ Below you can see an example of a Sink contract that uses function ``receive``.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.6.0 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     // This contract keeps all Ether sent to it with no way
     // to get it back.
@@ -397,7 +397,7 @@ operations as long as there is enough gas passed on to it.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.6.2 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract Test {
         uint x;
@@ -475,7 +475,7 @@ The following example shows overloading of the function
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.4.16 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract A {
         function f(uint value) public pure returns (uint out) {
@@ -494,7 +494,7 @@ externally visible functions differ by their Hyperion types but not by their ext
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.4.16 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     // This will not compile
     contract A {
@@ -528,7 +528,7 @@ candidate, resolution fails.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.4.16 <0.9.0;
+    pragma hyperion >=0.0.1 <0.2.0;
 
     contract A {
         function f(uint8 val) public pure returns (uint8 out) {
