@@ -803,19 +803,20 @@ jobs:
                         --exclude-file scripts/codespell_ignored_lines.txt
             - matrix_notify_failure_unless_pr
 
-    chk_docs_examples:
-        <<: *base_node_small
-        steps:
-            - checkout
-            - attach_workspace:
-                  at: build
-            - run:
-                  name: JS deps
-                  command: sudo npm install -g hyphint
-            - run:
-                  name: Test Docs examples
-                  command: test/docsCodeStyle.sh
-            - matrix_notify_failure_unless_pr
+    # TODO (cyyber): Fix hyphint dependency
+    #chk_docs_examples:
+    #    <<: *base_node_small
+    #    steps:
+    #        - checkout
+    #        - attach_workspace:
+    #              at: build
+    #        - run:
+    #              name: JS deps
+    #              command: sudo npm install -g hyphint
+    #        - run:
+    #              name: Test Docs examples
+    #              command: test/docsCodeStyle.sh
+    #        - matrix_notify_failure_unless_pr
 
     chk_coding_style:
         <<: *base_cimg_small
