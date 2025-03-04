@@ -2,7 +2,7 @@
 const process = require('process')
 const fs = require('fs')
 
-const compiler = require('hypc')
+const compiler = require('@theqrl/hypc')
 
 SETTINGS_PRESETS = {
     'legacy-optimize':    {optimize: true,  viaIR: false},
