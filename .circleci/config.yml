@@ -1163,18 +1163,19 @@ jobs:
                       - version.txt
             - matrix_notify_failure_unless_pr
 
-    b_docs:
-        <<: *base_ubuntu2204_small
-        steps:
-            - checkout
-            - setup_prerelease_commit_hash
-            - run:
-                  name: Build documentation
-                  command: docs/docs.sh
-            - store_artifacts:
-                  path: docs/_build/html/
-                  destination: docs-html
-            - matrix_notify_failure_unless_pr
+    # TODO (cyyber): fix Missing dependency pygments-lexer-hyperion
+    #b_docs:
+    #    <<: *base_ubuntu2204_small
+    #    steps:
+    #        - checkout
+    #        - setup_prerelease_commit_hash
+    #        - run:
+    #              name: Build documentation
+    #              command: docs/docs.sh
+    #        - store_artifacts:
+    #              path: docs/_build/html/
+    #              destination: docs-html
+    #        - matrix_notify_failure_unless_pr
 
     t_ubu_hyptest_all: &t_ubu_hyptest_all
         <<: *base_ubuntu2204_large
@@ -1317,33 +1318,34 @@ jobs:
                       test/externalTests/hypc-js/hypc-js.sh /tmp/workspace/hypjson.js $(cat /tmp/workspace/version.txt)
             - matrix_notify_failure_unless_pr
 
-    t_ems_ext_hardhat:
-        <<: *base_node_small
-        docker:
-            - image: cimg/node:18.16
-        environment:
-            <<: *base_node_small_env
-            HARDHAT_TESTS_HYPC_PATH: /tmp/workspace/hypjson.js
-        steps:
-            - checkout
-            - attach_workspace:
-                  at: /tmp/workspace
-            - run: git clone --depth 1 https://github.com/nomiclabs/hardhat.git
-            - run:
-                  name: Install dependencies
-                  command: |
-                      cd hardhat
-                      yarn
-            - run:
-                  name: Run hardhat-core test suite
-                  command: |
-                      HARDHAT_TESTS_HYPC_VERSION=$(scripts/get_version.sh)
-                      export HARDHAT_TESTS_HYPC_VERSION
+    # TODO (cyyber): Missing dependency
+    #t_ems_ext_hardhat:
+    #    <<: *base_node_small
+    #    docker:
+    #        - image: cimg/node:18.16
+    #    environment:
+    #        <<: *base_node_small_env
+    #        HARDHAT_TESTS_HYPC_PATH: /tmp/workspace/hypjson.js
+    #    steps:
+    #        - checkout
+    #        - attach_workspace:
+    #              at: /tmp/workspace
+    #        - run: git clone --depth 1 https://github.com/nomiclabs/hardhat.git
+    #        - run:
+    #              name: Install dependencies
+    #              command: |
+    #                  cd hardhat
+    #                  yarn
+    #        - run:
+    #              name: Run hardhat-core test suite
+    #              command: |
+    #                  HARDHAT_TESTS_HYPC_VERSION=$(scripts/get_version.sh)
+    #                  export HARDHAT_TESTS_HYPC_VERSION
 
-                      # NOTE: This is expected to work without running `yarn build` first.
-                      cd hardhat/packages/hardhat-core
-                      yarn test
-            - matrix_notify_failure_unless_pr
+    #                  # NOTE: This is expected to work without running `yarn build` first.
+    #                  cd hardhat/packages/hardhat-core
+    #                  yarn test
+    #        - matrix_notify_failure_unless_pr
 
     # TODO (cyyber): Disabled as install_foundry: is disabled
     #t_ext:
@@ -1720,7 +1722,8 @@ workflows:
             - t_win_pyscripts: *requires_nothing
 
             # build-only
-            - b_docs: *requires_nothing
+            # TODO (cyyber): Disabled due to missing dependency of a py library
+            #- b_docs: *requires_nothing
             # DISABLED FOR 0.8.18 - b_ubu_cxx20: *requires_nothing
             # Issue: https://github.com/ethereum/solidity/issues/13868
             - b_ubu_ossfuzz: *requires_nothing
@@ -1754,7 +1757,8 @@ workflows:
             # Emscripten build and tests that take 15 minutes or less
             - b_ems: *requires_nothing
             - t_ems_hypcjs: *requires_b_ems
-            - t_ems_ext_hardhat: *requires_b_ems
+            # TODO (cyyber): Disabled due to mission dependency
+            #- t_ems_ext_hardhat: *requires_b_ems
 
             # TODO (cyyber): Disabled as t_ext is disabled
             #- t_ext: *job_ems_compile_ext_colony
