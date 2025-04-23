@@ -967,7 +967,7 @@ void ProtoConverter::visit(LowLevelCall const& _x)
 	m_output << ", ";
 	if (type == LowLevelCall::CALL)
 	{
-		visit(_x.wei());
+		visit(_x.planck());
 		m_output << ", ";
 	}
 	m_output << "mod(";
@@ -1001,7 +1001,7 @@ void ProtoConverter::visit(Create const& _x)
 		m_output << "create2(";
 		break;
 	}
-	visit(_x.wei());
+	visit(_x.planck());
 	m_output << ", ";
 	m_output << "mod(";
 	visit(_x.position());

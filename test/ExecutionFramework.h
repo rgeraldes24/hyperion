@@ -48,9 +48,9 @@ namespace hyperion::test
 {
 using rational = boost::rational<bigint>;
 
-// The ether and gwei denominations; here for ease of use where needed within code.
-static u256 const gwei = u256(1) << 9;
-static u256 const ether = u256(1) << 18;
+// The znd and gplanck denominations; here for ease of use where needed within code.
+static u256 const gplanck = u256(1) << 9;
+static u256 const znd = u256(1) << 18;
 class ExecutionFramework
 {
 
@@ -278,7 +278,7 @@ protected:
 	void reset();
 
 	void sendMessage(bytes const& _data, bool _isCreation, u256 const& _value = 0);
-	void sendEther(util::h160 const& _to, u256 const& _value);
+	void sendZND(util::h160 const& _to, u256 const& _value);
 	size_t currentTimestamp();
 	size_t blockTimestamp(u256 _number);
 

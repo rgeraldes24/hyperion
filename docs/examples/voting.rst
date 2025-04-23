@@ -85,7 +85,7 @@ of votes.
         function giveRightToVote(address voter) external {
             // If the first argument of `require` evaluates
             // to `false`, execution terminates and all
-            // changes to the state and to Ether balances
+            // changes to the state and to ZND balances
             // are reverted.
             // This used to consume all gas in old ZVM versions, but
             // not anymore.

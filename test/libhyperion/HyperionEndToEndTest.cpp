@@ -823,7 +823,7 @@ BOOST_AUTO_TEST_CASE(constructor)
 	)
 }
 
-BOOST_AUTO_TEST_CASE(send_ether)
+BOOST_AUTO_TEST_CASE(send_znd)
 {
 	char const* sourceCode = R"(
 		contract test {
@@ -843,7 +843,7 @@ BOOST_AUTO_TEST_CASE(send_ether)
 	)
 }
 
-BOOST_AUTO_TEST_CASE(transfer_ether)
+BOOST_AUTO_TEST_CASE(transfer_znd)
 {
 	char const* sourceCode = R"(
 		contract A {
@@ -1103,7 +1103,7 @@ BOOST_AUTO_TEST_CASE(contracts_as_addresses)
 {
 	char const* sourceCode = R"(
 		contract helper {
-			receive() external payable { } // can receive ether
+			receive() external payable { } // can receive znd
 		}
 		contract test {
 			helper h;
@@ -2454,7 +2454,7 @@ BOOST_AUTO_TEST_CASE(calldata_offset)
 	ABI_CHECK(callContractFunction("last()", encodeArgs()), encodeDyn(std::string("nd")));
 }
 
-BOOST_AUTO_TEST_CASE(reject_ether_sent_to_library)
+BOOST_AUTO_TEST_CASE(reject_znd_sent_to_library)
 {
 	char const* sourceCode = R"(
 		library lib {}

@@ -1895,7 +1895,7 @@ Json::Value CompilerStack::gasEstimates(std::string const& _contractName) const
 		Json::Value internalFunctions(Json::objectValue);
 		for (auto const& it: contract.definedFunctions())
 		{
-			/// Exclude externally visible functions, constructor, fallback and receive ether function
+			/// Exclude externally visible functions, constructor, fallback and receive znd function
 			if (it->isPartOfExternalInterface() || !it->isOrdinary())
 				continue;
 

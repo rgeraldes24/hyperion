@@ -1,11 +1,11 @@
 contract D {
 	function f() public pure {
-		assert(1000000000000000000 wei == 1 ether);
-		assert(100000000000000000 wei == 1 ether);
-		assert(1000000000 wei == 1 gwei);
-		assert(100000000 wei == 1 gwei);
-		assert(1000000000 gwei == 1 ether);
-		assert(100000000 gwei == 1 ether);
+		assert(1000000000000000000 planck == 1 znd);
+		assert(100000000000000000 planck == 1 znd);
+		assert(1000000000 planck == 1 gplanck);
+		assert(100000000 planck == 1 gplanck);
+		assert(1000000000 gplanck == 1 znd);
+		assert(100000000 gplanck == 1 znd);
 	}
 }
 // ====

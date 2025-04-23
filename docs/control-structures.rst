@@ -79,10 +79,10 @@ all function arguments have to be copied to memory.
     A function call from one contract to another does not create its own transaction,
     it is a message call as part of the overall transaction.
 
-When calling functions of other contracts, you can specify the amount of Wei or
+When calling functions of other contracts, you can specify the amount of Planck or
 gas sent with the call with the special options ``{value: 10, gas: 10000}``.
 Note that it is discouraged to specify gas values explicitly, since the gas costs
-of opcodes can change in the future. Any Wei you send to the contract is added
+of opcodes can change in the future. Any Planck you send to the contract is added
 to the total balance of that contract:
 
 .. code-block:: hyperion
@@ -222,13 +222,13 @@ is compiled so recursive creation-dependencies are not possible.
         }
 
         function createAndEndowD(uint arg, uint amount) public payable {
-            // Send ether along with the creation
+            // Send znd along with the creation
             D newD = new D{value: amount}(arg);
             newD.x();
         }
     }
 
-As seen in the example, it is possible to send Ether while creating
+As seen in the example, it is possible to send ZND while creating
 an instance of ``D`` using the ``value`` option, but it is not possible
 to limit the amount of gas.
 If the creation fails (due to out-of-stack, not enough balance or other problems),
@@ -639,9 +639,9 @@ in the following situations:
 #. Calling ``require(x)`` where ``x`` evaluates to ``false``.
 #. If you use ``revert()`` or ``revert("description")``.
 #. If you perform an external function call targeting a contract that contains no code.
-#. If your contract receives Ether via a public function without
+#. If your contract receives ZND via a public function without
    ``payable`` modifier (including the constructor and the fallback function).
-#. If your contract receives Ether via a public getter function.
+#. If your contract receives ZND via a public getter function.
 
 For the following cases, the error data from the external call
 (if provided) is forwarded. This means that it can either cause
@@ -680,7 +680,7 @@ and ``assert`` for internal error checking.
             addr.transfer(msg.value / 2);
             // Since transfer throws an exception on failure and
             // cannot call back here, there should be no way for us to
-            // still have half of the Ether.
+            // still have half of the ZND.
             assert(address(this).balance == balanceBeforeTransfer - msg.value / 2);
             return address(this).balance;
         }
@@ -741,12 +741,12 @@ together with ``revert`` and the equivalent ``require``:
         address owner;
         error Unauthorized();
         function buy(uint amount) public payable {
-            if (amount > msg.value / 2 ether)
-                revert("Not enough Ether provided.");
+            if (amount > msg.value / 2 znd)
+                revert("Not enough ZND provided.");
             // Alternative way to do it:
             require(
-                amount <= msg.value / 2 ether,
-                "Not enough Ether provided."
+                amount <= msg.value / 2 znd,
+                "Not enough ZND provided."
             );
             // Perform the purchase.
         }
@@ -769,7 +769,7 @@ for example if they are just strings.
     ``condition`` is true.
 
 The provided string is :ref:`abi-encoded <ABI>` as if it were a call to a function ``Error(string)``.
-In the above example, ``revert("Not enough Ether provided.");`` returns the following hexadecimal as error return data:
+In the above example, ``revert("Not enough ZND provided.");`` returns the following hexadecimal as error return data:
 
 .. code::
 

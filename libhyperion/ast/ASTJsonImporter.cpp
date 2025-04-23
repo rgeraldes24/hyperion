@@ -1198,12 +1198,12 @@ Literal::SubDenomination ASTJsonImporter::subdenomination(Json::Value const& _no
 
 	std::string const subDenStr = subDen.asString();
 
-	if (subDenStr == "wei")
-		return Literal::SubDenomination::Wei;
-	else if (subDenStr == "gwei")
-		return Literal::SubDenomination::Gwei;
-	else if (subDenStr == "ether")
-		return Literal::SubDenomination::Ether;
+	if (subDenStr == "planck")
+		return Literal::SubDenomination::Planck;
+	else if (subDenStr == "gplanck")
+		return Literal::SubDenomination::Gplanck;
+	else if (subDenStr == "znd")
+		return Literal::SubDenomination::ZND;
 	else if (subDenStr == "seconds")
 		return Literal::SubDenomination::Second;
 	else if (subDenStr == "minutes")

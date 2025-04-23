@@ -29,7 +29,7 @@ object "C_15" {
             mstore(pos, 34)
             pos := add(pos, 0x20)
 
-            mstore(add(pos, 0), "Ether sent to non-payable functi")
+            mstore(add(pos, 0), "ZND sent to non-payable functi")
 
             mstore(add(pos, 32), "on")
 
@@ -89,7 +89,7 @@ object "C_15" {
                 mstore(pos, 34)
                 pos := add(pos, 0x20)
 
-                mstore(add(pos, 0), "Ether sent to non-payable functi")
+                mstore(add(pos, 0), "ZND sent to non-payable functi")
 
                 mstore(add(pos, 32), "on")
 

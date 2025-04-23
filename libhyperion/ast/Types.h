@@ -991,8 +991,8 @@ public:
 	/// See documentation of m_super
 	bool isSuper() const { return m_super; }
 
-	// @returns true if and only if the contract has a receive ether function or a payable fallback function, i.e.
-	// if it has code that will be executed on plain ether transfers
+	// @returns true if and only if the contract has a receive znd function or a payable fallback function, i.e.
+	// if it has code that will be executed on plain znd transfers
 	bool isPayable() const;
 
 	ContractDefinition const& contractDefinition() const { return m_contract; }

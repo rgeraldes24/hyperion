@@ -1,4 +1,4 @@
-// Sending zero ether to a contract should still invoke the receive ether function
+// Sending zero znd to a contract should still invoke the receive znd function
 // (it previously did not because the gas stipend was not provided by the ZVM)
 contract Receiver {
     receive() external payable {}
@@ -14,7 +14,7 @@ contract Main {
     }
 }
 // ----
-// constructor(), 20 wei ->
+// constructor(), 20 planck ->
 // gas irOptimized: 100264
 // gas legacy: 113411
 // gas legacyOptimized: 100361

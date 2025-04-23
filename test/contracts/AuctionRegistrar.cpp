@@ -321,7 +321,7 @@ BOOST_AUTO_TEST_CASE(double_reserve_long)
 	registrar.reserve(name);
 	BOOST_CHECK_EQUAL(registrar.owner(name), m_sender);
 
-	sendEther(account(1), u256(10) * ether);
+	sendZND(account(1), u256(10) * znd);
 	m_sender = account(1);
 	registrar.reserve(name);
 	BOOST_CHECK_EQUAL(registrar.owner(name), account(0));
@@ -338,7 +338,7 @@ BOOST_AUTO_TEST_CASE(properties)
 	for (std::string const& name: names)
 	{
 		m_sender = account(0);
-		sendEther(account(count), u256(20) * ether);
+		sendZND(account(count), u256(20) * znd);
 		m_sender = account(count);
 		auto sender = m_sender;
 		addr += count;
@@ -390,7 +390,7 @@ BOOST_AUTO_TEST_CASE(disown)
 	BOOST_CHECK_EQUAL(registrar.name(h160(124)), name);
 
 	// someone else tries disowning
-	sendEther(account(1), u256(10) * ether);
+	sendZND(account(1), u256(10) * znd);
 	m_sender = account(1);
 	registrar.disown(name);
 	BOOST_CHECK_EQUAL(registrar.owner(name), account(0));
@@ -440,7 +440,7 @@ BOOST_AUTO_TEST_CASE(auction_bidding)
 	registrar.setNextValue(12);
 	registrar.reserve(name);
 	// another bid by someone else
-	sendEther(account(1), 10 * ether);
+	sendZND(account(1), 10 * znd);
 	m_sender = account(1);
 	m_zvmcHost->tx_context.block_timestamp = startTime + 2 * m_biddingTime - 50;
 	registrar.setNextValue(13);

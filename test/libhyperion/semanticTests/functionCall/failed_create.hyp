@@ -14,7 +14,7 @@ contract C {
 	}
 }
 // ----
-// constructor(), 20 wei
+// constructor(), 20 planck
 // gas irOptimized: 166148
 // gas legacy: 285547
 // gas legacyOptimized: 168515

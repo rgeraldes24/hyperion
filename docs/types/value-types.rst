@@ -186,9 +186,9 @@ The address type comes in two largely identical flavors:
 - ``address``: Holds a 20 byte value (size of an Ethereum address).
 - ``address payable``: Same as ``address``, but with the additional members ``transfer`` and ``send``.
 
-The idea behind this distinction is that ``address payable`` is an address you can send Ether to,
-while you are not supposed to send Ether to a plain ``address``, for example because it might be a smart contract
-that was not built to accept Ether.
+The idea behind this distinction is that ``address payable`` is an address you can send ZND to,
+while you are not supposed to send ZND to a plain ``address``, for example because it might be a smart contract
+that was not built to accept ZND.
 
 Type conversions:
 
@@ -200,12 +200,12 @@ Explicit conversions to and from ``address`` are allowed for ``uint160``, intege
 
 Only expressions of type ``address`` and contract-type can be converted to the type ``address
 payable`` via the explicit conversion ``payable(...)``. For contract-type, this conversion is only
-allowed if the contract can receive Ether, i.e., the contract either has a :ref:`receive
-<receive-ether-function>` or a payable fallback function. Note that ``payable(0)`` is valid and is
+allowed if the contract can receive ZND, i.e., the contract either has a :ref:`receive
+<receive-znd-function>` or a payable fallback function. Note that ``payable(0)`` is valid and is
 an exception to this rule.
 
 .. note::
-    If you need a variable of type ``address`` and plan to send Ether to it, then
+    If you need a variable of type ``address`` and plan to send ZND to it, then
     declare its type as ``address payable`` to make this requirement visible. Also,
     try to make this distinction or conversion as early as possible.
 
@@ -239,7 +239,7 @@ For a quick reference of all members of address, see :ref:`address_related`.
 * ``balance`` and ``transfer``
 
 It is possible to query the balance of an address using the property ``balance``
-and to send Ether (in units of wei) to a payable address using the ``transfer`` function:
+and to send ZND (in units of planck) to a payable address using the ``transfer`` function:
 
 .. code-block:: hyperion
     :force:
@@ -249,11 +249,11 @@ and to send Ether (in units of wei) to a payable address using the ``transfer`` 
     if (x.balance < 10 && myAddress.balance >= 10) x.transfer(10);
 
 The ``transfer`` function fails if the balance of the current contract is not large enough
-or if the Ether transfer is rejected by the receiving account. The ``transfer`` function
+or if the ZND transfer is rejected by the receiving account. The ``transfer`` function
 reverts on failure.
 
 .. note::
-    If ``x`` is a contract address, its code (more specifically: its :ref:`receive-ether-function`, if present, or otherwise its :ref:`fallback-function`, if present) will be executed together with the ``transfer`` call (this is a feature of the ZVM and cannot be prevented). If that execution runs out of gas or fails in any way, the Ether transfer will be reverted and the current contract will stop with an exception.
+    If ``x`` is a contract address, its code (more specifically: its :ref:`receive-znd-function`, if present, or otherwise its :ref:`fallback-function`, if present) will be executed together with the ``transfer`` call (this is a feature of the ZVM and cannot be prevented). If that execution runs out of gas or fails in any way, the ZND transfer will be reverted and the current contract will stop with an exception.
 
 * ``send``
 
@@ -262,8 +262,8 @@ reverts on failure.
 .. warning::
     There are some dangers in using ``send``: The transfer fails if the call stack depth is at 1024
     (this can always be forced by the caller) and it also fails if the recipient runs out of gas. So in order
-    to make safe Ether transfers, always check the return value of ``send``, use ``transfer`` or even better:
-    use a pattern where the recipient withdraws the Ether.
+    to make safe ZND transfers, always check the return value of ``send``, use ``transfer`` or even better:
+    use a pattern where the recipient withdraws the ZND.
 
 * ``call``, ``delegatecall`` and ``staticcall``
 
@@ -303,17 +303,17 @@ It is possible to adjust the supplied gas with the ``gas`` modifier:
 
     address(nameReg).call{gas: 1000000}(abi.encodeWithSignature("register(string)", "MyName"));
 
-Similarly, the supplied Ether value can be controlled too:
+Similarly, the supplied ZND value can be controlled too:
 
 .. code-block:: hyperion
 
-    address(nameReg).call{value: 1 ether}(abi.encodeWithSignature("register(string)", "MyName"));
+    address(nameReg).call{value: 1 znd}(abi.encodeWithSignature("register(string)", "MyName"));
 
 Lastly, these modifiers can be combined. Their order does not matter:
 
 .. code-block:: hyperion
 
-    address(nameReg).call{gas: 1000000, value: 1 ether}(abi.encodeWithSignature("register(string)", "MyName"));
+    address(nameReg).call{gas: 1000000, value: 1 znd}(abi.encodeWithSignature("register(string)", "MyName"));
 
 In a similar way, the function ``delegatecall`` can be used: the difference is that only the code of the given address is used, all other aspects (storage, balance, ...) are taken from the current contract. The purpose of ``delegatecall`` is to use library code which is stored in another contract. The user has to ensure that the layout of storage in both contracts is suitable for delegatecall to be used.
 
@@ -765,19 +765,19 @@ No other conversions between function types are possible.
 
 The rule about ``payable`` and ``non-payable`` might be a little
 confusing, but in essence, if a function is ``payable``, this means that it
-also accepts a payment of zero Ether, so it also is ``non-payable``.
-On the other hand, a ``non-payable`` function will reject Ether sent to it,
+also accepts a payment of zero ZND, so it also is ``non-payable``.
+On the other hand, a ``non-payable`` function will reject ZND sent to it,
 so ``non-payable`` functions cannot be converted to ``payable`` functions.
-To clarify, rejecting ether is more restrictive than not rejecting ether.
+To clarify, rejecting znd is more restrictive than not rejecting znd.
 This means you can override a payable function with a non-payable but not the
 other way around.
 
 Additionally, When you define a ``non-payable`` function pointer,
-the compiler does not enforce that the pointed function will actually reject ether.
-Instead, it enforces that the function pointer is never used to send ether.
+the compiler does not enforce that the pointed function will actually reject znd.
+Instead, it enforces that the function pointer is never used to send znd.
 Which makes it possible to assign a ``payable`` function pointer to a ``non-payable``
 function pointer ensuring both types behave the same way, i.e, both cannot be used
-to send ether.
+to send znd.
 
 If a function type variable is not initialised, calling it results
 in a :ref:`Panic error<assert-and-require>`. The same happens if you call a function after using ``delete``
