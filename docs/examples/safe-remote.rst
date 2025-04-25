@@ -26,7 +26,7 @@ you can use state machine-like constructs inside a contract.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
     contract Purchase {
         uint public value;
         address payable public seller;

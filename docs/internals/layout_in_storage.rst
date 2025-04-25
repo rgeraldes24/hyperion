@@ -102,7 +102,7 @@ As an example, consider the following contract:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
 
     contract C {
@@ -219,7 +219,7 @@ value and reference types, types that are encoded packed, and nested types.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
     contract A {
         struct S {
             uint128 a;

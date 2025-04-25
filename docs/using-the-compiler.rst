@@ -113,7 +113,7 @@ If ``hypc`` is called with the option ``--link``, all input files are interprete
 Setting the ZVM Version to Target
 *********************************
 
-When you compile your contract code you can specify the Ethereum virtual machine
+When you compile your contract code you can specify the Zond virtual machine
 version to compile for to avoid particular features or behaviors.
 
 .. warning::

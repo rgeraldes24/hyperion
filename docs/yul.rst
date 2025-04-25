@@ -748,7 +748,7 @@ Since it is the default type of this dialect, it can be omitted.
 The following table lists all builtin functions
 (depending on the ZVM version) and provides a short description of the
 semantics of the function / opcode.
-This document does not want to be a full description of the Ethereum virtual machine.
+This document does not want to be a full description of the Zond virtual machine.
 Please refer to a different document if you are interested in the precise semantics.
 
 Opcodes marked with ``-`` do not return a result and all others return exactly one value.

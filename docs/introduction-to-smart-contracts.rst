@@ -18,7 +18,7 @@ Storage Example
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract SimpleStorage {
         uint storedData;
@@ -85,7 +85,7 @@ registering with a username and password, all you need is an Ethereum keypair.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
 
     contract Coin {
         // The keyword "public" makes variables

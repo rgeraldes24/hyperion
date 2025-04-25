@@ -107,7 +107,7 @@ instead of library functions.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
 
     struct Data { mapping(uint => bool) flags; }
     // Now we attach functions to the type.
@@ -163,7 +163,7 @@ In this example, we will use a library.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
 
     library Search {
         function indexOf(uint[] storage self, uint value)
@@ -206,7 +206,7 @@ Another example shows how to define a custom operator for a user-defined type:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
 
     type UFixed16x2 is uint16;
 

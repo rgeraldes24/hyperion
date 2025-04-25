@@ -46,7 +46,7 @@ contract that returns the value at the specified address.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract MappingExample {
         mapping(address => uint) public balances;
@@ -75,7 +75,7 @@ for the inputs and outputs in the ABI for the mapping's getter.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
 
     contract MappingExampleWithNames {
         mapping(address user => uint balance) public balances;
@@ -91,7 +91,7 @@ The example below uses ``_allowances`` to record the amount someone else is allo
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract MappingExample {
 
@@ -148,7 +148,7 @@ the ``sum`` function iterates over to sum all the values.
     :force:
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
 
     struct IndexValue { uint keyIndex; uint value; }
     struct KeyFlag { uint key; bool deleted; }

@@ -613,7 +613,7 @@ smallest and respectively largest value of the given enum.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
 
     contract test {
         enum ActionChoices { GoLeft, GoRight, GoStraight, SitStill }
@@ -676,7 +676,7 @@ type with 18 decimals and a minimal library to do arithmetic operations on the t
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
 
     // Represent a 18 decimal, 256 bit wide fixed point type using a user-defined value type.
     type UFixed256x18 is uint256;
@@ -825,7 +825,7 @@ Example that shows how to use the members:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract Example {
         function f() public payable returns (bytes4) {
@@ -843,7 +843,7 @@ Example that shows how to use internal function types:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     library ArrayUtils {
         // internal functions can be used in internal library functions because
@@ -903,7 +903,7 @@ Another example that uses external function types:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
 
     contract Oracle {
