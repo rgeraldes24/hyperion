@@ -1,5 +1,3 @@
-// TODO(rgeraldes24): pragma
-
 contract C {
     uint[2 planck] a;
     uint[2 gplanck] b;
