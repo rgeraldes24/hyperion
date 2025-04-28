@@ -181,7 +181,7 @@ can still return a value to the caller by use of the ``return`` statement.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1;
+    pragma hyperion >=0.1.0;
 
     contract C {
         // omitted name for parameter
