@@ -2,4 +2,4 @@ contract C {
 	uint constant y = 8 gplanck znd;
 }
 // ----
-// ParserError 2314: (39-44): Expected ';' but got 'znd'
+// ParserError 2314: (42-45): Expected ';' but got 'znd'

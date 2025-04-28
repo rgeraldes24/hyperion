@@ -2,4 +2,4 @@ contract C {
 	bool constant x = true znd;
 }
 // ----
-// ParserError 2314: (37-42): Expected ';' but got 'znd'
+// ParserError 2314: (37-40): Expected ';' but got 'znd'

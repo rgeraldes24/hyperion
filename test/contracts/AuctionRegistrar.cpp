@@ -42,7 +42,7 @@ namespace hyperion::frontend::test
 namespace
 {
 static char const* registrarCode = R"DELIMITER(
-pragma hyperion >=0.7.0 <0.9.0;
+pragma hyperion >=0.1.0;
 
 abstract contract NameRegister {
 	function addr(string memory _name) public virtual view returns (address o_owner);

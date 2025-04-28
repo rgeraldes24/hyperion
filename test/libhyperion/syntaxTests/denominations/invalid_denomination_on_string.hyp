@@ -2,4 +2,4 @@ contract C {
 	string s = "abc" znd;
 }
 // ----
-// ParserError 2314: (31-36): Expected ';' but got 'znd'
+// ParserError 2314: (31-34): Expected ';' but got 'znd'
