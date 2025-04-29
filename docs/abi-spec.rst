@@ -550,7 +550,7 @@ JSON
 The JSON format for a contract's interface is given by an array of function, event and error descriptions.
 A function description is a JSON object with the fields:
 
-- ``type``: ``"function"``, ``"constructor"``, ``"receive"`` (the :ref:`"receive ZND" function <receive-znd-function>`) or ``"fallback"`` (the :ref:`"default" function <fallback-function>`);
+- ``type``: ``"function"``, ``"constructor"``, ``"receive"`` (the :ref:`"receive Zond" function <receive-zond-function>`) or ``"fallback"`` (the :ref:`"default" function <fallback-function>`);
 - ``name``: the name of the function;
 - ``inputs``: an array of objects, each of which contains:
 
@@ -561,12 +561,12 @@ A function description is a JSON object with the fields:
 - ``outputs``: an array of objects similar to ``inputs``.
 - ``stateMutability``: a string with one of the following values: ``pure`` (:ref:`specified to not read
   blockchain state <pure-functions>`), ``view`` (:ref:`specified to not modify the blockchain
-  state <view-functions>`), ``nonpayable`` (function does not accept ZND - the default) and ``payable`` (function accepts ZND).
+  state <view-functions>`), ``nonpayable`` (function does not accept Zond - the default) and ``payable`` (function accepts Zond).
 
 Constructor, receive, and fallback never have ``name`` or ``outputs``. Receive and fallback do not have ``inputs`` either.
 
 .. note::
-    Sending non-zero ZND to non-payable function will revert the transaction.
+    Sending non-zero Zond to non-payable function will revert the transaction.
 
 .. note::
     The state mutability ``nonpayable`` is reflected in Hyperion by not specifying
