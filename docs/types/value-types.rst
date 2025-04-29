@@ -765,19 +765,19 @@ No other conversions between function types are possible.
 
 The rule about ``payable`` and ``non-payable`` might be a little
 confusing, but in essence, if a function is ``payable``, this means that it
-also accepts a payment of zero ZND, so it also is ``non-payable``.
-On the other hand, a ``non-payable`` function will reject ZND sent to it,
+also accepts a payment of zero Zond, so it also is ``non-payable``.
+On the other hand, a ``non-payable`` function will reject Zond sent to it,
 so ``non-payable`` functions cannot be converted to ``payable`` functions.
-To clarify, rejecting znd is more restrictive than not rejecting znd.
+To clarify, rejecting zond is more restrictive than not rejecting zond.
 This means you can override a payable function with a non-payable but not the
 other way around.
 
 Additionally, When you define a ``non-payable`` function pointer,
-the compiler does not enforce that the pointed function will actually reject znd.
-Instead, it enforces that the function pointer is never used to send znd.
+the compiler does not enforce that the pointed function will actually reject zond.
+Instead, it enforces that the function pointer is never used to send zond.
 Which makes it possible to assign a ``payable`` function pointer to a ``non-payable``
 function pointer ensuring both types behave the same way, i.e, both cannot be used
-to send znd.
+to send zond.
 
 If a function type variable is not initialised, calling it results
 in a :ref:`Panic error<assert-and-require>`. The same happens if you call a function after using ``delete``
