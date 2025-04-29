@@ -12,15 +12,15 @@ Withdrawal from Contracts
 
 The recommended method of sending funds after an effect
 is using the withdrawal pattern. Although the most intuitive
-method of sending ZND, as a result of an effect, is a
+method of sending Zond, as a result of an effect, is a
 direct ``transfer`` call, this is not recommended as it
 introduces a potential security risk. You may read
 more about this on the :ref:`security_considerations` page.
 
 The following is an example of the withdrawal pattern in practice in
-a contract where the goal is to send the most of some compensation, e.g. ZND, to the
+a contract where the goal is to send the most of some compensation, e.g. Zond, to the
 contract in order to become the "richest", inspired by
-`King of the ZND <https://www.kingoftheether.com/>`_.
+`King of the Zond <https://www.kingoftheether.com/>`_.
 
 In the following contract, if you are no longer the richest,
 you receive the funds of the person who is now the richest.
@@ -36,9 +36,9 @@ you receive the funds of the person who is now the richest.
 
         mapping(address => uint) pendingWithdrawals;
 
-        /// The amount of ZND sent was not higher than
+        /// The amount of Zond sent was not higher than
         /// the currently highest amount.
-        error NotEnoughZND();
+        error NotEnoughZond();
 
         constructor() payable {
             richest = msg.sender;
@@ -46,7 +46,7 @@ you receive the funds of the person who is now the richest.
         }
 
         function becomeRichest() public payable {
-            if (msg.value <= mostSent) revert NotEnoughZND();
+            if (msg.value <= mostSent) revert NotEnoughZond();
             pendingWithdrawals[richest] += msg.value;
             richest = msg.sender;
             mostSent = msg.value;
@@ -72,9 +72,9 @@ This is as opposed to the more intuitive sending pattern:
         address payable public richest;
         uint public mostSent;
 
-        /// The amount of ZND sent was not higher than
+        /// The amount of Zond sent was not higher than
         /// the currently highest amount.
-        error NotEnoughZND();
+        error NotEnoughZond();
 
         constructor() payable {
             richest = payable(msg.sender);
@@ -82,7 +82,7 @@ This is as opposed to the more intuitive sending pattern:
         }
 
         function becomeRichest() public payable {
-            if (msg.value <= mostSent) revert NotEnoughZND();
+            if (msg.value <= mostSent) revert NotEnoughZond();
             // This line can cause problems (explained below).
             richest.transfer(msg.value);
             richest = payable(msg.sender);
@@ -154,8 +154,8 @@ restrictions highly readable.
         /// Function called too early.
         error TooEarly();
 
-        /// Not enough ZND sent with function call.
-        error NotEnoughZND();
+        /// Not enough Zond sent with function call.
+        error NotEnoughZond();
 
         // Modifiers can be used to change
         // the body of a function.
@@ -207,7 +207,7 @@ restrictions highly readable.
         // where it was possible to skip the part after `_;`.
         modifier costs(uint amount) {
             if (msg.value < amount)
-                revert NotEnoughZND();
+                revert NotEnoughZond();
 
             _;
             if (msg.value > amount)
@@ -217,7 +217,7 @@ restrictions highly readable.
         function forceOwnerChange(address newOwner)
             public
             payable
-            costs(200 znd)
+            costs(200 zond)
         {
             owner = newOwner;
             // just some example condition
