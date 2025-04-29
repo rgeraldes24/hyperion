@@ -10,4 +10,4 @@ contract A {
 // x() -> 2
 // x(), 1 planck -> FAILURE
 // (): hex"00" -> FAILURE
-// (), 1 znd: hex"00" -> FAILURE
+// (), 1 zond: hex"00" -> FAILURE

@@ -10,16 +10,16 @@ contract C {
     }
 }
 
-// A contract that cannot receive ZND
+// A contract that cannot receive Zond
 contract D {}
 
-// A contract that can receive ZND
+// A contract that can receive Zond
 contract E {
     receive() external payable {
     }
 }
 
-// A contract that can receive ZND using the fallback
+// A contract that can receive Zond using the fallback
 contract F {
     fallback() external payable {
 

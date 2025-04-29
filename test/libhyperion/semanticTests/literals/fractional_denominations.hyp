@@ -1,6 +1,6 @@
 contract C {
     uint public g = 1.5 gplanck;
-    uint public e = 1.5 znd;
+    uint public e = 1.5 zond;
     uint public m = 1.5 minutes;
     uint public h = 1.5 hours;
     uint public d = 1.5 days;

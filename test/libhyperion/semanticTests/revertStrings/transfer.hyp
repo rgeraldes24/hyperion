@@ -11,7 +11,7 @@ contract C {
 		payable(a).transfer(1 planck);
 	}
 	function h() public {
-		payable(a).transfer(100 znd);
+		payable(a).transfer(100 zond);
 	}
 	function g() public view returns (uint) {
 		return payable(this).balance;

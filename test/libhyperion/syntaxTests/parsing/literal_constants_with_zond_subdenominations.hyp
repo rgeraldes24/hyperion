@@ -2,7 +2,7 @@ contract C {
     function f() public
     {
          a = 1 planck;
-         b = 2 znd;
+         b = 2 zond;
          c = 3 gplanck;
     }
     uint256 a;

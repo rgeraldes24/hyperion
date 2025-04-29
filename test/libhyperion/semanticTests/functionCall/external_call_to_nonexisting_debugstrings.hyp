@@ -23,7 +23,7 @@ contract C {
 // ====
 // revertStrings: debug
 // ----
-// constructor(), 1 znd ->
+// constructor(), 1 zond ->
 // gas irOptimized: 390464
 // gas legacy: 809985
 // gas legacyOptimized: 498331

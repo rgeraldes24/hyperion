@@ -7,5 +7,5 @@ contract C {
   }
 }
 // ----
-// Warning 3628: (0-139): This contract has a payable fallback function, but no receive znd function. Consider adding a receive znd function.
+// Warning 3628: (0-139): This contract has a payable fallback function, but no receive zond function. Consider adding a receive zond function.
 // TypeError 7398: (92-96): Explicit type conversion not allowed from non-payable "address" to "contract C", which has a payable fallback function.

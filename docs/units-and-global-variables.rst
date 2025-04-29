@@ -4,7 +4,7 @@
 Units and Globally Available Variables
 **************************************
 
-.. index:: ! planck, ! gplanck, ! zond, ! denomination;znd
+.. index:: ! planck, ! gplanck, ! zond, ! denomination;zond
 
 Zond Units
 ===========

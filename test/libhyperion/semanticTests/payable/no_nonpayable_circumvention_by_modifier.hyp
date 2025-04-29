@@ -1,6 +1,6 @@
 contract C {
     modifier tryCircumvent {
-        if (false) _; // avoid the function, we should still not accept znd
+        if (false) _; // avoid the function, we should still not accept zond
     }
     function f() tryCircumvent public returns (uint) {
         return msgvalue();

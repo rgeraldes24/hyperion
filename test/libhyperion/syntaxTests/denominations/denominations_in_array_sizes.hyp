@@ -1,7 +1,7 @@
 contract C {
     uint[42 planck] a;
     uint[42 gplanck] b;
-    uint[42 znd] c;
+    uint[42 zond] c;
     uint[42 seconds] d;
     uint[42 minutes] e;
     uint[42 hours] f;

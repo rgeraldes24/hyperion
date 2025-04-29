@@ -54,7 +54,7 @@ namespace hyperion::frontend::test
 	T(Address, "address", 0)      \
 	T(Identifier, "identifier", 0)     \
 	/* type keywords */                \
-	K(ZND, "znd", 0)               \
+	K(Zond, "zond", 0)               \
 	K(Planck, "planck", 0)                   \
 	K(Hex, "hex", 0)                   \
 	K(Boolean, "boolean", 0)           \
@@ -252,7 +252,7 @@ struct FunctionCallArgs
 enum class FunctionValueUnit
 {
 	Planck,
-	ZND
+	Zond
 };
 
 /// Holds value along with unit it was expressed in originally.
@@ -265,7 +265,7 @@ struct FunctionValue
 
 /**
  * Represents a function call read from an input stream. It contains the signature, the
- * arguments, an optional znd value and an expected execution result.
+ * arguments, an optional zond value and an expected execution result.
  */
 struct FunctionCall
 {
@@ -273,7 +273,7 @@ struct FunctionCall
 	/// For a library deployment, this contains the library name.
 	std::string signature;
 	/// Optional value that can be sent with the call.
-	/// Value is expressed in planck, smallest unit of znd
+	/// Value is expressed in planck, smallest unit of zond
 	/// Value has a field unit which represents denomination on which value was expressed originally
 	FunctionValue value;
 	/// Object that holds all function parameters in their `bytes`

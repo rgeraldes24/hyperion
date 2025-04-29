@@ -56,7 +56,7 @@ contract C {
   let while := 1
   let planck := 1
   let gplanck := 1
-  let znd := 1
+  let zond := 1
   let seconds := 1
   let minutes := 1
   let hours := 1

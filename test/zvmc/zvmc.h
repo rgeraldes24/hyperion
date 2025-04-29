@@ -157,7 +157,7 @@ struct zvmc_message
     size_t input_size;
 
     /**
-     * The amount of ZND transferred with the message.
+     * The amount of Zond transferred with the message.
      *
      * This is transferred value for ::ZVMC_CALL or apparent value for ::ZVMC_DELEGATECALL.
      * Defined as `v` or `v~` in the Yellow Paper.

@@ -2,5 +2,5 @@ contract ClientReceipt {
     constructor() payable {}
 }
 // ----
-// constructor(), 1 znd ->
+// constructor(), 1 zond ->
 // balance -> 1000000000000000000

@@ -5,7 +5,7 @@
 " block.number "
 " block.timestamp "
 " days "
-" znd "
+" zond "
 " gasleft() "
 " gplanck "
 " hours "

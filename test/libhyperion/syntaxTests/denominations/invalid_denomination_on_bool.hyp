@@ -1,5 +1,5 @@
 contract C {
-	bool constant x = true znd;
+	bool constant x = true zond;
 }
 // ----
-// ParserError 2314: (37-40): Expected ';' but got 'znd'
+// ParserError 2314: (37-40): Expected ';' but got 'zond'

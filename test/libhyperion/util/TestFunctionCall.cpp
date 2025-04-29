@@ -50,7 +50,7 @@ std::string TestFunctionCall::format(
 		std::string colon = formatToken(Token::Colon);
 		std::string comma = formatToken(Token::Comma);
 		std::string comment = formatToken(Token::Comment);
-		std::string znd = formatToken(Token::ZND);
+		std::string zond = formatToken(Token::Zond);
 		std::string planck = formatToken(Token::Planck);
 		std::string newline = formatToken(Token::Newline);
 		std::string failure = formatToken(Token::Failure);
@@ -70,8 +70,8 @@ std::string TestFunctionCall::format(
 		{
 			switch (m_call.value.unit)
 			{
-			case FunctionValueUnit::ZND:
-				stream << comma << ws << (m_call.value.value / exp256(10, 18)) << ws << znd;
+			case FunctionValueUnit::Zond:
+				stream << comma << ws << (m_call.value.value / exp256(10, 18)) << ws << zond;
 				break;
 			case FunctionValueUnit::Planck:
 				stream << comma << ws << m_call.value.value << ws << planck;

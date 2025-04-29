@@ -5,4 +5,4 @@ contract C is A {
     fallback() external payable { }
 }
 // ----
-// Warning 3628: (49-104): This contract has a payable fallback function, but no receive znd function. Consider adding a receive znd function.
+// Warning 3628: (49-104): This contract has a payable fallback function, but no receive zond function. Consider adding a receive zond function.

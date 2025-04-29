@@ -1,5 +1,5 @@
 contract C {
-	string s = "abc" znd;
+	string s = "abc" zond;
 }
 // ----
-// ParserError 2314: (31-34): Expected ';' but got 'znd'
+// ParserError 2314: (31-34): Expected ';' but got 'zond'

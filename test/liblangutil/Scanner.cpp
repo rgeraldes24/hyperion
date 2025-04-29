@@ -572,12 +572,12 @@ BOOST_AUTO_TEST_CASE(comments_mixed_in_sequence)
 	BOOST_CHECK_EQUAL(scanner.currentCommentLiteral(), "documentation comment ");
 }
 
-BOOST_AUTO_TEST_CASE(znd_subdenominations)
+BOOST_AUTO_TEST_CASE(zond_subdenominations)
 {
-	TestScanner scanner("planck gplanck znd");
+	TestScanner scanner("planck gplanck zond");
 	BOOST_CHECK_EQUAL(scanner.currentToken(), Token::SubPlanck);
 	BOOST_CHECK_EQUAL(scanner.next(), Token::SubGplanck);
-	BOOST_CHECK_EQUAL(scanner.next(), Token::SubZND);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::SubZond);
 }
 
 BOOST_AUTO_TEST_CASE(time_subdenominations)
