@@ -282,7 +282,7 @@ the source account is also not modified.
 Furthermore, a transaction is always cryptographically signed by the sender (creator).
 This makes it straightforward to guard access to specific modifications of the
 database. In the example of the electronic currency, a simple check ensures that
-only the person holding the keys to the account can transfer some compensation, e.g. ZND, from it.
+only the person holding the keys to the account can transfer some compensation, e.g. Zond, from it.
 
 .. index:: ! block
 
@@ -359,8 +359,8 @@ Every account has a persistent key-value store mapping 256-bit words to 256-bit
 words called **storage**.
 
 Furthermore, every account has a **balance** in
-ZND (in "Planck" to be exact, ``1 znd`` is ``10**18 planck``) which can be modified by sending transactions that
-include ZND.
+Zond (in "Planck" to be exact, ``1 zond`` is ``10**18 planck``) which can be modified by sending transactions that
+include Zond.
 
 .. index:: ! transaction
 
@@ -369,7 +369,7 @@ Transactions
 
 A transaction is a message that is sent from one account to another
 account (which might be the same or empty, see below).
-It can include binary data (which is called "payload") and ZND.
+It can include binary data (which is called "payload") and Zond.
 
 If the target account contains code, that code is executed and
 the payload is provided as input data.
@@ -480,10 +480,10 @@ assembly documentation.
 Message Calls
 =============
 
-Contracts can call other contracts or send ZND to non-contract
+Contracts can call other contracts or send Zond to non-contract
 accounts by the means of message calls. Message calls are similar
 to transactions, in that they have a source, a target, data payload,
-ZND, gas and return data. In fact, every transaction consists of
+Zond, gas and return data. In fact, every transaction consists of
 a top-level message call which in turn can create further message calls.
 
 A contract can decide how much of its remaining **gas** should be sent
@@ -556,12 +556,12 @@ Deactivate and Self-destruct
 ============================
 
 Removing the contract in theory sounds like a good idea, but it is potentially
-dangerous, as if someone sends ZND to removed contracts, the ZND is forever
+dangerous, as if someone sends Zond to removed contracts, the Zond is forever
 lost.
 
 If you want to deactivate your contracts, you should instead **disable** them
 by changing some internal state which causes all functions to revert. This
-makes it impossible to use the contract, as it returns ZND immediately.
+makes it impossible to use the contract, as it returns Zond immediately.
 
 
 .. index:: ! precompiled contracts, ! precompiles, ! contract;precompiled

@@ -62,7 +62,7 @@ New: 'new';
 /**
  * Unit denomination for numbers.
  */
-SubDenomination: 'planck' | 'gplanck' | 'znd' | 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
+SubDenomination: 'planck' | 'gplanck' | 'zond' | 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
 Override: 'override';
 Payable: 'payable';
 Pragma: 'pragma' -> pushMode(PragmaMode);
