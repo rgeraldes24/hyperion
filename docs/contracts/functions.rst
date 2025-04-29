@@ -36,7 +36,7 @@ that call them, similar to internal library functions.
 .. note::
     Functions defined outside a contract are still always executed
     in the context of a contract.
-    They still can call other contracts, send them ZND and destroy the contract that called them,
+    They still can call other contracts, send them Zond and destroy the contract that called them,
     among other things. The main difference to functions defined inside a contract
     is that free functions do not have direct access to the variable ``this``, storage variables and functions
     not in their scope.
@@ -176,7 +176,7 @@ The following statements are considered modifying the state:
 #. Writing to state variables.
 #. :ref:`Emitting events <events>`.
 #. :ref:`Creating other contracts <creating-contracts>`.
-#. Sending ZND via calls.
+#. Sending Zond via calls.
 #. Calling any function not marked ``view`` or ``pure``.
 #. Using low-level calls.
 #. Using inline assembly that contains certain opcodes.
@@ -275,11 +275,11 @@ This behavior is also in line with the ``STATICCALL`` opcode.
 Special Functions
 =================
 
-.. index:: ! receive znd function, function;receive, ! receive
+.. index:: ! receive zond function, function;receive, ! receive
 
-.. _receive-znd-function:
+.. _receive-zond-function:
 
-Receive ZND Function
+Receive Zond Function
 ----------------------
 
 A contract can have at most one ``receive`` function, declared using
@@ -291,11 +291,11 @@ It can be virtual, can override and can have modifiers.
 
 The receive function is executed on a
 call to the contract with empty calldata. This is the function that is executed
-on plain ZND transfers (e.g. via ``.send()`` or ``.transfer()``). If no such
+on plain Zond transfers (e.g. via ``.send()`` or ``.transfer()``). If no such
 function exists, but a payable :ref:`fallback function <fallback-function>`
-exists, the fallback function will be called on a plain ZND transfer. If
-neither a receive ZND nor a payable fallback function is present, the
-contract cannot receive ZND through a transaction that does not represent a payable function call and throws an
+exists, the fallback function will be called on a plain Zond transfer. If
+neither a receive Zond nor a payable fallback function is present, the
+contract cannot receive Zond through a transaction that does not represent a payable function call and throws an
 exception.
 
 In the worst case, the ``receive`` function can only rely on 2300 gas being
@@ -306,29 +306,29 @@ will consume more gas than the 2300 gas stipend:
 - Writing to storage
 - Creating a contract
 - Calling an external function which consumes a large amount of gas
-- Sending ZND
+- Sending Zond
 
 .. warning::
-    When ZND is sent directly to a contract (without a function call, i.e. sender uses ``send`` or ``transfer``)
-    but the receiving contract does not define a receive ZND function or a payable fallback function,
-    an exception will be thrown, sending back the ZND (this was different
-    before Hyperion v0.4.0). If you want your contract to receive ZND,
-    you have to implement a receive ZND function (using payable fallback functions for receiving ZND is
+    When Zond is sent directly to a contract (without a function call, i.e. sender uses ``send`` or ``transfer``)
+    but the receiving contract does not define a receive Zond function or a payable fallback function,
+    an exception will be thrown, sending back the Zond (this was different
+    before Hyperion v0.4.0). If you want your contract to receive Zond,
+    you have to implement a receive Zond function (using payable fallback functions for receiving Zond is
     not recommended, since the fallback is invoked and would not fail for interface confusions
     on the part of the sender).
 
 
 .. warning::
-    A contract without a receive ZND function can receive ZND as a
+    A contract without a receive Zond function can receive Zond as a
     recipient of a *coinbase transaction* (aka *miner block reward*).
 
-    A contract cannot react to such ZND transfers and thus also
+    A contract cannot react to such Zond transfers and thus also
     cannot reject them. This is a design choice of the ZVM and
     Hyperion cannot work around it.
 
     It also means that ``address(this).balance`` can be higher
     than the sum of some manual accounting implemented in a
-    contract (i.e. having a counter updated in the receive ZND function).
+    contract (i.e. having a counter updated in the receive Zond function).
 
 Below you can see an example of a Sink contract that uses function ``receive``.
 
@@ -337,7 +337,7 @@ Below you can see an example of a Sink contract that uses function ``receive``.
     // SPDX-License-Identifier: GPL-3.0
     pragma hyperion >=0.1.0;
 
-    // This contract keeps all ZND sent to it with no way
+    // This contract keeps all Zond sent to it with no way
     // to get it back.
     contract Sink {
         event Received(address, uint);
@@ -361,8 +361,8 @@ and can have modifiers.
 
 The fallback function is executed on a call to the contract if none of the other
 functions match the given function signature, or if no data was supplied at
-all and there is no :ref:`receive ZND function <receive-znd-function>`.
-The fallback function always receives data, but in order to also receive ZND
+all and there is no :ref:`receive Zond function <receive-zond-function>`.
+The fallback function always receives data, but in order to also receive Zond
 it must be marked ``payable``.
 
 If the version with parameters is used, ``input`` will contain the full data sent to the contract
@@ -371,7 +371,7 @@ ABI-encoded. Instead it will be returned without modifications (not even padding
 
 In the worst case, if a payable fallback function is also used in
 place of a receive function, it can only rely on 2300 gas being
-available (see :ref:`receive ZND function <receive-znd-function>`
+available (see :ref:`receive Zond function <receive-zond-function>`
 for a brief description of the implications of this).
 
 Like any function, the fallback function can execute complex
@@ -379,10 +379,10 @@ operations as long as there is enough gas passed on to it.
 
 .. warning::
     A ``payable`` fallback function is also executed for
-    plain ZND transfers, if no :ref:`receive ZND function <receive-znd-function>`
-    is present. It is recommended to always define a receive ZND
+    plain Zond transfers, if no :ref:`receive Zond function <receive-zond-function>`
+    is present. It is recommended to always define a receive Zond
     function as well, if you define a payable fallback function
-    to distinguish ZND transfers from interface confusions.
+    to distinguish Zond transfers from interface confusions.
 
 .. note::
     If you want to decode the input data, you can check the first four bytes
@@ -403,7 +403,7 @@ operations as long as there is enough gas passed on to it.
         uint x;
         // This function is called for all messages sent to
         // this contract (there is no other function).
-        // Sending ZND to this contract will cause an exception,
+        // Sending Zond to this contract will cause an exception,
         // because the fallback function does not have the `payable`
         // modifier.
         fallback() external { x = 1; }
@@ -413,13 +413,13 @@ operations as long as there is enough gas passed on to it.
         uint x;
         uint y;
         // This function is called for all messages sent to
-        // this contract, except plain ZND transfers
+        // this contract, except plain Zond transfers
         // (there is no other function except the receive function).
         // Any call with non-empty calldata to this contract will execute
-        // the fallback function (even if ZND is sent along with the call).
+        // the fallback function (even if Zond is sent along with the call).
         fallback() external payable { x = 1; y = msg.value; }
 
-        // This function is called for plain ZND transfers, i.e.
+        // This function is called for plain Zond transfers, i.e.
         // for every call with empty calldata.
         receive() external payable { x = 2; y = msg.value; }
     }
@@ -435,9 +435,9 @@ operations as long as there is enough gas passed on to it.
             // It has to be converted to the ``address payable`` type to even allow calling ``send`` on it.
             address payable testPayable = payable(address(test));
 
-            // If someone sends ZND to that contract,
+            // If someone sends Zond to that contract,
             // the transfer will fail, i.e. this returns false here.
-            return testPayable.send(2 znd);
+            return testPayable.send(2 zond);
         }
 
         function callTestPayable(TestPayable test) public returns (bool) {
@@ -448,12 +448,12 @@ operations as long as there is enough gas passed on to it.
             require(success);
             // results in test.x becoming == 1 and test.y becoming 1.
 
-            // If someone sends ZND to that contract, the receive function in TestPayable will be called.
+            // If someone sends Zond to that contract, the receive function in TestPayable will be called.
             // Since that function writes to storage, it takes more gas than is available with a
             // simple ``send`` or ``transfer``. Because of that, we have to use a low-level call.
-            (success,) = address(test).call{value: 2 znd}("");
+            (success,) = address(test).call{value: 2 zond}("");
             require(success);
-            // results in test.x becoming == 2 and test.y becoming 2 znd.
+            // results in test.x becoming == 2 and test.y becoming 2 zond.
 
             return true;
         }
