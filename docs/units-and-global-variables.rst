@@ -4,19 +4,19 @@
 Units and Globally Available Variables
 **************************************
 
-.. index:: ! planck, ! gplanck, ! znd, ! denomination;znd
+.. index:: ! planck, ! gplanck, ! zond, ! denomination;znd
 
-ZND Units
+Zond Units
 ===========
 
-A literal number can take a suffix of ``planck``, ``gplanck`` or ``znd`` to specify a subdenomination of ZND, where ZND numbers without a postfix are assumed to be Planck.
+A literal number can take a suffix of ``planck``, ``gplanck`` or ``zond`` to specify a subdenomination of Zond, where Zond numbers without a postfix are assumed to be Planck.
 
 .. code-block:: hyperion
     :force:
 
     assert(1 planck == 1);
     assert(1 gplanck == 1e9);
-    assert(1 znd == 1e18);
+    assert(1 zond == 1e18);
 
 The only effect of the subdenomination suffix is a multiplication by a power of ten.
 
@@ -100,7 +100,7 @@ Block and Transaction Properties
 
     Both the timestamp and the block hash can be influenced by miners to some degree.
     Bad actors in the mining community can for example run a casino payout function on a chosen hash
-    and just retry a different hash if they did not receive any compensation, e.g. ZND.
+    and just retry a different hash if they did not receive any compensation, e.g. Zond.
 
     The current block timestamp must be strictly larger than the timestamp of the last block,
     but the only guarantee is that it will be somewhere between the timestamps of two
@@ -236,8 +236,8 @@ For more information, see the section on :ref:`address`.
 .. warning::
     There are some dangers in using ``send``: The transfer fails if the call stack depth is at 1024
     (this can always be forced by the caller) and it also fails if the recipient runs out of gas. So in order
-    to make safe ZND transfers, always check the return value of ``send``, use ``transfer`` or even better:
-    Use a pattern where the recipient withdraws the ZND.
+    to make safe Zond transfers, always check the return value of ``send``, use ``transfer`` or even better:
+    Use a pattern where the recipient withdraws the Zond.
 
 .. warning::
     Due to the fact that the ZVM considers a call to a non-existing contract to always succeed,

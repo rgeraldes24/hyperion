@@ -24,9 +24,9 @@ and the extraBalance accounts.
 abstract contract ManagedAccountInterface {
     // The only address with permission to withdraw from this account
     address public owner;
-    // If true, only the owner of the account can receive znd from it
+    // If true, only the owner of the account can receive zond from it
     bool public payOwnerOnly;
-    // The sum of znd (in planck) which has been sent to this contract
+    // The sum of zond (in planck) which has been sent to this contract
     uint public accumulatedInput;
 
     /// @notice Sends `_amount` of planck to _recipient
@@ -48,7 +48,7 @@ contract ManagedAccount is ManagedAccountInterface{
     }
 
     // When the contract receives a transaction without data this is called.
-    // It counts the amount of znd it receives and stores it in
+    // It counts the amount of zond it receives and stores it in
     // accumulatedInput.
     receive() external payable {
         accumulatedInput += msg.value;

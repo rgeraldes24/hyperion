@@ -193,10 +193,10 @@ namespace hyperion::langutil
 	K(Virtual, "virtual", 0)                                           \
 	K(While, "while", 0)                                               \
 	\
-	/* ZND subdenominations */                                       \
+	/* Zond subdenominations */                                       \
 	K(SubPlanck, "planck", 0)                                                \
 	K(SubGplanck, "gplanck", 0)                                              \
-	K(SubZND, "znd", 0)                                            \
+	K(SubZond, "zond", 0)                                            \
 	K(SubSecond, "seconds", 0)                                         \
 	K(SubMinute, "minutes", 0)                                         \
 	K(SubHour, "hours", 0)                                             \
@@ -313,7 +313,7 @@ namespace TokenTraits
 		return op == Token::Pure || op == Token::View || op == Token::Payable;
 	}
 
-	constexpr bool isZNDSubdenomination(Token op) { return op >= Token::SubPlanck && op <= Token::SubZND; }
+	constexpr bool isZondSubdenomination(Token op) { return op >= Token::SubPlanck && op <= Token::SubZond; }
 	constexpr bool isTimeSubdenomination(Token op) { return op == Token::SubSecond || op == Token::SubMinute || op == Token::SubHour || op == Token::SubDay || op == Token::SubWeek; }
 	constexpr bool isReservedKeyword(Token op) { return (Token::After <= op && op <= Token::Var); }
 

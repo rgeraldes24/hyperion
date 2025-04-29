@@ -1255,7 +1255,7 @@ Complete ERC20 Example
         }
         object "runtime" {
             code {
-                // Protection against sending ZND
+                // Protection against sending Zond
                 require(iszero(callvalue()))
 
                 // Dispatcher

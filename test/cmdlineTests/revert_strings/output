@@ -26,12 +26,14 @@ object "C_15" {
             pos := add(pos, 4)
             mstore(pos, 0x20)
             pos := add(pos, 0x20)
-            mstore(pos, 32)
+            mstore(pos, 33)
             pos := add(pos, 0x20)
 
-            mstore(add(pos, 0), "ZND sent to non-payable function")
+            mstore(add(pos, 0), "Zond sent to non-payable functio")
 
-            revert(start, 100)
+            mstore(add(pos, 32), "n")
+
+            revert(start, 132)
 
         }
 
@@ -84,12 +86,14 @@ object "C_15" {
                 pos := add(pos, 4)
                 mstore(pos, 0x20)
                 pos := add(pos, 0x20)
-                mstore(pos, 32)
+                mstore(pos, 33)
                 pos := add(pos, 0x20)
 
-                mstore(add(pos, 0), "ZND sent to non-payable function")
+                mstore(add(pos, 0), "Zond sent to non-payable functio")
 
-                revert(start, 100)
+                mstore(add(pos, 32), "n")
+
+                revert(start, 132)
 
             }
 

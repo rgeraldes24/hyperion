@@ -974,7 +974,7 @@ std::string IRGenerator::deployCode(ContractDefinition const& _contract)
 
 std::string IRGenerator::callValueCheck()
 {
-	return "if callvalue() { " + m_utils.revertReasonIfDebugFunction("ZND sent to non-payable function") + "() }";
+	return "if callvalue() { " + m_utils.revertReasonIfDebugFunction("Zond sent to non-payable function") + "() }";
 }
 
 std::string IRGenerator::dispatchRoutine(ContractDefinition const& _contract)
@@ -994,7 +994,7 @@ std::string IRGenerator::dispatchRoutine(ContractDefinition const& _contract)
 			</cases>
 			default {}
 		}</+cases>
-		<?+receiveZND>if iszero(calldatasize()) { <receiveZND> }</+receiveZND>
+		<?+receiveZond>if iszero(calldatasize()) { <receiveZond> }</+receiveZond>
 		<fallback>
 	)X");
 	t("shr224", m_utils.shiftRightFunction(224));
@@ -1023,14 +1023,14 @@ std::string IRGenerator::dispatchRoutine(ContractDefinition const& _contract)
 		templ["externalFunction"] = generateExternalFunction(_contract, *type);
 	}
 	t("cases", functions);
-	FunctionDefinition const* zndReceiver = _contract.receiveFunction();
-	if (zndReceiver)
+	FunctionDefinition const* zondReceiver = _contract.receiveFunction();
+	if (zondReceiver)
 	{
 		hypAssert(!_contract.isLibrary(), "");
-		t("receiveZND", m_context.enqueueFunctionForCodeGeneration(*zndReceiver) + "() stop()");
+		t("receiveZond", m_context.enqueueFunctionForCodeGeneration(*zondReceiver) + "() stop()");
 	}
 	else
-		t("receiveZND", "");
+		t("receiveZond", "");
 	if (FunctionDefinition const* fallback = _contract.fallbackFunction())
 	{
 		hypAssert(!_contract.isLibrary(), "");
@@ -1051,7 +1051,7 @@ std::string IRGenerator::dispatchRoutine(ContractDefinition const& _contract)
 	}
 	else
 		t("fallback", (
-			zndReceiver ?
+			zondReceiver ?
 			m_utils.revertReasonIfDebugFunction("Unknown signature and no fallback defined") :
 			m_utils.revertReasonIfDebugFunction("Contract does not have fallback nor receive functions")
 		) + "()");

@@ -825,8 +825,8 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 		case FunctionType::Kind::Transfer:
 		{
 			_functionCall.expression().accept(*this);
-			// Provide the gas stipend manually at first because we may send zero znd.
-			// Will be zeroed if we send more than zero znd.
+			// Provide the gas stipend manually at first because we may send zero zond.
+			// Will be zeroed if we send more than zero zond.
 			m_context << u256(zvmasm::GasCosts::callStipend);
 			acceptAndConvert(*arguments.front(), *function.parameterTypes().front(), true);
 			// gas <- gas * !value

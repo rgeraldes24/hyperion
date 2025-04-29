@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE(int_literal)
 	BOOST_CHECK_EQUAL_COLLECTIONS(code.begin(), code.end(), expectation.begin(), expectation.end());
 }
 
-BOOST_AUTO_TEST_CASE(int_with_planck_znd_subdenomination)
+BOOST_AUTO_TEST_CASE(int_with_planck_zond_subdenomination)
 {
 	char const* sourceCode = R"(
 		contract test {
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE(int_with_planck_znd_subdenomination)
 	BOOST_CHECK_EQUAL_COLLECTIONS(code.begin(), code.end(), expectation.begin(), expectation.end());
 }
 
-BOOST_AUTO_TEST_CASE(int_with_gplanck_znd_subdenomination)
+BOOST_AUTO_TEST_CASE(int_with_gplanck_zond_subdenomination)
 {
 	char const* sourceCode = R"(
 		contract test {
@@ -258,12 +258,12 @@ BOOST_AUTO_TEST_CASE(int_with_gplanck_znd_subdenomination)
 	BOOST_CHECK_EQUAL_COLLECTIONS(code.begin(), code.end(), expectation.begin(), expectation.end());
 }
 
-BOOST_AUTO_TEST_CASE(int_with_znd_znd_subdenomination)
+BOOST_AUTO_TEST_CASE(int_with_zond_zond_subdenomination)
 {
 	char const* sourceCode = R"(
 		contract test {
 			constructor() {
-				 uint x = 1 znd;
+				 uint x = 1 zond;
 			}
 		}
 	)";
