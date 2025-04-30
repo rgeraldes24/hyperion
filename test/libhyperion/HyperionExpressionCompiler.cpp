@@ -228,12 +228,12 @@ BOOST_AUTO_TEST_CASE(int_literal)
 	BOOST_CHECK_EQUAL_COLLECTIONS(code.begin(), code.end(), expectation.begin(), expectation.end());
 }
 
-BOOST_AUTO_TEST_CASE(int_with_wei_ether_subdenomination)
+BOOST_AUTO_TEST_CASE(int_with_planck_zond_subdenomination)
 {
 	char const* sourceCode = R"(
 		contract test {
 			constructor() {
-				 uint x = 1 wei;
+				 uint x = 1 planck;
 			}
 		}
 	)";
@@ -243,12 +243,12 @@ BOOST_AUTO_TEST_CASE(int_with_wei_ether_subdenomination)
 	BOOST_CHECK_EQUAL_COLLECTIONS(code.begin(), code.end(), expectation.begin(), expectation.end());
 }
 
-BOOST_AUTO_TEST_CASE(int_with_gwei_ether_subdenomination)
+BOOST_AUTO_TEST_CASE(int_with_gplanck_zond_subdenomination)
 {
 	char const* sourceCode = R"(
 		contract test {
 			function f() public {
-				uint x = 1 gwei;
+				uint x = 1 gplanck;
 			}
 		}
 	)";
@@ -258,12 +258,12 @@ BOOST_AUTO_TEST_CASE(int_with_gwei_ether_subdenomination)
 	BOOST_CHECK_EQUAL_COLLECTIONS(code.begin(), code.end(), expectation.begin(), expectation.end());
 }
 
-BOOST_AUTO_TEST_CASE(int_with_ether_ether_subdenomination)
+BOOST_AUTO_TEST_CASE(int_with_zond_zond_subdenomination)
 {
 	char const* sourceCode = R"(
 		contract test {
 			constructor() {
-				 uint x = 1 ether;
+				 uint x = 1 zond;
 			}
 		}
 	)";

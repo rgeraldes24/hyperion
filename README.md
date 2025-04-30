@@ -39,7 +39,7 @@ A "Hello World" program in Hyperion is of even less use than in other languages,
 
 ```hyperion
 // SPDX-License-Identifier: MIT
-pragma hyperion >=0.6.0 <0.9.0;
+pragma hyperion >=0.1.0;
 
 contract HelloWorld {
     function helloWorld() external pure returns (string memory) {

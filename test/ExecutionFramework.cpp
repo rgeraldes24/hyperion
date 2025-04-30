@@ -202,13 +202,13 @@ void ExecutionFramework::sendMessage(bytes const& _data, bool _isCreation, u256 
 	}
 }
 
-void ExecutionFramework::sendEther(h160 const& _addr, u256 const& _amount)
+void ExecutionFramework::sendZond(h160 const& _addr, u256 const& _amount)
 {
 	m_zvmcHost->newBlock();
 
 	if (m_showMessages)
 	{
-		cout << "SEND_ETHER   " << m_sender.hex() << " -> " << _addr.hex() << ":" << endl;
+		cout << "SEND_ZOND   " << m_sender.hex() << " -> " << _addr.hex() << ":" << endl;
 		if (_amount > 0)
 			cout << " value: " << _amount << endl;
 	}

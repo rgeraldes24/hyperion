@@ -172,23 +172,23 @@ void ContractLevelChecker::checkReceiveFunction(ContractDefinition const& _contr
 		if (function->isReceive())
 		{
 			if (function->libraryFunction())
-				m_errorReporter.declarationError(4549_error, function->location(), "Libraries cannot have receive ether functions.");
+				m_errorReporter.declarationError(4549_error, function->location(), "Libraries cannot have receive zond functions.");
 
 			if (function->stateMutability() != StateMutability::Payable)
 				m_errorReporter.declarationError(
 					7793_error,
 					function->location(),
-					"Receive ether function must be payable, but is \"" +
+					"Receive zond function must be payable, but is \"" +
 					stateMutabilityToString(function->stateMutability()) +
 					"\"."
 				);
 			if (function->visibility() != Visibility::External)
-				m_errorReporter.declarationError(4095_error, function->location(), "Receive ether function must be defined as \"external\".");
+				m_errorReporter.declarationError(4095_error, function->location(), "Receive zond function must be defined as \"external\".");
 
 			if (!function->returnParameters().empty())
-				m_errorReporter.fatalDeclarationError(6899_error, function->returnParameterList()->location(), "Receive ether function cannot return values.");
+				m_errorReporter.fatalDeclarationError(6899_error, function->returnParameterList()->location(), "Receive zond function cannot return values.");
 			if (!function->parameters().empty())
-				m_errorReporter.fatalDeclarationError(6857_error, function->parameterList().location(), "Receive ether function cannot take parameters.");
+				m_errorReporter.fatalDeclarationError(6857_error, function->parameterList().location(), "Receive zond function cannot take parameters.");
 		}
 	}
 }
@@ -548,7 +548,7 @@ void ContractLevelChecker::checkPayableFallbackWithoutReceive(ContractDefinition
 			m_errorReporter.warning(
 				3628_error,
 				_contract.location(),
-				"This contract has a payable fallback function, but no receive ether function. Consider adding a receive ether function.",
+				"This contract has a payable fallback function, but no receive zond function. Consider adding a receive zond function.",
 				SecondarySourceLocation{}.append("The payable fallback function is defined here.", fallback->location())
 			);
 }

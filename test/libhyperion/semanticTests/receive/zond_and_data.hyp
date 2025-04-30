@@ -2,5 +2,5 @@ contract C {
     receive () payable external { }
 }
 // ----
-// (), 1 ether
-// (), 1 ether: 1 -> FAILURE
+// (), 1 zond
+// (), 1 zond: 1 -> FAILURE

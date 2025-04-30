@@ -975,13 +975,13 @@ std::tuple<bool, rational> RationalNumberType::isValidLiteral(Literal const& _li
 	switch (_literal.subDenomination())
 	{
 		case Literal::SubDenomination::None:
-		case Literal::SubDenomination::Wei:
+		case Literal::SubDenomination::Planck:
 		case Literal::SubDenomination::Second:
 			break;
-		case Literal::SubDenomination::Gwei:
+		case Literal::SubDenomination::Gplanck:
 			value *= bigint("1000000000");
 			break;
-		case Literal::SubDenomination::Ether:
+		case Literal::SubDenomination::Zond:
 			value *= bigint("1000000000000000000");
 			break;
 		case Literal::SubDenomination::Minute:
@@ -3136,7 +3136,7 @@ BoolResult FunctionType::isImplicitlyConvertibleTo(Type const& _convertTo) const
 	if (m_stateMutability != StateMutability::Payable && convertTo.stateMutability() == StateMutability::Payable)
 		return false;
 
-	// payable should be convertible to non-payable, because you are free to pay 0 ether
+	// payable should be convertible to non-payable, because you are free to pay 0 zond
 	if (m_stateMutability == StateMutability::Payable && convertTo.stateMutability() == StateMutability::NonPayable)
 		return true;
 

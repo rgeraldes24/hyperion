@@ -4,7 +4,7 @@ version-script: git describe --exact-match --tags 2> /dev/null || echo "develop"
 summary: The Hyperion Contract-Oriented Programming Language
 description: |
   Hyperion is a contract-oriented, high-level language whose syntax is similar
-  to that of JavaScript and it is designed to target the Ethereum Virtual
+  to that of JavaScript and it is designed to target the Zond Virtual
   Machine (ZVM).
 
   Hyperion is statically typed, supports inheritance, libraries and complex

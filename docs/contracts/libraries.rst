@@ -53,7 +53,7 @@ more advanced example to implement a set).
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
 
     // We define a new struct datatype that will be used to
@@ -132,7 +132,7 @@ custom types without the overhead of external function calls:
     :force:
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
 
     struct bigint {
         uint[] limbs;
@@ -207,7 +207,7 @@ In comparison to contracts, libraries are restricted in the following ways:
 
 - they cannot have state variables
 - they cannot inherit nor be inherited
-- they cannot receive Ether
+- they cannot receive Zond
 - they cannot be destroyed
 
 (These might be lifted at a later point.)
@@ -244,7 +244,7 @@ Its value can be obtained from Hyperion using the ``.selector`` member as follow
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     library L {
         function f(uint256) external {}

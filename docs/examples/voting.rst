@@ -33,7 +33,7 @@ of votes.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
     /// @title Voting with delegation.
     contract Ballot {
         // This declares a new complex type which will
@@ -85,7 +85,7 @@ of votes.
         function giveRightToVote(address voter) external {
             // If the first argument of `require` evaluates
             // to `false`, execution terminates and all
-            // changes to the state and to Ether balances
+            // changes to the state and to Zond balances
             // are reverted.
             // This used to consume all gas in old ZVM versions, but
             // not anymore.

@@ -96,7 +96,7 @@ struct InterpreterState
 	u256 prevrandao = (u256(1) << 64) + 1;
 	u256 gaslimit = 4000000;
 	u256 chainid = 0x01;
-	/// The minimum value of basefee: 7 wei.
+	/// The minimum value of basefee: 7 planck.
 	u256 basefee = 0x07;
 	/// Log of changes / effects. Sholud be structured data in the future.
 	std::vector<std::string> trace;

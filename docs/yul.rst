@@ -748,7 +748,7 @@ Since it is the default type of this dialect, it can be omitted.
 The following table lists all builtin functions
 (depending on the ZVM version) and provides a short description of the
 semantics of the function / opcode.
-This document does not want to be a full description of the Ethereum virtual machine.
+This document does not want to be a full description of the Zond virtual machine.
 Please refer to a different document if you are interested in the precise semantics.
 
 Opcodes marked with ``-`` do not return a result and all others return exactly one value.
@@ -839,13 +839,13 @@ the ``dup`` and ``swap`` instructions as well as ``jump`` instructions, labels a
 +-------------------------+-----+---+-----------------------------------------------------------------+
 | address()               |     | F | address of the current contract / execution context             |
 +-------------------------+-----+---+-----------------------------------------------------------------+
-| balance(a)              |     | F | wei balance at address a                                        |
+| balance(a)              |     | F | planck balance at address a                                     |
 +-------------------------+-----+---+-----------------------------------------------------------------+
 | selfbalance()           |     | I | equivalent to balance(address()), but cheaper                   |
 +-------------------------+-----+---+-----------------------------------------------------------------+
 | caller()                |     | F | call sender (excluding ``delegatecall``)                        |
 +-------------------------+-----+---+-----------------------------------------------------------------+
-| callvalue()             |     | F | wei sent together with the current call                         |
+| callvalue()             |     | F | planck sent together with the current call                      |
 +-------------------------+-----+---+-----------------------------------------------------------------+
 | calldataload(p)         |     | F | call data starting from position p (32 bytes)                   |
 +-------------------------+-----+---+-----------------------------------------------------------------+
@@ -867,18 +867,18 @@ the ``dup`` and ``swap`` instructions as well as ``jump`` instructions, labels a
 +-------------------------+-----+---+-----------------------------------------------------------------+
 | extcodehash(a)          |     | C | code hash of address a                                          |
 +-------------------------+-----+---+-----------------------------------------------------------------+
-| create(v, p, n)         |     | F | create new contract with code mem[p...(p+n)) and send v wei     |
+| create(v, p, n)         |     | F | create new contract with code mem[p...(p+n)) and send v planck  |
 |                         |     |   | and return the new address; returns 0 on error                  |
 +-------------------------+-----+---+-----------------------------------------------------------------+
 | create2(v, p, n, s)     |     | C | create new contract with code mem[p...(p+n)) at address         |
 |                         |     |   | keccak256(0xff . this . s . keccak256(mem[p...(p+n)))           |
-|                         |     |   | and send v wei and return the new address, where ``0xff`` is a  |
-|                         |     |   | 1 byte value, ``this`` is the current contract's address        |
+|                         |     |   | and send v planck and return the new address, where ``0xff`` is |
+|                         |     |   | a 1 byte value, ``this`` is the current contract's address      |
 |                         |     |   | as a 20 byte value and ``s`` is a big-endian 256-bit value;     |
 |                         |     |   | returns 0 on error                                              |
 +-------------------------+-----+---+-----------------------------------------------------------------+
 | call(g, a, v, in,       |     | F | call contract at address a with input mem[in...(in+insize))     |
-| insize, out, outsize)   |     |   | providing g gas and v wei and output area                       |
+| insize, out, outsize)   |     |   | providing g gas and v planck and output area                    |
 |                         |     |   | mem[out...(out+outsize)) returning 0 on error (eg. out of gas)  |
 |                         |     |   | and 1 on success                                                |
 |                         |     |   | :ref:`See more <yul-call-return-area>`                          |
@@ -1255,7 +1255,7 @@ Complete ERC20 Example
         }
         object "runtime" {
             code {
-                // Protection against sending Ether
+                // Protection against sending Zond
                 require(iszero(callvalue()))
 
                 // Dispatcher

@@ -1,0 +1,5 @@
+contract C {
+	uint constant gplanck = 1;
+}
+// ----
+// ParserError 2314: (28-35): Expected identifier but got 'gplanck'

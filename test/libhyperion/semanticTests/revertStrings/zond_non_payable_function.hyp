@@ -4,5 +4,5 @@ contract C {
 // ====
 // revertStrings: debug
 // ----
-// f(), 1 ether -> FAILURE, hex"08c379a0", 0x20, 34, "Ether sent to non-payable functi", "on"
+// f(), 1 zond -> FAILURE, hex"08c379a0", 0x20, 33, "Zond sent to non-payable functio","n"
 // () -> FAILURE, hex"08c379a0", 0x20, 53, "Contract does not have fallback ", "nor receive functions"

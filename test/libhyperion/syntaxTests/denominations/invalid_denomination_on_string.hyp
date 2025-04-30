@@ -1,5 +1,5 @@
 contract C {
-	string s = "abc" ether;
+	string s = "abc" zond;
 }
 // ----
-// ParserError 2314: (31-36): Expected ';' but got 'ether'
+// ParserError 2314: (31-35): Expected ';' but got 'zond'

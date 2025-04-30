@@ -279,17 +279,17 @@ FunctionValue TestFileParser::parseFunctionCallValue()
 	{
 		u256 value{ parseDecimalNumber() };
 		Token token = m_scanner.currentToken();
-		if (token != Token::Ether && token != Token::Wei)
-			BOOST_THROW_EXCEPTION(TestParserError("Invalid value unit provided. Coins can be wei or ether."));
+		if (token != Token::Zond && token != Token::Planck)
+			BOOST_THROW_EXCEPTION(TestParserError("Invalid value unit provided. Coins can be planck or zond."));
 
 		m_scanner.scanNextToken();
 
-		FunctionValueUnit unit = token == Token::Wei ? FunctionValueUnit::Wei : FunctionValueUnit::Ether;
-		return { (unit == FunctionValueUnit::Wei ? u256(1) : exp256(u256(10), u256(18))) * value, unit };
+		FunctionValueUnit unit = token == Token::Planck ? FunctionValueUnit::Planck : FunctionValueUnit::Zond;
+		return { (unit == FunctionValueUnit::Planck ? u256(1) : exp256(u256(10), u256(18))) * value, unit };
 	}
 	catch (std::exception const&)
 	{
-		BOOST_THROW_EXCEPTION(TestParserError("Ether value encoding invalid."));
+		BOOST_THROW_EXCEPTION(TestParserError("Zond value encoding invalid."));
 	}
 }
 
@@ -569,8 +569,8 @@ void TestFileParser::Scanner::scanNextToken()
 	auto detectKeyword = [](std::string const& _literal = "") -> std::pair<Token, std::string> {
 		if (_literal == "true") return {Token::Boolean, "true"};
 		if (_literal == "false") return {Token::Boolean, "false"};
-		if (_literal == "ether") return {Token::Ether, ""};
-		if (_literal == "wei") return {Token::Wei, ""};
+		if (_literal == "zond") return {Token::Zond, ""};
+		if (_literal == "planck") return {Token::Planck, ""};
 		if (_literal == "left") return {Token::Left, ""};
 		if (_literal == "library") return {Token::Library, ""};
 		if (_literal == "right") return {Token::Right, ""};

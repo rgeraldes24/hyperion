@@ -243,7 +243,7 @@ Given the contract:
     :force:
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract Foo {
         function bar(bytes3[2] memory) public pure {}
@@ -519,7 +519,7 @@ reverts with a custom error of "insufficient balance":
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
 
     contract TestToken {
         error InsufficientBalance(uint256 available, uint256 required);
@@ -550,7 +550,7 @@ JSON
 The JSON format for a contract's interface is given by an array of function, event and error descriptions.
 A function description is a JSON object with the fields:
 
-- ``type``: ``"function"``, ``"constructor"``, ``"receive"`` (the :ref:`"receive Ether" function <receive-ether-function>`) or ``"fallback"`` (the :ref:`"default" function <fallback-function>`);
+- ``type``: ``"function"``, ``"constructor"``, ``"receive"`` (the :ref:`"receive Zond" function <receive-zond-function>`) or ``"fallback"`` (the :ref:`"default" function <fallback-function>`);
 - ``name``: the name of the function;
 - ``inputs``: an array of objects, each of which contains:
 
@@ -561,12 +561,12 @@ A function description is a JSON object with the fields:
 - ``outputs``: an array of objects similar to ``inputs``.
 - ``stateMutability``: a string with one of the following values: ``pure`` (:ref:`specified to not read
   blockchain state <pure-functions>`), ``view`` (:ref:`specified to not modify the blockchain
-  state <view-functions>`), ``nonpayable`` (function does not accept Ether - the default) and ``payable`` (function accepts Ether).
+  state <view-functions>`), ``nonpayable`` (function does not accept Zond - the default) and ``payable`` (function accepts Zond).
 
 Constructor, receive, and fallback never have ``name`` or ``outputs``. Receive and fallback do not have ``inputs`` either.
 
 .. note::
-    Sending non-zero Ether to non-payable function will revert the transaction.
+    Sending non-zero Zond to non-payable function will revert the transaction.
 
 .. note::
     The state mutability ``nonpayable`` is reflected in Hyperion by not specifying
@@ -608,8 +608,7 @@ For example,
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
-
+    pragma hyperion >=0.1.0;
 
     contract Test {
         constructor() { b = hex"12345678901234567890123456789012"; }
@@ -662,7 +661,7 @@ As an example, the code
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
     pragma abicoder v2;
 
     contract Test {

@@ -1,0 +1,17 @@
+contract D {
+	function f() public pure {
+		assert(1000000000000000000 planck == 1 zond);
+		assert(100000000000000000 planck == 1 zond);
+		assert(1000000000 planck == 1 gplanck);
+		assert(100000000 planck == 1 gplanck);
+		assert(1000000000 gplanck == 1 zond);
+		assert(100000000 gplanck == 1 zond);
+	}
+}
+// ====
+// SMTEngine: all
+// ----
+// Warning 6328: (91-134): CHC: Assertion violation happens here.
+// Warning 6328: (180-217): CHC: Assertion violation happens here.
+// Warning 6328: (261-296): CHC: Assertion violation happens here.
+// Info 1391: CHC: 3 verification condition(s) proved safe! Enable the model checker option "show proved safe" to see all of them.

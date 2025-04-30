@@ -44,7 +44,7 @@ this nonsensical example:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     // This will report a warning
     contract C {
@@ -79,16 +79,16 @@ all function arguments have to be copied to memory.
     A function call from one contract to another does not create its own transaction,
     it is a message call as part of the overall transaction.
 
-When calling functions of other contracts, you can specify the amount of Wei or
+When calling functions of other contracts, you can specify the amount of Planck or
 gas sent with the call with the special options ``{value: 10, gas: 10000}``.
 Note that it is discouraged to specify gas values explicitly, since the gas costs
-of opcodes can change in the future. Any Wei you send to the contract is added
+of opcodes can change in the future. Any Planck you send to the contract is added
 to the total balance of that contract:
 
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract InfoFeed {
         function info() public payable returns (uint ret) { return 42; }
@@ -156,7 +156,7 @@ parameters from the function declaration, but can be in arbitrary order.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract C {
         mapping(uint => uint) data;
@@ -181,7 +181,7 @@ can still return a value to the caller by use of the ``return`` statement.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract C {
         // omitted name for parameter
@@ -205,7 +205,7 @@ is compiled so recursive creation-dependencies are not possible.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
     contract D {
         uint public x;
         constructor(uint a) payable {
@@ -222,13 +222,13 @@ is compiled so recursive creation-dependencies are not possible.
         }
 
         function createAndEndowD(uint arg, uint amount) public payable {
-            // Send ether along with the creation
+            // Send zond along with the creation
             D newD = new D{value: amount}(arg);
             newD.x();
         }
     }
 
-As seen in the example, it is possible to send Ether while creating
+As seen in the example, it is possible to send Zond while creating
 an instance of ``D`` using the ``value`` option, but it is not possible
 to limit the amount of gas.
 If the creation fails (due to out-of-stack, not enough balance or other problems),
@@ -260,7 +260,7 @@ which only need to be created if there is a dispute.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
     contract D {
         uint public x;
         constructor(uint a) {
@@ -329,7 +329,7 @@ groupings of expressions.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract C {
         uint index;
@@ -375,7 +375,7 @@ because only a reference and not a copy is passed.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract C {
         uint[20] x;
@@ -434,7 +434,7 @@ the two variables have the same name but disjoint scopes.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
     contract C {
         function minimalScoping() pure public {
             {
@@ -456,7 +456,7 @@ In any case, you will get a warning about the outer variable being shadowed.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
     // This will report a warning
     contract C {
         function f() pure public returns (uint) {
@@ -478,7 +478,7 @@ In any case, you will get a warning about the outer variable being shadowed.
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
     // This will not compile
     contract C {
         function f() pure public returns (uint) {
@@ -510,7 +510,7 @@ To obtain the previous behavior, an ``unchecked`` block can be used:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >=0.1.0;
     contract C {
         function f(uint a, uint b) pure public returns (uint) {
             // This subtraction will wrap on underflow.
@@ -639,9 +639,9 @@ in the following situations:
 #. Calling ``require(x)`` where ``x`` evaluates to ``false``.
 #. If you use ``revert()`` or ``revert("description")``.
 #. If you perform an external function call targeting a contract that contains no code.
-#. If your contract receives Ether via a public function without
+#. If your contract receives Zond via a public function without
    ``payable`` modifier (including the constructor and the fallback function).
-#. If your contract receives Ether via a public getter function.
+#. If your contract receives Zond via a public getter function.
 
 For the following cases, the error data from the external call
 (if provided) is forwarded. This means that it can either cause
@@ -671,7 +671,7 @@ and ``assert`` for internal error checking.
     :force:
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract Sharer {
         function sendHalf(address payable addr) public payable returns (uint balance) {
@@ -680,7 +680,7 @@ and ``assert`` for internal error checking.
             addr.transfer(msg.value / 2);
             // Since transfer throws an exception on failure and
             // cannot call back here, there should be no way for us to
-            // still have half of the Ether.
+            // still have half of the Zond.
             assert(address(this).balance == balanceBeforeTransfer - msg.value / 2);
             return address(this).balance;
         }
@@ -735,18 +735,18 @@ together with ``revert`` and the equivalent ``require``:
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion ^0.1.0;
+    pragma hyperion >0.1.0;
 
     contract VendingMachine {
         address owner;
         error Unauthorized();
         function buy(uint amount) public payable {
-            if (amount > msg.value / 2 ether)
-                revert("Not enough Ether provided.");
+            if (amount > msg.value / 2 zond)
+                revert("Not enough Zond provided.");
             // Alternative way to do it:
             require(
-                amount <= msg.value / 2 ether,
-                "Not enough Ether provided."
+                amount <= msg.value / 2 zond,
+                "Not enough Zond provided."
             );
             // Perform the purchase.
         }
@@ -769,7 +769,7 @@ for example if they are just strings.
     ``condition`` is true.
 
 The provided string is :ref:`abi-encoded <ABI>` as if it were a call to a function ``Error(string)``.
-In the above example, ``revert("Not enough Ether provided.");`` returns the following hexadecimal as error return data:
+In the above example, ``revert("Not enough Zond provided.");`` returns the following hexadecimal as error return data:
 
 .. code::
 
@@ -790,7 +790,7 @@ A failure in an external call can be caught using a try/catch statement, as foll
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1;
+    pragma hyperion >=0.1.0;
 
     interface DataFeed { function getData(address token) external returns (uint value); }
 

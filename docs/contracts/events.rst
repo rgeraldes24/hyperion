@@ -89,7 +89,7 @@ Example
 .. code-block:: hyperion
 
     // SPDX-License-Identifier: GPL-3.0
-    pragma hyperion >=0.0.1 <0.2.0;
+    pragma hyperion >=0.1.0;
 
     contract ClientReceipt {
         event Deposit(
