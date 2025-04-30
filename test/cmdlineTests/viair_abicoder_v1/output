@@ -5,7 +5,7 @@ object "test_11" {
     code {
         /// @src 0:79:169  "contract test {..."
         mstore(64, memoryguard(128))
-        if callvalue() { revert_error_86145825064446ef9f4ad86eecc8f956cfef801b3270c1a70ec30d94ec94cd8b() }
+        if callvalue() { revert_error_c51b573d57c2d2c06c47452bd71c2ef51b7bdac1648334dac5064732f4ea03df() }
 
         constructor_test_11()
 
@@ -18,7 +18,7 @@ object "test_11" {
             memPtr := mload(64)
         }
 
-        function revert_error_86145825064446ef9f4ad86eecc8f956cfef801b3270c1a70ec30d94ec94cd8b() {
+        function revert_error_c51b573d57c2d2c06c47452bd71c2ef51b7bdac1648334dac5064732f4ea03df() {
             revert(0, 0)
         }
 
@@ -63,7 +63,7 @@ object "test_11" {
                 memPtr := mload(64)
             }
 
-            function revert_error_86145825064446ef9f4ad86eecc8f956cfef801b3270c1a70ec30d94ec94cd8b() {
+            function revert_error_c51b573d57c2d2c06c47452bd71c2ef51b7bdac1648334dac5064732f4ea03df() {
                 revert(0, 0)
             }
 
@@ -93,7 +93,7 @@ object "test_11" {
 
             function external_fun_f_10() {
 
-                if callvalue() { revert_error_86145825064446ef9f4ad86eecc8f956cfef801b3270c1a70ec30d94ec94cd8b() }
+                if callvalue() { revert_error_c51b573d57c2d2c06c47452bd71c2ef51b7bdac1648334dac5064732f4ea03df() }
                 abi_decode_tuple_(4, calldatasize())
                 let ret_0 :=  fun_f_10()
                 let memPos := allocate_unbounded()
