@@ -435,8 +435,8 @@ public:
         record_account_access(addr);
 
         // Accessing precompiled contracts is always warm.
-        if (addr >= "Z0000000000000000000000000000000000000001"_address &&
-            addr <= "Z0000000000000000000000000000000000000009"_address)
+        if (addr >= "Z000000000000000000000000000000000000000000000001"_address &&
+            addr <= "Z000000000000000000000000000000000000000000000009"_address)
             return ZVMC_ACCESS_WARM;
 
         return already_accessed ? ZVMC_ACCESS_WARM : ZVMC_ACCESS_COLD;

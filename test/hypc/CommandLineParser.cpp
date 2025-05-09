@@ -128,8 +128,8 @@ BOOST_AUTO_TEST_CASE(cli_mode_options)
 			"--no-color",
 			"--error-codes",
 			"--libraries="
-				"dir1/file1.hyp:L=Z1234567890123456789012345678901234567890,"
-				"dir2/file2.hyp:L=Z1111122222333334444455555666667777788888",
+				"dir1/file1.hyp:L=Z123456789012345678901234567890123456789012345678,"
+				"dir2/file2.hyp:L=Z111112222233333444445555566666777778888899999000",
 			"--ast-compact-json", "--asm", "--asm-json", "--opcodes", "--bin", "--bin-runtime", "--abi",
 			"--ir", "--ir-ast-json", "--ir-optimized", "--ir-optimized-ast-json", "--hashes", "--userdoc", "--devdoc", "--metadata", "--storage-layout",
 			"--gas",
@@ -308,8 +308,8 @@ BOOST_AUTO_TEST_CASE(assembly_mode_options)
 			"--no-color",
 			"--error-codes",
 			"--libraries="
-				"dir1/file1.hyp:L=Z1234567890123456789012345678901234567890,"
-				"dir2/file2.hyp:L=Z1111122222333334444455555666667777788888",
+				"dir1/file1.hyp:L=Z123456789012345678901234567890123456789012345678,"
+				"dir2/file2.hyp:L=Z111112222233333444445555566666777778888899999000",
 			"--asm",
 			"--bin",
 			"--ir-optimized",
@@ -388,8 +388,8 @@ BOOST_AUTO_TEST_CASE(standard_json_mode_options)
 		"--no-color",                      // Accepted but has no effect in Standard JSON mode
 		"--error-codes",                   // Accepted but has no effect in Standard JSON mode
 		"--libraries="                     // Ignored in Standard JSON mode
-			"dir1/file1.hyp:L=Z1234567890123456789012345678901234567890,"
-			"dir2/file2.hyp:L=Z1111122222333334444455555666667777788888",
+			"dir1/file1.hyp:L=Z123456789012345678901234567890123456789012345678,"
+			"dir2/file2.hyp:L=Z111112222233333444445555566666777778888899999000",
 		"--gas",                           // Accepted but has no effect in Standard JSON mode
 		"--combined-json=abi,bin",         // Accepted but has no effect in Standard JSON mode
 	};
