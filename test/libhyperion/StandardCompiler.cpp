@@ -804,7 +804,7 @@ BOOST_AUTO_TEST_CASE(libraries_invalid_length)
 			"libraries": {
 				"library.hyp": {
 					"L1": "Z42",
-					"L2": "Z4200000000000000000000000000000000000001ff"
+					"L2": "Z420000000000000000000000000000000000000000000001ff"
 				}
 			}
 		},
@@ -850,7 +850,7 @@ BOOST_AUTO_TEST_CASE(library_linking)
 		"settings": {
 			"libraries": {
 				"library.hyp": {
-					"L": "Z4200000000000000000000000000000000000001"
+					"L": "Z420000000000000000000000000000000000000000000001"
 				}
 			},
 			"outputSelection": {
@@ -888,7 +888,7 @@ BOOST_AUTO_TEST_CASE(linking_yul)
 		"settings": {
 			"libraries": {
 				"fileB": {
-					"L": "Z4200000000000000000000000000000000000001"
+					"L": "Z420000000000000000000000000000000000000000000001"
 				}
 			},
 			"outputSelection": {
@@ -920,7 +920,7 @@ BOOST_AUTO_TEST_CASE(linking_yul_empty_link_reference)
 		"settings": {
 			"libraries": {
 				"": {
-					"": "Z4200000000000000000000000000000000000001"
+					"": "Z420000000000000000000000000000000000000000000001"
 				}
 			},
 			"outputSelection": {
@@ -952,7 +952,7 @@ BOOST_AUTO_TEST_CASE(linking_yul_no_filename_in_link_reference)
 		"settings": {
 			"libraries": {
 				"": {
-					"L": "Z4200000000000000000000000000000000000001"
+					"L": "Z420000000000000000000000000000000000000000000001"
 				}
 			},
 			"outputSelection": {
@@ -984,7 +984,7 @@ BOOST_AUTO_TEST_CASE(linking_yul_same_library_name_different_files)
 		"settings": {
 			"libraries": {
 				"fileB": {
-					"L": "Z4200000000000000000000000000000000000001"
+					"L": "Z420000000000000000000000000000000000000000000001"
 				}
 			},
 			"outputSelection": {

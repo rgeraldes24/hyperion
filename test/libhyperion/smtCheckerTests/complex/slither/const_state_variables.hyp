@@ -21,7 +21,7 @@ contract A {
 
 contract B is A {
 
-    address public mySistersAddress = Z999999cf1046e68e36E1aA2E0E07105eDDD1f08E;
+    address public mySistersAddress = Ze44Beb642C5F57EF145a6205941169d4D591b4Ff849A73A3;
 
     fallback () external {
         used = 0;
