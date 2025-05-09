@@ -222,7 +222,7 @@ Operators:
     If you convert a type that uses a larger byte size to an ``address``, for example ``bytes32``, then the ``address`` is truncated.
     To reduce conversion ambiguity, starting with version 0.4.24, the compiler will force you to make the truncation explicit in the conversion.
     Take for example the 32-byte value ``0x111122223333444455556666777788889999AAAABBBBCCCCDDDDEEEEFFFFCCCC``.
-
+    // TODO(rgeraldes24)
     You can use ``address(uint160(bytes20(b)))``, which results in ``Z111122223333444455556666777788889999aAaa``,
     or you can use ``address(uint160(uint256(b)))``, which results in ``Z777788889999AaAAbBbbCcccddDdeeeEfFFfCcCc``.
 

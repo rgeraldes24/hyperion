@@ -13,5 +13,5 @@ contract C {
 	}
 }
 // ----
-// testYul() -> Zc06afe3a8444fc0004668591e8306bfb9968e79e
-// testHyp() -> Zc06afe3a8444fc0004668591e8306bfb9968e79e
+// testYul() -> Z19ff20c0ecd6d9dba330eba5095bcb0516bc24ee7b939ad9
+// testHyp() -> Z19ff20c0ecd6d9dba330eba5095bcb0516bc24ee7b939ad9

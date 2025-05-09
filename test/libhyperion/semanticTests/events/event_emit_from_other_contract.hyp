@@ -19,4 +19,4 @@ contract C {
 // gas legacy: 244800
 // gas legacyOptimized: 171615
 // deposit(bytes32), 18 planck: 0x1234 ->
-// ~ emit Deposit(address,bytes32,uint256) from Z137aa4dfc0911524504fcd4d98501f179bc13b4a: #Zc06afe3a8444fc0004668591e8306bfb9968e79e, #0x1234, 0x00
+// ~ emit Deposit(address,bytes32,uint256) from Z3e30f134f630a88ba60546a2b583404659a3033af3034f67: #Z19ff20c0ecd6d9dba330eba5095bcb0516bc24ee7b939ad9, #0x1234, 0x00

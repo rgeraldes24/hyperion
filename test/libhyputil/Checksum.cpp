@@ -34,30 +34,30 @@ BOOST_AUTO_TEST_SUITE(Checksum)
 
 BOOST_AUTO_TEST_CASE(calculate)
 {
-	BOOST_CHECK(!getChecksummedAddress("Z5aaeb6053f3e94c9b9a09f33669435e7ef1beaed").empty());
-	BOOST_CHECK(!getChecksummedAddress("Z0123456789abcdefABCDEF0123456789abcdefAB").empty());
+	BOOST_CHECK(!getChecksummedAddress("Zdf81da12dbbb1300cd8725887bd50ecff9e6f57297c4c5a3").empty());
+	BOOST_CHECK(!getChecksummedAddress("Z0123456789abcdefABCDEF0123456789abcdefABCDEF0123").empty());
 	// no prefix
-	BOOST_CHECK_THROW(getChecksummedAddress("5aaeb6053f3e94c9b9a09f33669435e7ef1beaed"), InvalidAddress);
+	BOOST_CHECK_THROW(getChecksummedAddress("df81da12dbbb1300cd8725887bd50ecff9e6f57297c4c5a3"), InvalidAddress);
 	// too short
-	BOOST_CHECK_THROW(getChecksummedAddress("Z5aaeb6053f3e94c9b9a09f33669435e7ef1beae"), InvalidAddress);
+	BOOST_CHECK_THROW(getChecksummedAddress("Zdf81da12dbbb1300cd8725887bd50ecff9e6f57297c4c5a3"), InvalidAddress);
 	// too long
-	BOOST_CHECK_THROW(getChecksummedAddress("Z5aaeb6053f3e94c9b9a09f33669435e7ef1beaed1"), InvalidAddress);
+	BOOST_CHECK_THROW(getChecksummedAddress("Zdf81da12dbbb1300cd8725887bd50ecff9e6f57297c4c5a31"), InvalidAddress);
 	// non-hex character
-	BOOST_CHECK_THROW(getChecksummedAddress("Z5aaeb6053f3e94c9b9a09f33669435e7ef1beaeK"), InvalidAddress);
+	BOOST_CHECK_THROW(getChecksummedAddress("Zdf81da12dbbb1300cd8725887bd50ecff9e6f57297c4c5aK"), InvalidAddress);
 
 	// the official test suite from EIP-55
 	std::vector<std::string> cases {
 		// all upper case
-		"Z52908400098527886E0F7030069857D2E4169EE7",
-		"Z8617E340B3D01FA5F11F306F4090FD50E238070D",
+		"ZA377CBC7E2EED6C1C26F652B83CB0456C91B8499A936EDD5",
+		"ZE7A35105750CD36E9A3C3035E4E46A7A9E9539FEC6D51F8C",
 		// all lower case
-		"Zde709f2102306220921060314715629080e2fb77",
-		"Z27b1fdb04752bbc536007a920d24acb045561c26",
+		"Ze0e3afa8e503fbd835229cf329580e418c682add7478db62",
+		"Z0db9576bb8227afd79a6059b6bc6a012ffD2ec594d394910",
 		// regular
-		"Z5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed",
-		"ZfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359",
-		"ZdbF03B407c01E7cD3CBea99509d93f8DDDC8C6FB",
-		"ZD1220A0cf47c7B9Be7A2E6BA89F429762e7b9aDb"
+		"ZdF81dA12DBBB1300Cd8725887BD50eCFf9E6F57297C4c5a3",
+		"Z7F27fbe155e575f6387a95F2cCec19A67F28b3e9a6aeCaB0",
+		"Z2eBA8b7e1D3Ada69CB71D79A25f9Ae891a13D38cB668F431",
+		"ZAF5036a2CBea16D47a825F701b062f721c4fC9A3139Da472"
 	};
 
 	for (size_t i = 0; i < cases.size(); i++)
@@ -66,46 +66,46 @@ BOOST_AUTO_TEST_CASE(calculate)
 
 BOOST_AUTO_TEST_CASE(regular)
 {
-	BOOST_CHECK(passesAddressChecksum("Z5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed", true));
-	BOOST_CHECK(passesAddressChecksum("ZfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359", true));
-	BOOST_CHECK(passesAddressChecksum("ZdbF03B407c01E7cD3CBea99509d93f8DDDC8C6FB", true));
-	BOOST_CHECK(passesAddressChecksum("ZD1220A0cf47c7B9Be7A2E6BA89F429762e7b9aDb", true));
+	BOOST_CHECK(passesAddressChecksum("ZdF81dA12DBBB1300Cd8725887BD50eCFf9E6F57297C4c5a3", true));
+	BOOST_CHECK(passesAddressChecksum("Z7F27fbe155e575f6387a95F2cCec19A67F28b3e9a6aeCaB0", true));
+	BOOST_CHECK(passesAddressChecksum("Z2eBA8b7e1D3Ada69CB71D79A25f9Ae891a13D38cB668F431", true));
+	BOOST_CHECK(passesAddressChecksum("ZAF5036a2CBea16D47a825F701b062f721c4fC9A3139Da472", true));
 }
 
 BOOST_AUTO_TEST_CASE(regular_negative)
 {
-	BOOST_CHECK(!passesAddressChecksum("Z6aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed", true));
-	BOOST_CHECK(!passesAddressChecksum("ZeB6916095ca1df60bB79Ce92cE3Ea74c37c5d359", true));
-	BOOST_CHECK(!passesAddressChecksum("ZebF03B407c01E7cD3CBea99509d93f8DDDC8C6FB", true));
-	BOOST_CHECK(!passesAddressChecksum("ZE1220A0cf47c7B9Be7A2E6BA89F429762e7b9aDb", true));
+	BOOST_CHECK(!passesAddressChecksum("Z451809aBc97bd4f223aa0A33e1EA5b426D470bBC3fEE57B3", true));
+	BOOST_CHECK(!passesAddressChecksum("Zecd50A2711166eB6a9B12CB54D4621CffdCfA576a2027490", true));
+	BOOST_CHECK(!passesAddressChecksum("Z44c9A14640A560958ffc43D628a7C77c0b3B479e022c25dc", true));
+	BOOST_CHECK(!passesAddressChecksum("ZEad9850DCa929aa16b0107fd675Ac038369d10Bd951e974F", true));
 }
 
 BOOST_AUTO_TEST_CASE(regular_invalid_length)
 {
-	BOOST_CHECK(passesAddressChecksum("Z9426cbfc57389778d313268E7F85F1CDc2fdad60", true));
-	BOOST_CHECK(!passesAddressChecksum("Z9426cbfc57389778d313268E7F85F1CDc2fdad6", true));
-	BOOST_CHECK(passesAddressChecksum("Z08A61851FFa4637dE289D630Ae8c5dFb0ff9171F", true));
-	BOOST_CHECK(!passesAddressChecksum("Z8A61851FFa4637dE289D630Ae8c5dFb0ff9171F", true));
-	BOOST_CHECK(passesAddressChecksum("Z00c40cC30cb4675673c9ee382de805c19734986A", true));
-	BOOST_CHECK(!passesAddressChecksum("Zc40cC30cb4675673c9ee382de805c19734986A", true));
-	BOOST_CHECK(passesAddressChecksum("ZC40CC30cb4675673C9ee382dE805c19734986a00", true));
-	BOOST_CHECK(!passesAddressChecksum("ZC40CC30cb4675673C9ee382dE805c19734986a", true));
+	BOOST_CHECK(passesAddressChecksum("Z9adA1b4B23BcDf70BA9ad26054f9c2a6e143dcD77Ab864a4", true));
+	BOOST_CHECK(!passesAddressChecksum("Z9adA1b4B23BcDf70BA9ad26054f9c2a6e143dcD77Ab864a", true));
+	BOOST_CHECK(passesAddressChecksum("ZC42f9308f5856268700B48aD380bf53A3403AD3302F57207", true));
+	BOOST_CHECK(!passesAddressChecksum("Z42f9308f5856268700B48aD380bf53A3403AD3302F57207", true));
+	BOOST_CHECK(passesAddressChecksum("Z028D9d02806cE32932FD127e4B4Cd8bF76646A7654BD7dEA", true));
+	BOOST_CHECK(!passesAddressChecksum("Z28D9d02806cE32932FD127e4B4Cd8bF76646A7654BD7dEA", true));
+	BOOST_CHECK(passesAddressChecksum("Za063338E533c817e06154e5e9F2Fc615a947c44592c5d880", true));
+	BOOST_CHECK(!passesAddressChecksum("Za063338E533c817e06154e5e9F2Fc615a947c44592c5d88", true));
 }
 
 BOOST_AUTO_TEST_CASE(homocaps_valid)
 {
-	BOOST_CHECK(passesAddressChecksum("Z52908400098527886E0F7030069857D2E4169EE7", true));
-	BOOST_CHECK(passesAddressChecksum("Z8617E340B3D01FA5F11F306F4090FD50E238070D", true));
-	BOOST_CHECK(passesAddressChecksum("Zde709f2102306220921060314715629080e2fb77", true));
-	BOOST_CHECK(passesAddressChecksum("Z27b1fdb04752bbc536007a920d24acb045561c26", true));
+	BOOST_CHECK(passesAddressChecksum("ZA377CBC7E2EED6C1C26F652B83CB0456C91B8499A936EDD5", true));
+	BOOST_CHECK(passesAddressChecksum("ZE7A35105750CD36E9A3C3035E4E46A7A9E9539FEC6D51F8C", true));
+	BOOST_CHECK(passesAddressChecksum("Ze0e3afa8e503fbd835229cf329580e418c682add7478db62", true));
+	BOOST_CHECK(passesAddressChecksum("Z0db9576bb8227afd79a6059b6bc6a012ffD2ec594d394910", true));
 }
 
 BOOST_AUTO_TEST_CASE(homocaps_invalid)
 {
-	std::string upper = "Z00AA0000000012400000000DDEEFF000000000BB";
+	std::string upper = "Z00AA0000000012400000000DDEEFF00000000000000000BB";
 	BOOST_CHECK(passesAddressChecksum(upper, false));
 	BOOST_CHECK(!passesAddressChecksum(upper, true));
-	std::string lower = "Z11aa000000000000000d00cc00000000000000bb";
+	std::string lower = "Z11aa000000000000000d00cc0000000000000000000000bb";
 	BOOST_CHECK(passesAddressChecksum(lower, false));
 	BOOST_CHECK(!passesAddressChecksum(lower, true));
 }
