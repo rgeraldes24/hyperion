@@ -30,6 +30,7 @@ namespace hyperion::util::test
 {
 
 static_assert(std::is_same<h160, FixedHash<20>>());
+static_assert(std::is_same<h192, FixedHash<24>>());
 static_assert(std::is_same<h256, FixedHash<32>>());
 
 BOOST_AUTO_TEST_SUITE(FixedHashTest)
@@ -59,6 +60,14 @@ BOOST_AUTO_TEST_CASE(default_constructor)
 	BOOST_CHECK_EQUAL(
 		FixedHash<20>{}.size,
 		20
+	);
+	BOOST_CHECK_EQUAL(
+		FixedHash<24>{}.hex(),
+		"000000000000000000000000000000000000000000000000"
+	);
+	BOOST_CHECK_EQUAL(
+		FixedHash<24>{}.size,
+		24
 	);
 	BOOST_CHECK_EQUAL(
 		FixedHash<32>{}.hex(),

@@ -34,7 +34,7 @@
 
 namespace hyperion::test
 {
-using Address = util::h160;
+using Address = util::h192;
 using StorageMap = std::map<zvmc::bytes32, zvmc::StorageValue>;
 
 struct ZVMPrecompileOutput {

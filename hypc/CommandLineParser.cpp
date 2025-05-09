@@ -431,11 +431,11 @@ void CommandLineParser::parseLibraryOption(std::string const& _input)
 					"Note that the address must be prefixed with \"Z\"."
 				);
 
-			if (addrString.length() != 41)
+			if (addrString.length() != 49)
 				hypThrow(
 					CommandLineValidationError,
 					"Invalid length for address for library \"" + libName + "\": " +
-					std::to_string(addrString.substr(1).length()) + " instead of 40 hex characters."
+					std::to_string(addrString.substr(1).length()) + " instead of 49 hex characters."
 				);
 			if (!util::passesAddressChecksum(addrString, false))
 				hypThrow(
@@ -444,8 +444,8 @@ void CommandLineParser::parseLibraryOption(std::string const& _input)
 					"The correct checksum is " + util::getChecksummedAddress(addrString)
 				);
 			bytes binAddr = util::fromHex(addrString.substr(1));
-			util::h160 address(binAddr, util::h160::AlignRight);
-			if (binAddr.size() > 20 || address == util::h160())
+			util::h192 address(binAddr, util::h192::AlignRight);
+			if (binAddr.size() > 24 || address == util::h192())
 				hypThrow(
 					CommandLineValidationError,
 					"Invalid address for library \"" + libName + "\": " + addrString

@@ -235,12 +235,12 @@ zvmc::Result ZVMHost::call(zvmc_message const& _message) noexcept
 
 		bytes encodedNonce = encodeRlpInteger(sender.nonce);
 
-		h160 createAddress(keccak256(
+		h192 createAddress(keccak256(
 			bytes{static_cast<uint8_t>(0xc0 + 21 + encodedNonce.size())} +
 			bytes{0x94} +
 			bytes(begin(message.sender.bytes), end(message.sender.bytes)) +
 			encodedNonce
-		), h160::AlignRight);
+		), h192::AlignRight);
 
 		message.recipient = convertToZVMC(createAddress);
 		assertThrow(accounts.count(message.recipient) == 0, Exception, "Account cannot exist");
@@ -249,12 +249,12 @@ zvmc::Result ZVMHost::call(zvmc_message const& _message) noexcept
 	}
 	else if (message.kind == ZVMC_CREATE2)
 	{
-		h160 createAddress(keccak256(
+		h192 createAddress(keccak256(
 			bytes{0xff} +
 			bytes(begin(message.sender.bytes), end(message.sender.bytes)) +
 			bytes(begin(message.create2_salt.bytes), end(message.create2_salt.bytes)) +
 			keccak256(bytes(message.input_data, message.input_data + message.input_size)).asBytes()
-		), h160::AlignRight);
+		), h192::AlignRight);
 
 		message.recipient = convertToZVMC(createAddress);
 		if (accounts.count(message.recipient) && (
@@ -330,12 +330,12 @@ zvmc::bytes32 ZVMHost::get_block_hash(int64_t _number) const noexcept
 	return convertToZVMC(u256("0x3737373737373737373737373737373737373737373737373737373737373737") + _number);
 }
 
-h160 ZVMHost::convertFromZVMC(zvmc::address const& _addr)
+h192 ZVMHost::convertFromZVMC(zvmc::address const& _addr)
 {
-	return h160(bytes(begin(_addr.bytes), end(_addr.bytes)));
+	return h192(bytes(begin(_addr.bytes), end(_addr.bytes)));
 }
 
-zvmc::address ZVMHost::convertToZVMC(h160 const& _addr)
+zvmc::address ZVMHost::convertToZVMC(h192 const& _addr)
 {
 	zvmc::address a;
 	for (unsigned i = 0; i < 20; ++i)

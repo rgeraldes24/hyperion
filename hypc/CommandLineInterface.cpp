@@ -1082,7 +1082,8 @@ void CommandLineInterface::link()
 	hypAssert(m_options.input.mode == InputMode::Linker);
 
 	// Map from how the libraries will be named inside the bytecode to their addresses.
-	std::map<std::string, h160> librariesReplacements;
+	// TODO(rgeraldes24)
+	std::map<std::string, h192> librariesReplacements;
 	int const placeholderSize = 40; // 20 bytes or 40 hex characters
 	for (auto const& library: m_options.linker.libraries)
 	{

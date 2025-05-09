@@ -888,7 +888,7 @@ std::variant<StandardCompiler::InputsAndSettings, Json::Value> StandardCompiler:
 					"Library address is not prefixed with \"Z\"."
 				);
 
-			if (address.length() != 41)
+			if (address.length() != 49)
 				return formatFatalError(
 					Error::Type::JSONError,
 					"Library address is of invalid length."
@@ -896,7 +896,7 @@ std::variant<StandardCompiler::InputsAndSettings, Json::Value> StandardCompiler:
 
 			try
 			{
-				ret.libraries[sourceName + ":" + library] = util::h160(boost::replace_all_copy(address, "Z", "0x"));
+				ret.libraries[sourceName + ":" + library] = util::h192(boost::replace_all_copy(address, "Z", "0x"));
 			}
 			catch (util::BadHexCharacter const&)
 			{

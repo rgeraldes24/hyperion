@@ -264,9 +264,9 @@ BOOST_AUTO_TEST_CASE(storage_array)
 		compileAndRun(sourceCode);
 		callContractFunction("f()");
 		REQUIRE_LOG_DATA(encodeArgs(
-			h160("ffffffffffffffffffffffffffffffffffffffff"),
-			h160("fffffffffffffffffffffffffffffffffffffffe"),
-			h160("fffffffffffffffffffffffffffffffffffffffd")
+			h192("ffffffffffffffffffffffffffffffffffffffffffffffff"),
+			h192("fffffffffffffffffffffffffffffffffffffffffffffffe"),
+			h192("fffffffffffffffffffffffffffffffffffffffffffffffd")
 		));
 	)
 }
@@ -291,9 +291,9 @@ BOOST_AUTO_TEST_CASE(storage_array_dyn)
 		REQUIRE_LOG_DATA(encodeArgs(
 			0x20,
 			3,
-			h160("0000000000000000000000000000000000000001"),
-			h160("0000000000000000000000000000000000000002"),
-			h160("0000000000000000000000000000000000000003")
+			h192("000000000000000000000000000000000000000000000001"),
+			h192("000000000000000000000000000000000000000000000002"),
+			h192("000000000000000000000000000000000000000000000003")
 		));
 	)
 }

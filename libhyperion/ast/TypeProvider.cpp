@@ -370,7 +370,7 @@ RationalNumberType const* TypeProvider::rationalNumber(Literal const& _literal)
 			if (digitCount % 2 == 0 && (digitCount / 2) <= 32)
 				compatibleBytesType = fixedBytes(static_cast<unsigned>(digitCount / 2));
 		} else if (_literal.looksLikeAddress()) {
-			compatibleBytesType = fixedBytes(static_cast<unsigned>(20));
+			compatibleBytesType = fixedBytes(static_cast<unsigned>(24));
 		}
 
 		return rationalNumber(std::get<1>(validLiteral), compatibleBytesType);

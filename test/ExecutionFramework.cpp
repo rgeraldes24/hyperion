@@ -202,7 +202,7 @@ void ExecutionFramework::sendMessage(bytes const& _data, bool _isCreation, u256 
 	}
 }
 
-void ExecutionFramework::sendZond(h160 const& _addr, u256 const& _amount)
+void ExecutionFramework::sendZond(h192 const& _addr, u256 const& _amount)
 {
 	m_zvmcHost->newBlock();
 
@@ -236,12 +236,12 @@ size_t ExecutionFramework::blockTimestamp(u256 _block)
 		return static_cast<size_t>((currentTimestamp() / blockNumber()) * _block);
 }
 
-h160 ExecutionFramework::account(size_t _idx)
+h192 ExecutionFramework::account(size_t _idx)
 {
-	return h160(h256(u256{"0x1212121212121212121212121212120000000012"} + _idx * 0x1000), h160::AlignRight);
+	return h192(h256(u256{"0x121212121212121212121212121212121212120000000012"} + _idx * 0x1000), h192::AlignRight);
 }
 
-bool ExecutionFramework::addressHasCode(h160 const& _addr) const
+bool ExecutionFramework::addressHasCode(h192 const& _addr) const
 {
 	return m_zvmcHost->get_code_size(ZVMHost::convertToZVMC(_addr)) != 0;
 }
@@ -261,7 +261,7 @@ h256 ExecutionFramework::logTopic(size_t _logIdx, size_t _topicIdx) const
 	return ZVMHost::convertFromZVMC(m_zvmcHost->recorded_logs.at(_logIdx).topics.at(_topicIdx));
 }
 
-h160 ExecutionFramework::logAddress(size_t _logIdx) const
+h192 ExecutionFramework::logAddress(size_t _logIdx) const
 {
 	return ZVMHost::convertFromZVMC(m_zvmcHost->recorded_logs.at(_logIdx).creator);
 }
@@ -274,12 +274,12 @@ bytes ExecutionFramework::logData(size_t _logIdx) const
 	return {data.begin(), data.end()};
 }
 
-u256 ExecutionFramework::balanceAt(h160 const& _addr) const
+u256 ExecutionFramework::balanceAt(h192 const& _addr) const
 {
 	return u256(ZVMHost::convertFromZVMC(m_zvmcHost->get_balance(ZVMHost::convertToZVMC(_addr))));
 }
 
-bool ExecutionFramework::storageEmpty(h160 const& _addr) const
+bool ExecutionFramework::storageEmpty(h192 const& _addr) const
 {
 	const auto it = m_zvmcHost->accounts.find(ZVMHost::convertToZVMC(_addr));
 	if (it != m_zvmcHost->accounts.end())

@@ -325,11 +325,11 @@ using SideEffectHook = std::function<std::vector<std::string>(FunctionCall const
 
 struct LogRecord
 {
-	util::h160 creator;
+	util::h192 creator;
 	bytes data;
 	std::vector<util::h256> topics;
 
-	LogRecord(util::h160 _creator, bytes _data, std::vector<util::h256> _topics):
+	LogRecord(util::h192 _creator, bytes _data, std::vector<util::h256> _topics):
 		creator(std::move(_creator)), data(std::move(_data)), topics(std::move(_topics)) {}
 
 	bool operator==(LogRecord const& other) const noexcept

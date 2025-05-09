@@ -40,7 +40,7 @@ using namespace hyperion::zvmasm;
 using namespace hyperion::yul;
 using namespace hyperion::yul::test;
 
-using hyperion::util::h160;
+using hyperion::util::h192;
 using hyperion::util::h256;
 using hyperion::util::keccak256;
 
@@ -338,7 +338,7 @@ u256 ZVMInstructionInterpreter::eval(
 		// Used for fuzzing.
 		return (
 			(arg[0] > 0) &&
-			(arg[1] == util::h160::Arith(m_state.address) || (arg[1] & 1))
+			(arg[1] == util::h192::Arith(m_state.address) || (arg[1] & 1))
 		) ? 1 : 0;
 	case Instruction::DELEGATECALL:
 	case Instruction::STATICCALL:
@@ -349,7 +349,7 @@ u256 ZVMInstructionInterpreter::eval(
 		// Used for fuzzing.
 		return (
 			(arg[0] > 0) &&
-			(arg[1] == util::h160::Arith(m_state.address) || (arg[1] & 1))
+			(arg[1] == util::h192::Arith(m_state.address) || (arg[1] & 1))
 		) ? 1 : 0;
 	case Instruction::RETURN:
 	{

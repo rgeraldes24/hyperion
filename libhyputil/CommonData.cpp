@@ -125,7 +125,7 @@ bytes hyperion::util::fromHex(std::string const& _s, WhenError _throw)
 
 bool hyperion::util::passesAddressChecksum(std::string const& _str, bool _strict)
 {
-	if (_str.length() != 41 || !boost::starts_with(_str, "Z"))
+	if (_str.length() != 49 || !boost::starts_with(_str, "Z"))
 		return false;
 	
 	std::string s = _str.substr(1);
@@ -140,7 +140,7 @@ bool hyperion::util::passesAddressChecksum(std::string const& _str, bool _strict
 
 std::string hyperion::util::getChecksummedAddress(std::string const& _addr)
 {
-	assertThrow(_addr.length() == 41, InvalidAddress, _addr);
+	assertThrow(_addr.length() == 49, InvalidAddress, _addr);
 	assertThrow(boost::starts_with(_addr, "Z"), InvalidAddress, "");
 	std::string s = _addr.substr(1);
 	assertThrow(s.find_first_not_of("0123456789abcdefABCDEF") == std::string::npos, InvalidAddress, "");
@@ -148,7 +148,7 @@ std::string hyperion::util::getChecksummedAddress(std::string const& _addr)
 	h256 hash = keccak256(boost::algorithm::to_lower_copy(s, std::locale::classic()));
 
 	std::string ret = "Z";
-	for (unsigned i = 0; i < 40; ++i)
+	for (unsigned i = 0; i < 48; ++i)
 	{
 		char addressCharacter = s[i];
 		uint8_t nibble = hash[i / 2u] >> (4u * (1u - (i % 2u))) & 0xf;
