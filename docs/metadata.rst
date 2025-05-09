@@ -58,7 +58,7 @@ explanatory purposes.
           // Contents of the @author NatSpec field of the contract
           "author": "John Doe",
           // Contents of the @dev NatSpec field of the contract
-          "details": "Interface of the ERC20 standard as defined in the EIP. See https://eips.ethereum.org/EIPS/eip-20 for details",
+          "details": "Interface of the ZRC20 standard as defined in the EIP. See https://eips.ethereum.org/EIPS/eip-20 for details",
           "errors": {
             "MintToZeroAddress()" : {
               "details": "Cannot mint to zero address"
@@ -98,7 +98,7 @@ explanatory purposes.
             }
           },
           // Contents of the @title NatSpec field of the contract
-          "title": "MyERC20: an example ERC20",
+          "title": "MyZRC20: an example ZRC20",
           "version": 1 // NatSpec version
         },
         // Required: NatSpec user documentation of the contract. See "NatSpec Format"

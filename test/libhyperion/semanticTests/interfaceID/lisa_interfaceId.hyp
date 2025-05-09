@@ -1,4 +1,4 @@
-interface ERC165 {
+interface ZRC165 {
     /// @notice Query if a contract implements an interface
     /// @param interfaceID The interface identifier, as specified in ERC-165
     /// @dev Interface identification is specified in ERC-165. This function
@@ -8,7 +8,7 @@ interface ERC165 {
     function supportsInterface(bytes4 interfaceID) external view returns (bool);
 }
 
-abstract contract ERC165MappingImplementation is ERC165 {
+abstract contract ZRC165MappingImplementation is ZRC165 {
     /// @dev You must not set element 0xffffffff to true
     mapping(bytes4 => bool) internal supportedInterfaces;
 
@@ -26,7 +26,7 @@ interface Simpson {
     function skinColor() external returns (string memory);
 }
 
-contract Lisa is ERC165MappingImplementation, Simpson {
+contract Lisa is ZRC165MappingImplementation, Simpson {
     constructor() {
         supportedInterfaces[type(Simpson).interfaceId] = true;
     }

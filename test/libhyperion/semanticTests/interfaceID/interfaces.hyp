@@ -7,7 +7,7 @@ interface HelloWorldDerived is HelloWorld {
     function other() external pure;
 }
 
-interface ERC165 {
+interface ZRC165 {
     /// @notice Query if a contract implements an interface
     /// @param interfaceID The interface identifier, as specified in ERC-165
     /// @dev Interface identification is specified in ERC-165. This function
@@ -19,7 +19,7 @@ interface ERC165 {
 
 contract Test {
     bytes4 public ghello_world_interfaceId = type(HelloWorld).interfaceId;
-    bytes4 public ERC165_interfaceId = type(ERC165).interfaceId;
+    bytes4 public ZRC165_interfaceId = type(ZRC165).interfaceId;
 
     function hello() public pure returns (bytes4 data){
         HelloWorld i;
@@ -53,7 +53,7 @@ contract Test {
 // ----
 // hello() -> left(0x19ff1d21)
 // world() -> left(0xdf419679)
-// ERC165_interfaceId() -> left(0x01ffc9a7)
+// ZRC165_interfaceId() -> left(0x01ffc9a7)
 // hello_world() -> left(0xc6be8b58)
 // hello_world_interfaceId() -> left(0xc6be8b58)
 // ghello_world_interfaceId() -> left(0xc6be8b58)

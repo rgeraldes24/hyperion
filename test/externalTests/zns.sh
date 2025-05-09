@@ -34,7 +34,8 @@ SELECTED_PRESETS="$3"
 function compile_fn { yarn build; }
 function test_fn { yarn test; }
 
-function ens_test
+# TODO(rgeraldes24)
+function zns_test
 {
     local repo="https://github.com/ensdomains/ens-contracts.git"
     local ref_type=commit
@@ -89,4 +90,4 @@ function ens_test
     done
 }
 
-external_test ENS ens_test
+external_test ZNS zns_test

@@ -469,7 +469,7 @@ importing files from the following directories:
 
     Allowed paths are case-sensitive even if the filesystem is not.
     The case must exactly match the one used in your imports.
-    For example ``--allow-paths tokens`` will not match ``import "Tokens/IERC20.hyp"``.
+    For example ``--allow-paths tokens`` will not match ``import "Tokens/IZRC20.hyp"``.
 
 .. warning::
 

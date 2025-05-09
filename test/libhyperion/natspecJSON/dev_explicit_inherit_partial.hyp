@@ -1,4 +1,4 @@
-interface ERC20 {
+interface ZRC20 {
     /// Transfer ``amount`` from ``msg.sender`` to ``to``.
     /// @dev test
     /// @param to address to transfer to
@@ -6,24 +6,24 @@ interface ERC20 {
     function transfer(address to, uint amount) external returns (bool);
 }
 
-contract ERC21 {
+contract ZRC21 {
     function transfer(address to, uint amount) virtual external returns (bool) {
         return false;
     }
 }
 
-contract Token is ERC21, ERC20 {
-    /// @inheritdoc ERC20
+contract Token is ZRC21, ZRC20 {
+    /// @inheritdoc ZRC20
     /// @dev override dev comment
     /// @notice override notice
-    function transfer(address to, uint amount) override(ERC21, ERC20) external returns (bool) {
+    function transfer(address to, uint amount) override(ZRC21, ZRC20) external returns (bool) {
         return false;
     }
 }
 
 // ----
 // ----
-// :ERC20 devdoc
+// :ZRC20 devdoc
 // {
 //     "kind": "dev",
 //     "methods":
@@ -41,7 +41,7 @@ contract Token is ERC21, ERC20 {
 //     "version": 1
 // }
 //
-// :ERC20 userdoc
+// :ZRC20 userdoc
 // {
 //     "kind": "user",
 //     "methods":
@@ -54,14 +54,14 @@ contract Token is ERC21, ERC20 {
 //     "version": 1
 // }
 //
-// :ERC21 devdoc
+// :ZRC21 devdoc
 // {
 //     "kind": "dev",
 //     "methods": {},
 //     "version": 1
 // }
 //
-// :ERC21 userdoc
+// :ZRC21 userdoc
 // {
 //     "kind": "user",
 //     "methods": {},

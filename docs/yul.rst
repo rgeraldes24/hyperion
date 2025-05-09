@@ -100,7 +100,7 @@ instead of with recursion. Here, ``lt(a, b)`` computes whether ``a`` is less tha
     }
 
 At the :ref:`end of the section <erc20yul>`, a complete implementation of
-the ERC-20 standard can be found.
+the ZRC-20 standard can be found.
 
 
 
@@ -1239,7 +1239,7 @@ available in the :ref:`optimizer docs <optimizer-steps>`.
 
 .. _erc20yul:
 
-Complete ERC20 Example
+Complete ZRC20 Example
 ======================
 
 .. code-block:: yul

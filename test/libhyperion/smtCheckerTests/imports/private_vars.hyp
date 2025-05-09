@@ -1,13 +1,13 @@
-==== Source: ERC20.hyp ====
-contract ERC20 {
+==== Source: ZRC20.hyp ====
+contract ZRC20 {
     uint256 private a;
     function f() internal virtual {
         a = 2;
     }
 }
 ==== Source: Token.hyp ====
-import "ERC20.hyp";
-contract Token is ERC20 {
+import "ZRC20.hyp";
+contract Token is ZRC20 {
     constructor() {
       f();
     }

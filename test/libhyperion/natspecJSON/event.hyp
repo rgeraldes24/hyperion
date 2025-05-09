@@ -1,4 +1,4 @@
-contract ERC20 {
+contract ZRC20 {
     /// @notice This event is emitted when a transfer occurs.
     /// @param from The source account.
     /// @param to The destination account.
@@ -9,7 +9,7 @@ contract ERC20 {
 
 // ----
 // ----
-// :ERC20 devdoc
+// :ZRC20 devdoc
 // {
 //     "events":
 //     {
@@ -29,7 +29,7 @@ contract ERC20 {
 //     "version": 1
 // }
 //
-// :ERC20 userdoc
+// :ZRC20 userdoc
 // {
 //     "events":
 //     {

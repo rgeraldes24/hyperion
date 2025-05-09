@@ -38,7 +38,7 @@ class TestEthGasReport(unittest.TestCase):
                     'avg_deployment_gas': 283516,
                     'methods': None,
                 },
-                'ERC1155Token': {
+                'ZRC1155Token': {
                     'total_method_gas': 57826 * 6 + 53900 * 2,
                     'min_deployment_gas': None,
                     'max_deployment_gas': None,
@@ -60,7 +60,7 @@ class TestEthGasReport(unittest.TestCase):
                         },
                     },
                 },
-                'ERC20Token': {
+                'ZRC20Token': {
                     'total_method_gas': 51567 * 8,
                     'min_deployment_gas': None,
                     'max_deployment_gas': None,
@@ -125,9 +125,9 @@ class TestEthGasReport(unittest.TestCase):
     def test_parse_report_should_fail_if_report_has_no_header(self):
         text_report = dedent("""
             | Methods                                            |
-            | ERC1155Token · mint() · 1 · 3 · 2 ·          6 · - |
+            | ZRC1155Token · mint() · 1 · 3 · 2 ·          6 · - |
             | Deployments           ·           · % of limit ·   │
-            | ERC1155Token          · - · - · 5 ·        1 % · - |
+            | ZRC1155Token          · - · - · 5 ·        1 % · - |
         """).strip('\n')
         with self.assertRaises(ReportValidationError) as manager:
             parse_report(text_report)
@@ -135,11 +135,11 @@ class TestEthGasReport(unittest.TestCase):
 
     def test_parse_report_should_fail_if_data_rows_have_no_headers(self):
         text_report = dedent("""
-            | ERC1155Token · mint() · 1 · 3 · 2 · 6 · - |
+            | ZRC1155Token · mint() · 1 · 3 · 2 · 6 · - |
         """).strip('\n')
         expected_message = dedent("""
             Parsing error on line 1: Found data row without a section header.
-            | ERC1155Token | mint() | 1 | 3 | 2 | 6 | - |
+            | ZRC1155Token | mint() | 1 | 3 | 2 | 6 | - |
         """).strip('\n')
 
         with self.assertRaises(ReportParsingError) as manager:
@@ -163,12 +163,12 @@ class TestEthGasReport(unittest.TestCase):
     def test_parse_report_should_fail_if_row_matching_same_method_call_appears_twice(self):
         text_report = dedent("""
             | Methods                                               |
-            | ERC1155Token · mint() · 47934 · 59804 · 57826 · 6 · - |
-            | ERC1155Token · mint() · 11111 · 22222 · 33333 · 4 · - |
+            | ZRC1155Token · mint() · 47934 · 59804 · 57826 · 6 · - |
+            | ZRC1155Token · mint() · 11111 · 22222 · 33333 · 4 · - |
         """).strip('\n')
         expected_message = dedent("""
-            Parsing error on line 3: Duplicate method row for 'ERC1155Token.mint()'.
-            | ERC1155Token | mint() | 11111 | 22222 | 33333 | 4 | - |
+            Parsing error on line 3: Duplicate method row for 'ZRC1155Token.mint()'.
+            | ZRC1155Token | mint() | 11111 | 22222 | 33333 | 4 | - |
         """).strip('\n')
 
         with self.assertRaises(ReportParsingError) as manager:
@@ -178,12 +178,12 @@ class TestEthGasReport(unittest.TestCase):
     def test_parse_report_should_fail_if_row_matching_same_contract_deployment_appears_twice(self):
         text_report = dedent("""
             | Deployments          ·        · % of limit ·   │
-            | ERC1155Token · - · - · 525869 ·      0.5 % · - |
-            | ERC1155Token · - · - · 111111 ·      0.6 % · - |
+            | ZRC1155Token · - · - · 525869 ·      0.5 % · - |
+            | ZRC1155Token · - · - · 111111 ·      0.6 % · - |
         """).strip('\n')
         expected_message = dedent("""
-            Parsing error on line 3: Duplicate contract deployment row for 'ERC1155Token'.
-            | ERC1155Token | - | - | 111111 |      0.6 % | - |
+            Parsing error on line 3: Duplicate contract deployment row for 'ZRC1155Token'.
+            | ZRC1155Token | - | - | 111111 |      0.6 % | - |
         """).strip('\n')
 
         with self.assertRaises(ReportParsingError) as manager:
@@ -193,11 +193,11 @@ class TestEthGasReport(unittest.TestCase):
     def test_parse_report_should_fail_if_method_row_appears_under_deployments_header(self):
         text_report = dedent("""
             | Deployments           ·                       · % of limit ·   │
-            | ERC1155Token · mint() · 47934 · 59804 · 57826 ·          6 · - |
+            | ZRC1155Token · mint() · 47934 · 59804 · 57826 ·          6 · - |
         """).strip('\n')
         expected_message = dedent("""
             Parsing error on line 2: Expected a table row with deployment details.
-            | ERC1155Token | mint() | 47934 | 59804 | 57826 |          6 | - |
+            | ZRC1155Token | mint() | 47934 | 59804 | 57826 |          6 | - |
         """).strip('\n')
 
         with self.assertRaises(ReportParsingError) as manager:
@@ -207,11 +207,11 @@ class TestEthGasReport(unittest.TestCase):
     def test_parse_report_should_fail_if_deployment_row_appears_under_methods_header(self):
         text_report = dedent("""
             | Methods                               |
-            | ERC1155Token · - · - · 525869 · 5 · - |
+            | ZRC1155Token · - · - · 525869 · 5 · - |
         """).strip('\n')
         expected_message = dedent("""
             Parsing error on line 2: Expected a table row with method details.
-            | ERC1155Token | - | - | 525869 | 5 | - |
+            | ZRC1155Token | - | - | 525869 | 5 | - |
         """).strip('\n')
 
         with self.assertRaises(ReportParsingError) as manager:
