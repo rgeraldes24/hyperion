@@ -428,7 +428,7 @@ Address Literals
 ----------------
 
 Address literals that pass the address checksum test, for example
-``ZdCad3a6d3569DF655070DEd06cb7A1b2Ccd1D3AF`` are of ``address`` type.
+``Z7aCbbcb46586a282061bD86aC2e8A64cB892BC07ef8764ad`` are of ``address`` type.
 Address literals that do not pass the checksum test produce
 an error.
 

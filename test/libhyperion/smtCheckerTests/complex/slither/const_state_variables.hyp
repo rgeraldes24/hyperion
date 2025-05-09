@@ -1,8 +1,8 @@
 
 contract A {
 
-    address constant public MY_ADDRESS = ZE0f5206BBD039e7b0592d8918820024e2a7437b9;
-    address public myFriendsAddress = Zc0ffee254729296a45a3885639AC7E10F9d54979;
+    address constant public MY_ADDRESS = Z3eeE45C2260628f7631C951BD3235594012fDF3eBDA70751;
+    address public myFriendsAddress = ZdB742005837A94A6C2B69A298E4E6106BcCeD153a26D7979;
 
     uint public used;
     uint public test = 5;

@@ -18,7 +18,7 @@ grep -q -v '[/_]' L.bin
 
 # Now link
 printf "    "
-msg_on_error "$HYPC" --link --libraries x.hyp:L=Z90f20564390eAe531E810af625A22f51385Cd222 C.bin
+msg_on_error "$HYPC" --link --libraries x.hyp:L=Z4cDfb4685E7B16fA1174AeFE38E4977D0739543f3330f082 C.bin
 
 # Now the placeholder and explanation should be gone.
 grep -q -v '[/_]' C.bin
