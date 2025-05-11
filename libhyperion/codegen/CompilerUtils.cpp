@@ -702,6 +702,7 @@ void CompilerUtils::memoryCopy()
 	m_context << Instruction::POP << Instruction::POP << Instruction::POP;
 }
 
+// TODO(rgeraldes24)
 void CompilerUtils::splitExternalFunctionType(bool _leftAligned)
 {
 	// We have to split the left-aligned <address><function identifier> into two stack slots:

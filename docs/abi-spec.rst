@@ -53,7 +53,7 @@ The following elementary types exist:
 
 - ``int<M>``: two's complement signed integer type of ``M`` bits, ``0 < M <= 256``, ``M % 8 == 0``.
 
-- ``address``: equivalent to ``uint160``, except for the assumed interpretation and language typing.
+- ``address``: equivalent to ``uint192``, except for the assumed interpretation and language typing.
   For computing the function selector, ``address`` is used.
 
 - ``uint``, ``int``: synonyms for ``uint256``, ``int256`` respectively. For computing the function
@@ -71,7 +71,7 @@ The following elementary types exist:
 
 - ``bytes<M>``: binary type of ``M`` bytes, ``0 < M <= 32``.
 
-- ``function``: an address (20 bytes) followed by a function selector (4 bytes). Encoded identical to ``bytes24``.
+- ``function``: an address (24 bytes) followed by a function selector (4 bytes). Encoded identical to ``bytes28``.
 
 The following (fixed-size) array type exists:
 
@@ -210,7 +210,7 @@ on the type of ``X`` being
 
 - ``uint<M>``: ``enc(X)`` is the big-endian encoding of ``X``, padded on the higher-order
   (left) side with zero-bytes such that the length is 32 bytes.
-- ``address``: as in the ``uint160`` case
+- ``address``: as in the ``uint192`` case
 - ``int<M>``: ``enc(X)`` is the big-endian two's complement encoding of ``X``, padded on the higher-order (left) side with ``0xff`` bytes for negative ``X`` and with zero-bytes for non-negative ``X`` such that the length is 32 bytes.
 - ``bool``: as in the ``uint8`` case, where ``1`` is used for ``true`` and ``0`` for ``false``
 - ``fixed<M>x<N>``: ``enc(X)`` is ``enc(X * 10**N)`` where ``X * 10**N`` is interpreted as a ``int256``.

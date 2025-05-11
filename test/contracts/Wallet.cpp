@@ -532,15 +532,15 @@ BOOST_AUTO_TEST_CASE(remove_owner)
 }
 
 BOOST_AUTO_TEST_CASE(initial_owners)
-{	// TODO(rgeraldes24)
+{
 	std::vector<h192> owners{
-		h192("0x42c56279432962a17176998a4747d1b4d6ed4367"),
-		h192("0xd4d4669f5ba9f4c27d38ef02a358c339b5560c47"),
-		h192("0xe6716f9544a56c530d868e4bfbacb172315bdead"),
-		h192("0x775e18be7a50a0abb8a4e82b1bd697d79f31fe04"),
-		h192("0xf4dd5c3794f1fd0cdc0327a83aa472609c806e99"),
-		h192("0x4c9113886af165b2de069d6e99430647e94a9fff"),
-		h192("0x3fb1cd2cd96c6d5c0b5eb3322d807b34482481d4")
+		h192("0x4757a226acc51defb4cfde47a2d18de5b6824ba8a022efc5"),
+		h192("0x11539c9d8e3c9416b50bb0fbc75eebde0a563d8f3473e588"),
+		h192("0x64da714cea987198b7cdaec770afabb245629b598666793f"),
+		h192("0x3f07cdaa6182ad88f9b713d6da07cf95d4fb07f7ad839589"),
+		h192("0xd1865dd6ffeeba2629405ca4f579547e9426d211989d4227"),
+		h192("0xfd400b75771f4311736815136797e0a255dcda6be0e54844"),
+		h192("0x27266cee6f527b2aa7f30011c85d65fd73c32c2a46f3c39d")
 	};
 	deployWallet(0, owners, 4, 2);
 	BOOST_CHECK(callContractFunction("m_numOwners()") == encodeArgs(u256(8)));
@@ -559,8 +559,7 @@ BOOST_AUTO_TEST_CASE(multisig_value_transfer)
 	BOOST_REQUIRE(callContractFunction("addOwner(address)", account(3)) == encodeArgs());
 	// 4 owners, set required to 3
 	BOOST_REQUIRE(callContractFunction("changeRequirement(uint256)", u256(3)) == encodeArgs());
-	// TODO(rgeraldes24)
-	h192 destination = h192("0x5c6d6026d3fb35cd7175fd0054ae8df50d8f8b41");
+	h192 destination = h192("0x9163033f444fd59d4da909788a1ac163455059ce7bf6a5cc");
 	BOOST_CHECK_EQUAL(balanceAt(destination), 0);
 	m_sender = account(0);
 	sendZond(account(1), 10 * zond);
@@ -623,8 +622,7 @@ BOOST_AUTO_TEST_CASE(revoke_transaction)
 	BOOST_REQUIRE(callContractFunction("changeRequirement(uint256)", u256(3)) == encodeArgs());
 	// create a transaction
 	h192 deployer = m_sender;
-	// TODO(rgeraldes24)
-	h192 destination = h192("0x5c6d6026d3fb35cd7175fd0054ae8df50d8f8b41");
+	h192 destination = h192("0x9163033f444fd59d4da909788a1ac163455059ce7bf6a5cc");
 	BOOST_CHECK_EQUAL(balanceAt(destination), 0);
 	m_sender = account(0);
 	sendZond(account(1), 10 * zond);
@@ -664,8 +662,7 @@ BOOST_AUTO_TEST_CASE(daylimit)
 	BOOST_REQUIRE(callContractFunction("changeRequirement(uint256)", u256(3)) == encodeArgs());
 
 	// try to send tx over daylimit
-	// TODO(rgeraldes24)
-	h192 destination = h192("0x5c6d6026d3fb35cd7175fd0054ae8df50d8f8b41");
+	h192 destination = h192("0x9163033f444fd59d4da909788a1ac163455059ce7bf6a5cc");
 	BOOST_CHECK_EQUAL(balanceAt(destination), 0);
 	sendZond(account(1), 10 * zond);
 	m_sender = account(1);

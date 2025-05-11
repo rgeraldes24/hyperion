@@ -23,7 +23,7 @@ namespace zvmc
 /// String view of uint8_t chars.
 using bytes_view = std::basic_string_view<uint8_t>;
 
-/// The big-endian 160-bit hash suitable for keeping a Zond address.
+/// The big-endian 192-bit hash suitable for keeping a Zond address.
 ///
 /// This type wraps C ::zvmc_address to make sure objects of this type are always initialized.
 struct address : zvmc_address

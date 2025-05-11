@@ -64,11 +64,11 @@ typedef struct zvmc_bytes32
  */
 typedef struct zvmc_bytes32 zvmc_uint256be;
 
-/** Big-endian 160-bit hash suitable for keeping an Ethereum address. */
+/** Big-endian 192-bit hash suitable for keeping a Zond address. */
 typedef struct zvmc_address
 {
-    /** The 20 bytes of the hash. */
-    uint8_t bytes[20];
+    /** The 24 bytes of the hash. */
+    uint8_t bytes[24];
 } zvmc_address;
 
 /** The kind of call-like instruction. */
@@ -463,7 +463,7 @@ struct zvmc_result
     /**
      * Reserved data that MAY be used by a zvmc_result object creator.
      *
-     * This reserved 4 bytes together with 20 bytes from create_address form
+     * This reserved 4 bytes together with 24 bytes from create_address form
      * 24 bytes of memory called "optional data" within zvmc_result struct
      * to be optionally used by the zvmc_result object creator.
      *

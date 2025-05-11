@@ -183,7 +183,7 @@ Address
 
 The address type comes in two largely identical flavors:
 
-- ``address``: Holds a 20 byte value (size of an Ethereum address).
+- ``address``: Holds a 24 byte value (size of a Zond address).
 - ``address payable``: Same as ``address``, but with the additional members ``transfer`` and ``send``.
 
 The idea behind this distinction is that ``address payable`` is an address you can send Zond to,
@@ -195,8 +195,8 @@ Type conversions:
 Implicit conversions from ``address payable`` to ``address`` are allowed, whereas conversions from ``address`` to ``address payable``
 must be explicit via ``payable(<address>)``.
 
-Explicit conversions to and from ``address`` are allowed for ``uint160``, integer literals,
-``bytes20`` and contract types.
+Explicit conversions to and from ``address`` are allowed for ``uint192``, integer literals,
+``bytes24`` and contract types.
 
 Only expressions of type ``address`` and contract-type can be converted to the type ``address
 payable`` via the explicit conversion ``payable(...)``. For contract-type, this conversion is only
