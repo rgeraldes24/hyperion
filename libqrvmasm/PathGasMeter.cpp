@@ -27,8 +27,8 @@
 using namespace hyperion;
 using namespace hyperion::zvmasm;
 
-PathGasMeter::PathGasMeter(AssemblyItems const& _items, langutil::ZVMVersion _zvmVersion):
-	m_items(_items), m_zvmVersion(_zvmVersion)
+PathGasMeter::PathGasMeter(AssemblyItems const& _items, langutil::ZVMVersion _qrvmVersion):
+	m_items(_items), m_qrvmVersion(_qrvmVersion)
 {
 	for (size_t i = 0; i < m_items.size(); ++i)
 		if (m_items[i].type() == Tag)
@@ -70,7 +70,7 @@ GasMeter::GasConsumption PathGasMeter::handleQueueItem()
 	m_queue.erase(--m_queue.end());
 
 	std::shared_ptr<KnownState> state = path->state;
-	GasMeter meter(state, m_zvmVersion, path->largestMemoryAccess);
+	GasMeter meter(state, m_qrvmVersion, path->largestMemoryAccess);
 	ExpressionClasses& classes = state->expressionClasses();
 	GasMeter::GasConsumption gas = path->gas;
 	size_t index = path->index;

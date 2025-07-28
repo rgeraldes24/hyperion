@@ -1244,7 +1244,7 @@ private:
 class FunctionType: public Type
 {
 public:
-	/// How this function is invoked on the ZVM.
+	/// How this function is invoked on the QRVM.
 	enum class Kind
 	{
 		Internal, ///< stack-call using plain JUMP
@@ -1702,7 +1702,7 @@ private:
 
 /**
  * Special type that is used for dynamic types in returns from external function calls
- * (The ZVM currently cannot access dynamically-sized return values).
+ * (The QRVM currently cannot access dynamically-sized return values).
  */
 class InaccessibleDynamicType: public Type
 {

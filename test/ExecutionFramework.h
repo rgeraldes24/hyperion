@@ -56,7 +56,7 @@ class ExecutionFramework
 
 public:
 	ExecutionFramework();
-	ExecutionFramework(langutil::ZVMVersion _zvmVersion, std::vector<boost::filesystem::path> const& _vmPaths);
+	ExecutionFramework(langutil::ZVMVersion _qrvmVersion, std::vector<boost::filesystem::path> const& _vmPaths);
 	virtual ~ExecutionFramework() = default;
 
 	virtual bytes const& compileAndRunWithoutCheck(
@@ -204,7 +204,7 @@ public:
 		return bytes();
 	}
 	/// @returns error returndata corresponding to the Panic(uint256) error code,
-	/// if REVERT is supported by the current ZVM version and the empty string otherwise.
+	/// if REVERT is supported by the current QRVM version and the empty string otherwise.
 	bytes panicData(util::PanicCode _code);
 
 	//@todo might be extended in the future
@@ -291,7 +291,7 @@ protected:
 
 	std::vector<frontend::test::LogRecord> recordedLogs() const;
 
-	langutil::ZVMVersion m_zvmVersion;
+	langutil::ZVMVersion m_qrvmVersion;
 	hyperion::frontend::RevertStrings m_revertStrings = hyperion::frontend::RevertStrings::Default;
 	hyperion::frontend::OptimiserSettings m_optimiserSettings = hyperion::frontend::OptimiserSettings::minimal();
 	bool m_showMessages = false;

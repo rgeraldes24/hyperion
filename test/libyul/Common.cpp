@@ -103,14 +103,14 @@ namespace
 {
 std::map<string const, yul::Dialect const& (*)(langutil::ZVMVersion)> const validDialects = {
 	{
-		"zvm",
-		[](langutil::ZVMVersion _zvmVersion) -> yul::Dialect const&
-		{ return yul::ZVMDialect::strictAssemblyForZVMObjects(_zvmVersion); }
+		"qrvm",
+		[](langutil::ZVMVersion _qrvmVersion) -> yul::Dialect const&
+		{ return yul::ZVMDialect::strictAssemblyForZVMObjects(_qrvmVersion); }
 	},
 	{
 		"zvmTyped",
-		[](langutil::ZVMVersion _zvmVersion) -> yul::Dialect const&
-		{ return yul::ZVMDialectTyped::instance(_zvmVersion); }
+		[](langutil::ZVMVersion _qrvmVersion) -> yul::Dialect const&
+		{ return yul::ZVMDialectTyped::instance(_qrvmVersion); }
 	},
 	{
 		"yul",
@@ -128,7 +128,7 @@ vector<string> validDialectNames()
 }
 }
 
-yul::Dialect const& yul::test::dialect(std::string const& _name, langutil::ZVMVersion _zvmVersion)
+yul::Dialect const& yul::test::dialect(std::string const& _name, langutil::ZVMVersion _qrvmVersion)
 {
 	if (!validDialects.count(_name))
 		BOOST_THROW_EXCEPTION(runtime_error{
@@ -139,5 +139,5 @@ yul::Dialect const& yul::test::dialect(std::string const& _name, langutil::ZVMVe
 			"."
 		});
 
-	return validDialects.at(_name)(_zvmVersion);
+	return validDialects.at(_name)(_qrvmVersion);
 }

@@ -18,7 +18,7 @@
 /**
  * @author Christian <c@ethdev.com>
  * @date 2014
- * Hyperion AST to ZVM bytecode compiler.
+ * Hyperion AST to QRVM bytecode compiler.
  */
 
 #pragma once
@@ -37,10 +37,10 @@ namespace hyperion::frontend
 class Compiler
 {
 public:
-	Compiler(langutil::ZVMVersion _zvmVersion, RevertStrings _revertStrings, OptimiserSettings _optimiserSettings):
+	Compiler(langutil::ZVMVersion _qrvmVersion, RevertStrings _revertStrings, OptimiserSettings _optimiserSettings):
 		m_optimiserSettings(std::move(_optimiserSettings)),
-		m_runtimeContext(_zvmVersion, _revertStrings),
-		m_context(_zvmVersion, _revertStrings, &m_runtimeContext)
+		m_runtimeContext(_qrvmVersion, _revertStrings),
+		m_context(_qrvmVersion, _revertStrings, &m_runtimeContext)
 	{ }
 
 	/// Compiles a contract.

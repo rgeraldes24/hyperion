@@ -81,7 +81,7 @@ struct CopyTranslate: public yul::ASTCopier
 		// Strictly, the dialect used by inline assembly (m_dialect) could be different
 		// from the Yul dialect we are compiling to. So we are assuming here that the builtin
 		// functions are identical. This should not be a problem for now since everything
-		// is ZVM anyway.
+		// is QRVM anyway.
 		if (m_dialect.builtin(_name))
 			return _name;
 		else

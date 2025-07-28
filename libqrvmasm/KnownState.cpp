@@ -130,7 +130,7 @@ KnownState::StoreOperation KnownState::feedItem(AssemblyItem const& _item, bool 
 	{
 		Instruction instruction = _item.instruction();
 		// The latest ZVMVersion is used here, since the InstructionInfo is assumed to be
-		// the same across all ZVM versions except for the instruction name.
+		// the same across all QRVM versions except for the instruction name.
 		InstructionInfo info = instructionInfo(instruction);
 		if (SemanticInformation::isDupInstruction(_item))
 			setStackElement(

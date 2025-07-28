@@ -46,9 +46,9 @@ namespace
 {
 /// @returns an estimation of the runtime gas cost of the AsssemblyItems in @a _itemRange.
 template<typename RangeType>
-u256 executionCost(RangeType const& _itemRange, langutil::ZVMVersion _zvmVersion)
+u256 executionCost(RangeType const& _itemRange, langutil::ZVMVersion _qrvmVersion)
 {
-	GasMeter gasMeter{std::make_shared<KnownState>(), _zvmVersion};
+	GasMeter gasMeter{std::make_shared<KnownState>(), _qrvmVersion};
 	auto gasConsumption = ranges::accumulate(_itemRange | ranges::views::transform(
 		[&gasMeter](auto const& _item) { return gasMeter.estimateMax(_item, false); }
 	), GasMeter::GasConsumption());
@@ -162,8 +162,8 @@ bool Inliner::shouldInlineFullFunctionBody(size_t _tag, ranges::span<AssemblyIte
 	// Since the function body has to be executed equally often both with and without inlining,
 	// it can be ignored.
 	bigint uninlinedExecutionCost = numberOfCalls * (
-		executionCost(uninlinedCallSitePattern, m_zvmVersion) +
-		executionCost(uninlinedFunctionPattern, m_zvmVersion)
+		executionCost(uninlinedCallSitePattern, m_qrvmVersion) +
+		executionCost(uninlinedFunctionPattern, m_qrvmVersion)
 	);
 	// Each call site deposits the call site pattern, whereas the jump site pattern and the function itself are deposited once.
 	bigint uninlinedDepositCost = GasMeter::dataGas(

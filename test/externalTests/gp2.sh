@@ -96,7 +96,7 @@ function gp2_test
     # This test is not supposed to work. The compiler is supposed to enforce zero padding since
     # at least 0.5.8 (see https://github.com/ethereum/solidity/pull/5815). For some reason the
     # test worked on 0.7.6 but no longer works on 0.8.x.
-    sed -i 's|it\(("invalid ZVM transaction encoding does not change order hash"\)|it.skip\1|g' test/GPv2Signing.test.ts
+    sed -i 's|it\(("invalid QRVM transaction encoding does not change order hash"\)|it.skip\1|g' test/GPv2Signing.test.ts
 
     # Disable tests that won't pass on the ir presets due to Hardhat heuristics. Note that this also disables
     # them for other presets but that's fine - we want same code run for benchmarks to be comparable.

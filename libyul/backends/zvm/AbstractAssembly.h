@@ -66,7 +66,7 @@ public:
 	/// at the beginning.
 	virtual int stackHeight() const = 0;
 	virtual void setStackHeight(int height) = 0;
-	/// Append an ZVM instruction.
+	/// Append a QRVM instruction.
 	virtual void appendInstruction(zvmasm::Instruction _instruction) = 0;
 	/// Append a constant.
 	virtual void appendConstant(u256 const& _constant) = 0;
@@ -118,7 +118,7 @@ public:
 	/// Mark this assembly as invalid. Any attempt to request bytecode from it should throw.
 	virtual void markAsInvalid() = 0;
 
-	/// @returns the ZVM version the assembly targets.
+	/// @returns the QRVM version the assembly targets.
 	virtual langutil::ZVMVersion zvmVersion() const = 0;
 };
 

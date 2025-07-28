@@ -58,12 +58,12 @@ std::ostream& hyperion::frontend::test::operator<<(std::ostream& _output, Requir
 
 SemanticTest::SemanticTest(
 	std::string const& _filename,
-	langutil::ZVMVersion _zvmVersion,
+	langutil::ZVMVersion _qrvmVersion,
 	std::vector<boost::filesystem::path> const& _vmPaths,
 	bool _enforceGasCost,
 	u256 _enforceGasCostMinValue
 ):
-	HyperionExecutionFramework(_zvmVersion, _vmPaths, false),
+	HyperionExecutionFramework(_qrvmVersion, _vmPaths, false),
 	ZVMVersionRestrictedTestCase(_filename),
 	m_sources(m_reader.sources()),
 	m_lineOffset(m_reader.lineNumber()),

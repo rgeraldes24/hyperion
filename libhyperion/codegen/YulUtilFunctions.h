@@ -50,11 +50,11 @@ class YulUtilFunctions
 {
 public:
 	explicit YulUtilFunctions(
-		langutil::ZVMVersion _zvmVersion,
+		langutil::ZVMVersion _qrvmVersion,
 		RevertStrings _revertStrings,
 		MultiUseYulFunctionCollector& _functionCollector
 	):
-		m_zvmVersion(_zvmVersion),
+		m_qrvmVersion(_qrvmVersion),
 		m_revertStrings(_revertStrings),
 		m_functionCollector(_functionCollector)
 	{}
@@ -603,7 +603,7 @@ private:
 	/// signature: (array, index)
 	std::string longByteArrayStorageIndexAccessNoCheckFunction();
 
-	langutil::ZVMVersion m_zvmVersion;
+	langutil::ZVMVersion m_qrvmVersion;
 	RevertStrings m_revertStrings;
 	MultiUseYulFunctionCollector& m_functionCollector;
 };

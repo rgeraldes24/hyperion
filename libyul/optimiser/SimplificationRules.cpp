@@ -97,7 +97,7 @@ void SimplificationRules::addRule(Rule const& _rule)
 	m_rules[uint8_t(_rule.pattern.instruction())].push_back(_rule);
 }
 
-SimplificationRules::SimplificationRules(std::optional<langutil::ZVMVersion> _zvmVersion)
+SimplificationRules::SimplificationRules(std::optional<langutil::ZVMVersion> _qrvmVersion)
 {
 	// Multiple occurrences of one of these inside one rule must match the same equivalence class.
 	// Constants.
@@ -117,7 +117,7 @@ SimplificationRules::SimplificationRules(std::optional<langutil::ZVMVersion> _zv
 	Y.setMatchGroup(6, m_matchGroups);
 	Z.setMatchGroup(7, m_matchGroups);
 
-	addRules(simplificationRuleList(_zvmVersion, A, B, C, W, X, Y, Z));
+	addRules(simplificationRuleList(_qrvmVersion, A, B, C, W, X, Y, Z));
 	assertThrow(isInitialized(), OptimizerException, "Rule list not properly initialized.");
 }
 
@@ -234,7 +234,7 @@ zvmasm::Instruction Pattern::instruction() const
 	return m_instruction;
 }
 
-Expression Pattern::toExpression(std::shared_ptr<DebugData const> const& _debugData, langutil::ZVMVersion _zvmVersion) const
+Expression Pattern::toExpression(std::shared_ptr<DebugData const> const& _debugData, langutil::ZVMVersion _qrvmVersion) const
 {
 	if (matchGroup())
 		return ASTCopier().translate(matchGroupValue());
@@ -247,7 +247,7 @@ Expression Pattern::toExpression(std::shared_ptr<DebugData const> const& _debugD
 	{
 		std::vector<Expression> arguments;
 		for (auto const& arg: m_arguments)
-			arguments.emplace_back(arg.toExpression(_debugData, _zvmVersion));
+			arguments.emplace_back(arg.toExpression(_debugData, _qrvmVersion));
 
 		std::string name = util::toLower(instructionInfo(m_instruction).name);
 

@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Yul dialects for ZVM.
+ * Yul dialects for QRVM.
  */
 
 #include <libyul/backends/zvm/ZVMDialect.h>
@@ -278,9 +278,9 @@ std::regex const& verbatimPattern()
 }
 
 
-ZVMDialect::ZVMDialect(langutil::ZVMVersion _zvmVersion, bool _objectAccess):
+ZVMDialect::ZVMDialect(langutil::ZVMVersion _qrvmVersion, bool _objectAccess):
 	m_objectAccess(_objectAccess),
-	m_zvmVersion(_zvmVersion),
+	m_qrvmVersion(_qrvmVersion),
 	m_functions(createBuiltins(_objectAccess)),
 	m_reserved(createReservedIdentifiers())
 {
@@ -379,8 +379,8 @@ BuiltinFunctionForZVM const* ZVMDialect::verbatimFunction(size_t _arguments, siz
 	return function.get();
 }
 
-ZVMDialectTyped::ZVMDialectTyped(langutil::ZVMVersion _zvmVersion, bool _objectAccess):
-	ZVMDialect(_zvmVersion, _objectAccess)
+ZVMDialectTyped::ZVMDialectTyped(langutil::ZVMVersion _qrvmVersion, bool _objectAccess):
+	ZVMDialect(_qrvmVersion, _objectAccess)
 {
 	defaultType = "u256"_yulstring;
 	boolType = "bool"_yulstring;

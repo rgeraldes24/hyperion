@@ -18,7 +18,7 @@
 
 		"outputSelection":
 		{
-			"*": { "*": ["zvm.assembly"] }
+			"*": { "*": ["qrvm.assembly"] }
 		}
 	}
 }

@@ -55,7 +55,7 @@ YulOptimizerTest::YulOptimizerTest(string const& _filename):
 
 	m_source = m_reader.source();
 
-	auto dialectName = m_reader.stringSetting("dialect", "zvm");
+	auto dialectName = m_reader.stringSetting("dialect", "qrvm");
 	m_dialect = &dialect(dialectName, hyperion::test::CommonOptions::get().zvmVersion());
 
 	m_expectation = m_reader.simpleExpectations();

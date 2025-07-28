@@ -687,7 +687,7 @@ bool AsmAnalyzer::validateInstructions(zvmasm::Instruction _instr, SourceLocatio
 	// 			"The \"{instruction}\" instruction is {kind} VMs (you are currently compiling for \"{version}\").",
 	// 			fmt::arg("instruction", boost::to_lower_copy(instructionInfo(_instr).name)),
 	// 			fmt::arg("kind", vmKindMessage),
-	// 			fmt::arg("version", m_zvmVersion.name())
+	// 			fmt::arg("version", m_qrvmVersion.name())
 	// 		)
 	// 	);
 	// };
@@ -697,7 +697,7 @@ bool AsmAnalyzer::validateInstructions(zvmasm::Instruction _instr, SourceLocatio
 			2450_error,
 			Error::Type::SyntaxError,
 			_location,
-			"PC instruction is a low-level ZVM feature. "
+			"PC instruction is a low-level QRVM feature. "
 			"Because of that PC is disallowed in strict assembly."
 		);
 	else

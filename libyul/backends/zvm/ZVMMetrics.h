@@ -33,7 +33,7 @@ struct ZVMDialect;
 
 /**
  * Gas meter for expressions only involving literals, identifiers and
- * ZVM instructions.
+ * QRVM instructions.
  *
  * Assumes that EXP is not used with exponents larger than a single byte.
  * Is not particularly exact for anything apart from arithmetic.

@@ -711,10 +711,10 @@ ASTPointer<ArrayTypeName> ASTJsonImporter::createArrayTypeName(Json::Value const
 
 ASTPointer<InlineAssembly> ASTJsonImporter::createInlineAssembly(Json::Value const& _node)
 {
-	astAssert(_node["zvmVersion"].isString(), "Expected zvmVersion to be a string!");
-	auto zvmVersion = langutil::ZVMVersion::fromString(_node["zvmVersion"].asString());
-	astAssert(zvmVersion.has_value(), "Invalid ZVM version!");
-	astAssert(m_zvmVersion == zvmVersion, "Imported tree zvm version differs from configured zvm version!");
+	astAssert(_node["zvmVersion"].isString(), "Expected qrvmVersionto be a string!");
+	auto qrvmVersion= langutil::ZVMVersion::fromString(_node["zvmVersion"].asString());
+	astAssert(zvmVersion.has_value(), "Invalid QRVM version!");
+	astAssert(m_qrvmVersion == zvmVersion, "Imported tree zvm version differs from configured zvm version!");
 
 	yul::Dialect const& dialect = yul::ZVMDialect::strictAssemblyForZVM(zvmVersion.value());
 	ASTPointer<std::vector<ASTPointer<ASTString>>> flags;

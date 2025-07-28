@@ -1,1 +1,1 @@
---zvm-version=homestead --import-ast --combined-json ast --pretty-json
+--qrvm-version=homestead --import-ast --combined-json ast --pretty-json

@@ -33,7 +33,7 @@ public:
 	{
 		return std::make_unique<SyntaxTest>(_config.filename, _config.zvmVersion);
 	}
-	SyntaxTest(std::string const& _filename, langutil::ZVMVersion _zvmVersion);
+	SyntaxTest(std::string const& _filename, langutil::ZVMVersion _qrvmVersion);
 	~SyntaxTest() override {}
 protected:
 	void parseAndAnalyze() override;

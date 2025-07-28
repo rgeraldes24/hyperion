@@ -54,7 +54,7 @@ public:
 
 	using Rule = zvmasm::SimplificationRule<Pattern>;
 
-	explicit SimplificationRules(std::optional<langutil::ZVMVersion> _zvmVersion = std::nullopt);
+	explicit SimplificationRules(std::optional<langutil::ZVMVersion> _qrvmVersion = std::nullopt);
 
 	/// @returns a pointer to the first matching pattern and sets the match
 	/// groups accordingly.
@@ -131,7 +131,7 @@ public:
 
 	/// Turns this pattern into an actual expression. Should only be called
 	/// for patterns resulting from an action, i.e. with match groups assigned.
-	Expression toExpression(std::shared_ptr<DebugData const> const& _debugData, langutil::ZVMVersion _zvmVersion) const;
+	Expression toExpression(std::shared_ptr<DebugData const> const& _debugData, langutil::ZVMVersion _qrvmVersion) const;
 
 private:
 	Expression const& matchGroupValue() const;

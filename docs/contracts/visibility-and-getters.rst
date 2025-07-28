@@ -33,7 +33,7 @@ State Variable Visibility
 Function Visibility
 ===================
 
-Hyperion knows two kinds of function calls: external ones that do create an actual ZVM message call and internal ones that do not.
+Hyperion knows two kinds of function calls: external ones that do create an actual QRVM message call and internal ones that do not.
 Furthermore, internal functions can be made inaccessible to derived contracts.
 This gives rise to four types of visibility for functions.
 

@@ -30,7 +30,7 @@ using namespace hyperion::zvmasm;
 unsigned ConstantOptimisationMethod::optimiseConstants(
 	bool _isCreation,
 	size_t _runs,
-	langutil::ZVMVersion _zvmVersion,
+	langutil::ZVMVersion _qrvmVersion,
 	Assembly& _assembly
 )
 {
@@ -52,7 +52,7 @@ unsigned ConstantOptimisationMethod::optimiseConstants(
 		params.multiplicity = it.second;
 		params.isCreation = _isCreation;
 		params.runs = _runs;
-		params.zvmVersion = _zvmVersion;
+		params.qrvmVersion= _qrvmVersion;
 		LiteralMethod lit(params, item.data());
 		bigint literalGas = lit.gasNeeded();
 		CodeCopyMethod copy(params, item.data());
@@ -244,7 +244,7 @@ AssemblyItems ComputeMethod::findRepresentation(u256 const& _value)
 
 bool ComputeMethod::checkRepresentation(u256 const& _value, AssemblyItems const& _routine) const
 {
-	// This is a tiny ZVM that can only evaluate some instructions.
+	// This is a tiny QRVM that can only evaluate some instructions.
 	std::vector<u256> stack;
 	for (AssemblyItem const& item: _routine)
 	{

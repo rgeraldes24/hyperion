@@ -244,14 +244,14 @@ bool isArtifactRequested(Json::Value const& _outputSelection, std::string const&
 	return false;
 }
 
-/// @returns all artifact names of the ZVM object, either for creation or deploy time.
+/// @returns all artifact names of the QRVM object, either for creation or deploy time.
 std::vector<std::string> zvmObjectComponents(std::string const& _objectKind)
 {
 	hypAssert(_objectKind == "bytecode" || _objectKind == "deployedBytecode", "");
 	std::vector<std::string> components{"", ".object", ".opcodes", ".sourceMap", ".functionDebugData", ".generatedSources", ".linkReferences"};
 	if (_objectKind == "deployedBytecode")
 		components.push_back(".immutableReferences");
-	return util::applyMap(components, [&](auto const& _s) { return "zvm." + _objectKind + _s; });
+	return util::applyMap(components, [&](auto const& _s) { return "qrvm." + _objectKind + _s; });
 }
 
 /// @returns true if any binary was requested, i.e. we actually have to perform compilation.
@@ -260,11 +260,11 @@ bool isBinaryRequested(Json::Value const& _outputSelection)
 	if (!_outputSelection.isObject())
 		return false;
 
-	// This does not include "zvm.methodIdentifiers" on purpose!
+	// This does not include "qrvm.methodIdentifiers" on purpose!
 	static std::vector<std::string> const outputsThatRequireBinaries = std::vector<std::string>{
 		"*",
 		"ir", "irAst", "irOptimized", "irOptimizedAst",
-		"zvm.gasEstimates", "zvm.legacyAssembly", "zvm.assembly"
+		"qrvm.gasEstimates", "qrvm.legacyAssembly", "qrvm.assembly"
 	} + zvmObjectComponents("bytecode") + zvmObjectComponents("deployedBytecode");
 
 	for (auto const& fileRequests: _outputSelection)
@@ -275,7 +275,7 @@ bool isBinaryRequested(Json::Value const& _outputSelection)
 	return false;
 }
 
-/// @returns true if ZVM bytecode was requested, i.e. we have to run the old code generator.
+/// @returns true if QRVM bytecode was requested, i.e. we have to run the old code generator.
 bool isZvmBytecodeRequested(Json::Value const& _outputSelection)
 {
 	if (!_outputSelection.isObject())
@@ -283,7 +283,7 @@ bool isZvmBytecodeRequested(Json::Value const& _outputSelection)
 
 	static std::vector<std::string> const outputsThatRequireZvmBinaries = std::vector<std::string>{
 		"*",
-		"zvm.gasEstimates", "zvm.legacyAssembly", "zvm.assembly"
+		"qrvm.gasEstimates", "qrvm.legacyAssembly", "qrvm.assembly"
 	} + zvmObjectComponents("bytecode") + zvmObjectComponents("deployedBytecode");
 
 	for (auto const& fileRequests: _outputSelection)
@@ -793,11 +793,11 @@ std::variant<StandardCompiler::InputsAndSettings, Json::Value> StandardCompiler:
 	if (settings.isMember("zvmVersion"))
 	{
 		if (!settings["zvmVersion"].isString())
-			return formatFatalError(Error::Type::JSONError, "zvmVersion must be a string.");
+			return formatFatalError(Error::Type::JSONError, "qrvmVersionmust be a string.");
 		std::optional<langutil::ZVMVersion> version = langutil::ZVMVersion::fromString(settings["zvmVersion"].asString());
 		if (!version)
-			return formatFatalError(Error::Type::JSONError, "Invalid ZVM version requested.");
-		ret.zvmVersion = *version;
+			return formatFatalError(Error::Type::JSONError, "Invalid QRVM version requested.");
+		ret.qrvmVersion= *version;
 	}
 
 	if (settings.isMember("debug"))
@@ -882,10 +882,10 @@ std::variant<StandardCompiler::InputsAndSettings, Json::Value> StandardCompiler:
 				return formatFatalError(Error::Type::JSONError, "Library address must be a string.");
 			std::string address = jsonSourceName[library].asString();
 
-			if (!boost::starts_with(address, "Z"))
+			if (!boost::starts_with(address, "Q"))
 				return formatFatalError(
 					Error::Type::JSONError,
-					"Library address is not prefixed with \"Z\"."
+					"Library address is not prefixed with \"Q\"."
 				);
 
 			if (address.length() != 41)
@@ -896,7 +896,7 @@ std::variant<StandardCompiler::InputsAndSettings, Json::Value> StandardCompiler:
 
 			try
 			{
-				ret.libraries[sourceName + ":" + library] = util::h160(boost::replace_all_copy(address, "Z", "0x"));
+				ret.libraries[sourceName + ":" + library] = util::h160(boost::replace_all_copy(address, "Q", "0x"));
 			}
 			catch (util::BadHexCharacter const&)
 			{
@@ -1381,15 +1381,15 @@ Json::Value StandardCompiler::compileHyperion(StandardCompiler::InputsAndSetting
 			contractData["irOptimizedAst"] = compilerStack.yulIROptimizedAst(contractName);
 
 		// ZVM
-		Json::Value zvmData(Json::objectValue);
-		if (compilationSuccess && isArtifactRequested(_inputsAndSettings.outputSelection, file, name, "zvm.assembly", wildcardMatchesExperimental))
-			zvmData["assembly"] = compilerStack.assemblyString(contractName, sourceList);
-		if (compilationSuccess && isArtifactRequested(_inputsAndSettings.outputSelection, file, name, "zvm.legacyAssembly", wildcardMatchesExperimental))
-			zvmData["legacyAssembly"] = compilerStack.assemblyJSON(contractName);
-		if (isArtifactRequested(_inputsAndSettings.outputSelection, file, name, "zvm.methodIdentifiers", wildcardMatchesExperimental))
-			zvmData["methodIdentifiers"] = compilerStack.interfaceSymbols(contractName)["methods"];
-		if (compilationSuccess && isArtifactRequested(_inputsAndSettings.outputSelection, file, name, "zvm.gasEstimates", wildcardMatchesExperimental))
-			zvmData["gasEstimates"] = compilerStack.gasEstimates(contractName);
+		Json::Value qrvmData(Json::objectValue);
+		if (compilationSuccess && isArtifactRequested(_inputsAndSettings.outputSelection, file, name, "qrvm.assembly", wildcardMatchesExperimental))
+			qrvmData["assembly"] = compilerStack.assemblyString(contractName, sourceList);
+		if (compilationSuccess && isArtifactRequested(_inputsAndSettings.outputSelection, file, name, "qrvm.legacyAssembly", wildcardMatchesExperimental))
+			qrvmData["legacyAssembly"] = compilerStack.assemblyJSON(contractName);
+		if (isArtifactRequested(_inputsAndSettings.outputSelection, file, name, "qrvm.methodIdentifiers", wildcardMatchesExperimental))
+			qrvmData["methodIdentifiers"] = compilerStack.interfaceSymbols(contractName)["methods"];
+		if (compilationSuccess && isArtifactRequested(_inputsAndSettings.outputSelection, file, name, "qrvm.gasEstimates", wildcardMatchesExperimental))
+			qrvmData["gasEstimates"] = compilerStack.gasEstimates(contractName);
 
 		if (compilationSuccess && isArtifactRequested(
 			_inputsAndSettings.outputSelection,
@@ -1407,7 +1407,7 @@ Json::Value StandardCompiler::compileHyperion(StandardCompiler::InputsAndSetting
 					_inputsAndSettings.outputSelection,
 					file,
 					name,
-					"zvm.bytecode." + _element,
+					"qrvm.bytecode." + _element,
 					wildcardMatchesExperimental
 				); }
 			);
@@ -1428,13 +1428,13 @@ Json::Value StandardCompiler::compileHyperion(StandardCompiler::InputsAndSetting
 					_inputsAndSettings.outputSelection,
 					file,
 					name,
-					"zvm.deployedBytecode." + _element,
+					"qrvm.deployedBytecode." + _element,
 					wildcardMatchesExperimental
 				); }
 			);
 
 		if (!zvmData.empty())
-			contractData["zvm"] = zvmData;
+			contractData["qrvm"] = zvmData;
 
 		if (!contractData.empty())
 		{
@@ -1566,7 +1566,7 @@ Json::Value StandardCompiler::compileYul(InputsAndSettings _inputsAndSettings)
 		{
 			MachineAssemblyObject const& o = isDeployed ? deployedObject : object;
 			if (o.bytecode)
-				output["contracts"][sourceName][contractName]["zvm"][kind] =
+				output["contracts"][sourceName][contractName]["qrvm"][kind] =
 					collectZVMObject(
 						*o.bytecode,
 						o.sourceMappings.get(),
@@ -1576,7 +1576,7 @@ Json::Value StandardCompiler::compileYul(InputsAndSettings _inputsAndSettings)
 							_inputsAndSettings.outputSelection,
 							sourceName,
 							contractName,
-							"zvm." + kind + "." + _element,
+							"qrvm." + kind + "." + _element,
 							wildcardMatchesExperimental
 						); }
 					);
@@ -1584,8 +1584,8 @@ Json::Value StandardCompiler::compileYul(InputsAndSettings _inputsAndSettings)
 
 	if (isArtifactRequested(_inputsAndSettings.outputSelection, sourceName, contractName, "irOptimized", wildcardMatchesExperimental))
 		output["contracts"][sourceName][contractName]["irOptimized"] = stack.print();
-	if (isArtifactRequested(_inputsAndSettings.outputSelection, sourceName, contractName, "zvm.assembly", wildcardMatchesExperimental))
-		output["contracts"][sourceName][contractName]["zvm"]["assembly"] = object.assembly;
+	if (isArtifactRequested(_inputsAndSettings.outputSelection, sourceName, contractName, "qrvm.assembly", wildcardMatchesExperimental))
+		output["contracts"][sourceName][contractName]["qrvm"]["assembly"] = object.assembly;
 
 	return output;
 }

@@ -70,7 +70,7 @@ public:
 		m_dataNames(std::move(_dataNames))
 	{
 		if (ZVMDialect const* zvmDialect = dynamic_cast<ZVMDialect const*>(&m_dialect))
-			m_zvmVersion = zvmDialect->zvmVersion();
+			m_qrvmVersion = zvmDialect->zvmVersion();
 	}
 
 	bool analyze(Block const& _block);
@@ -125,7 +125,7 @@ private:
 	std::set<Scope::Variable const*> m_activeVariables;
 	AsmAnalysisInfo& m_info;
 	langutil::ErrorReporter& m_errorReporter;
-	langutil::ZVMVersion m_zvmVersion;
+	langutil::ZVMVersion m_qrvmVersion;
 	Dialect const& m_dialect;
 	/// Names of data objects to be referenced by builtin functions with literal arguments.
 	std::set<YulString> m_dataNames;

@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * ZVM versioning.
+ * QRVM versioning.
  */
 
 #pragma once
@@ -38,7 +38,7 @@ namespace hyperion::langutil
 {
 
 /**
- * A version specifier of the ZVM we want to compile to.
+ * A version specifier of the QRVM we want to compile to.
  * Defaults to the latest version deployed on Ethereum Mainnet at the time of compiler release.
  */
 class ZVMVersion:

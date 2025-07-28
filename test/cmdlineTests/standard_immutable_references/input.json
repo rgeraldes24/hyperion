@@ -10,7 +10,7 @@
   "outputSelection": {
    "*": {
     "A": [
-     "zvm.deployedBytecode.immutableReferences"
+     "qrvm.deployedBytecode.immutableReferences"
     ]
    }
   }

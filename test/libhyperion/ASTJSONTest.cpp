@@ -80,7 +80,7 @@ void replaceVersionWithTag(std::string& _input)
 	boost::algorithm::replace_all(
 		_input,
 		"\"" + hyperion::test::CommonOptions::get().zvmVersion().name() + "\"",
-		"%ZVMVERSION%"
+		"%QRVMVERSION%"
 	);
 }
 
@@ -88,7 +88,7 @@ void replaceTagWithVersion(std::string& _input)
 {
 	boost::algorithm::replace_all(
 		_input,
-		"%ZVMVERSION%",
+		"%QRVMVERSION%",
 		"\"" + hyperion::test::CommonOptions::get().zvmVersion().name() + "\""
 	);
 }

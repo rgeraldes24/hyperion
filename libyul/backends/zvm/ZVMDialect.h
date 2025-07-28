@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Yul dialects for ZVM.
+ * Yul dialects for QRVM.
  */
 
 #pragma once
@@ -60,14 +60,14 @@ struct BuiltinFunctionForZVM: public BuiltinFunction
 
 
 /**
- * Yul dialect for ZVM as a backend.
+ * Yul dialect for QRVM as a backend.
  * The main difference is that the builtin functions take an AbstractAssembly for the
  * code generation.
  */
 struct ZVMDialect: public Dialect
 {
 	/// Constructor, should only be used internally. Use the factory functions below.
-	ZVMDialect(langutil::ZVMVersion _zvmVersion, bool _objectAccess);
+	ZVMDialect(langutil::ZVMVersion _qrvmVersion, bool _objectAccess);
 
 	/// @returns the builtin function of the given name or a nullptr if it is not a builtin function.
 	BuiltinFunctionForZVM const* builtin(YulString _name) const override;
@@ -87,7 +87,7 @@ struct ZVMDialect: public Dialect
 	static ZVMDialect const& strictAssemblyForZVM(langutil::ZVMVersion _version);
 	static ZVMDialect const& strictAssemblyForZVMObjects(langutil::ZVMVersion _version);
 
-	langutil::ZVMVersion zvmVersion() const { return m_zvmVersion; }
+	langutil::ZVMVersion zvmVersion() const { return m_qrvmVersion; }
 
 	bool providesObjectAccess() const { return m_objectAccess; }
 
@@ -97,14 +97,14 @@ protected:
 	BuiltinFunctionForZVM const* verbatimFunction(size_t _arguments, size_t _returnVariables) const;
 
 	bool const m_objectAccess;
-	langutil::ZVMVersion const m_zvmVersion;
+	langutil::ZVMVersion const m_qrvmVersion;
 	std::map<YulString, BuiltinFunctionForZVM> m_functions;
 	std::map<std::pair<size_t, size_t>, std::shared_ptr<BuiltinFunctionForZVM const>> mutable m_verbatimFunctions;
 	std::set<YulString> m_reserved;
 };
 
 /**
- * ZVM dialect with types u256 (default) and bool.
+ * QRVM dialect with types u256 (default) and bool.
  * Difference to ZVMDialect:
  *  - All comparison functions return type bool
  *  - bitwise operations are called bitor, bitand, bitxor and bitnot
@@ -116,7 +116,7 @@ protected:
 struct ZVMDialectTyped: public ZVMDialect
 {
 	/// Constructor, should only be used internally. Use the factory function below.
-	ZVMDialectTyped(langutil::ZVMVersion _zvmVersion, bool _objectAccess);
+	ZVMDialectTyped(langutil::ZVMVersion _qrvmVersion, bool _objectAccess);
 
 	BuiltinFunctionForZVM const* discardFunction(YulString _type) const override;
 	BuiltinFunctionForZVM const* equalityFunction(YulString _type) const override;

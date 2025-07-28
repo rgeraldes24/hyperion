@@ -47,8 +47,8 @@ class TypeChecker: private ASTConstVisitor
 {
 public:
 	/// @param _errorReporter provides the error logging functionality.
-	TypeChecker(langutil::ZVMVersion _zvmVersion, langutil::ErrorReporter& _errorReporter):
-		m_zvmVersion(_zvmVersion),
+	TypeChecker(langutil::ZVMVersion _qrvmVersion, langutil::ErrorReporter& _errorReporter):
+		m_qrvmVersion(_qrvmVersion),
 		m_errorReporter(_errorReporter)
 	{}
 
@@ -200,7 +200,7 @@ private:
 	SourceUnit const* m_currentSourceUnit = nullptr;
 	ContractDefinition const* m_currentContract = nullptr;
 
-	langutil::ZVMVersion m_zvmVersion;
+	langutil::ZVMVersion m_qrvmVersion;
 
 	langutil::ErrorReporter& m_errorReporter;
 };

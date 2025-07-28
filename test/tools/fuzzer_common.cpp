@@ -40,7 +40,7 @@ using namespace hyperion::frontend;
 using namespace hyperion::langutil;
 using namespace hyperion::util;
 
-static vector<ZVMVersion> s_zvmVersions = {
+static vector<ZVMVersion> s_qrvmVersions = {
 	ZVMVersion::shanghai()
 };
 
@@ -86,7 +86,7 @@ void FuzzerUtil::testCompiler(
 )
 {
 	frontend::CompilerStack compiler;
-	ZVMVersion zvmVersion = s_zvmVersions[_rand % s_zvmVersions.size()];
+	ZVMVersion qrvmVersion= s_qrvmVersions[_rand % s_qrvmVersions.size()];
 	frontend::OptimiserSettings optimiserSettings;
 	if (_optimize)
 		optimiserSettings = frontend::OptimiserSettings::standard();

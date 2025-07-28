@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * ZVM execution host, i.e. component that implements a simulated Ethereum blockchain
+ * QRVM execution host, i.e. component that implements a simulated Ethereum blockchain
  * for testing purposes.
  */
 
@@ -86,9 +86,9 @@ bool ZVMHost::checkVmPaths(vector<boost::filesystem::path> const& _vmPaths)
 	return zvmVmFound;
 }
 
-ZVMHost::ZVMHost(langutil::ZVMVersion _zvmVersion, zvmc::VM& _vm):
+ZVMHost::ZVMHost(langutil::ZVMVersion _qrvmVersion, zvmc::VM& _vm):
 	m_vm(_vm),
-	m_zvmVersion(_zvmVersion)
+	m_qrvmVersion(_qrvmVersion)
 {
 	if (!m_vm)
 	{
@@ -96,22 +96,22 @@ ZVMHost::ZVMHost(langutil::ZVMVersion _zvmVersion, zvmc::VM& _vm):
 		assertThrow(false, Exception, "");
 	}
 
-	if (_zvmVersion == langutil::ZVMVersion::shanghai())
+	if (_qrvmVersion == langutil::ZVMVersion::shanghai())
 		m_zvmRevision = ZVMC_SHANGHAI;
 	else
-		assertThrow(false, Exception, "Unsupported ZVM version");
+		assertThrow(false, Exception, "Unsupported QRVM version");
 
 	
 	// This is the value from the merge block.
 	tx_context.block_prev_randao = 0xa86c2e601b6c44eb4848f7d23d9df3113fbcac42041c49cbed5000cb4f118777_bytes32;
 	tx_context.block_gas_limit = 20000000;
-	tx_context.block_coinbase = "Z7878787878787878787878787878787878787878"_address;
+	tx_context.block_coinbase = "Q7878787878787878787878787878787878787878"_address;
 	tx_context.tx_gas_price = zvmc::uint256be{3000000000};
-	tx_context.tx_origin = "Z9292929292929292929292929292929292929292"_address;
+	tx_context.tx_origin = "Q9292929292929292929292929292929292929292"_address;
 	// Mainnet according to EIP-155
 	tx_context.chain_id = zvmc::uint256be{1};
 	// The minimum value of basefee
-	tx_context.block_base_fee = zvmc::bytes32{7};
+	tx_context.block_base_fee = qrvmc::bytes32{7};
 
 	// Reserve space for recording calls.
 	if (!recorded_calls.capacity())
@@ -136,7 +136,7 @@ void ZVMHost::reset()
 	// roughly 22 days before the update went live.
 	for (unsigned precompiledAddress = 1; precompiledAddress <= 8; precompiledAddress++)
 	{
-		zvmc::address address{precompiledAddress};
+		qrvmc::address address{precompiledAddress};
 		// 1planck
 		accounts[address].balance = zvmc::uint256be{1};
 		// Set according to EIP-1052.
@@ -175,19 +175,19 @@ void ZVMHost::recordCalls(zvmc_message const& _message) noexcept
 zvmc::Result ZVMHost::call(zvmc_message const& _message) noexcept
 {
 	recordCalls(_message);
-	if (_message.recipient == "Z0000000000000000000000000000000000000001"_address)
+	if (_message.recipient == "Q0000000000000000000000000000000000000001"_address)
 		return precompileDepositRoot(_message);
-	else if (_message.recipient == "Z0000000000000000000000000000000000000002"_address)
+	else if (_message.recipient == "Q0000000000000000000000000000000000000002"_address)
 		return precompileSha256(_message);
-	else if (_message.recipient == "Z0000000000000000000000000000000000000004"_address)
+	else if (_message.recipient == "Q0000000000000000000000000000000000000004"_address)
 		return precompileIdentity(_message);
-	else if (_message.recipient == "Z0000000000000000000000000000000000000005"_address)
+	else if (_message.recipient == "Q0000000000000000000000000000000000000005"_address)
 		return precompileModExp(_message);
-	else if (_message.recipient == "Z0000000000000000000000000000000000000006"_address)
+	else if (_message.recipient == "Q0000000000000000000000000000000000000006"_address)
 		return precompileALTBN128G1Add(_message);
-	else if (_message.recipient == "Z0000000000000000000000000000000000000007"_address)
+	else if (_message.recipient == "Q0000000000000000000000000000000000000007"_address)
 		return precompileALTBN128G1Mul(_message);
-	else if (_message.recipient == "Z0000000000000000000000000000000000000008"_address)
+	else if (_message.recipient == "Q0000000000000000000000000000000000000008"_address)
 		return precompileALTBN128PairingProduct(_message);
 
 	auto const stateBackup = accounts;
@@ -325,32 +325,32 @@ zvmc::Result ZVMHost::call(zvmc_message const& _message) noexcept
 	return result;
 }
 
-zvmc::bytes32 ZVMHost::get_block_hash(int64_t _number) const noexcept
+qrvmc::bytes32 ZVMHost::get_block_hash(int64_t _number) const noexcept
 {
 	return convertToZVMC(u256("0x3737373737373737373737373737373737373737373737373737373737373737") + _number);
 }
 
-h160 ZVMHost::convertFromZVMC(zvmc::address const& _addr)
+h160 ZVMHost::convertFromZVMC(qrvmc::address const& _addr)
 {
 	return h160(bytes(begin(_addr.bytes), end(_addr.bytes)));
 }
 
-zvmc::address ZVMHost::convertToZVMC(h160 const& _addr)
+qrvmc::address ZVMHost::convertToZVMC(h160 const& _addr)
 {
-	zvmc::address a;
+	qrvmc::address a;
 	for (unsigned i = 0; i < 20; ++i)
 		a.bytes[i] = _addr[i];
 	return a;
 }
 
-h256 ZVMHost::convertFromZVMC(zvmc::bytes32 const& _data)
+h256 ZVMHost::convertFromZVMC(qrvmc::bytes32 const& _data)
 {
 	return h256(bytes(begin(_data.bytes), end(_data.bytes)));
 }
 
-zvmc::bytes32 ZVMHost::convertToZVMC(h256 const& _data)
+qrvmc::bytes32 ZVMHost::convertToZVMC(h256 const& _data)
 {
-	zvmc::bytes32 d;
+	qrvmc::bytes32 d;
 	for (unsigned i = 0; i < 32; ++i)
 		d.bytes[i] = _data[i];
 	return d;
@@ -958,7 +958,7 @@ zvmc::Result ZVMHost::resultWithGas(
 	return result;
 }
 
-StorageMap const& ZVMHost::get_address_storage(zvmc::address const& _addr)
+StorageMap const& ZVMHost::get_address_storage(qrvmc::address const& _addr)
 {
 	assertThrow(account_exists(_addr), Exception, "Account does not exist.");
 	return accounts[_addr].storage;

@@ -103,7 +103,7 @@ CommonOptions::CommonOptions(std::string _caption):
 void CommonOptions::addOptions()
 {
 	options.add_options()
-		("zvm-version", po::value(&zvmVersionString), "which ZVM version to use")
+		("qrvm-version", po::value(&zvmVersionString), "which QRVM version to use")
 		("testpath", po::value<fs::path>(&this->testPath)->default_value(hyperion::test::testPath()), "path to test files")
 		("vm", po::value<std::vector<fs::path>>(&vmPaths), "path to zvmc library, can be supplied multiple times.")
 		("batches", po::value<size_t>(&this->batches)->default_value(1), "set number of batches to split the tests into")
@@ -242,7 +242,7 @@ langutil::ZVMVersion CommonOptions::zvmVersion() const
 	{
 		auto version = langutil::ZVMVersion::fromString(zvmVersionString);
 		if (!version)
-			BOOST_THROW_EXCEPTION(std::runtime_error("Invalid ZVM version: " + zvmVersionString));
+			BOOST_THROW_EXCEPTION(std::runtime_error("Invalid QRVM version: " + zvmVersionString));
 		return *version;
 	}
 	else

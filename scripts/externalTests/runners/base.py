@@ -155,7 +155,7 @@ def run_test(runner: BaseRunner):
             -------------------------------------
             Settings preset: {preset.value}
             Settings: {settings}
-            ZVM version: {runner.config.zvm_version}
+            QRVM version: {runner.config.zvm_version}
             Compiler version: {get_hypc_short_version(hypc_version)}
             Compiler version (full): {hypc_version}
             -------------------------------------

@@ -1,19 +1,19 @@
 {
   "contracts":
   {
-    "test/cmdlineTests/ast_json_import_wrong_zvmVersion/input.hyp:C": {}
+    "test/cmdlineTests/ast_json_import_wrong_qrvmVersion/input.hyp:C": {}
   },
   "sourceList":
   [
-    "test/cmdlineTests/ast_json_import_wrong_zvmVersion/input.hyp"
+    "test/cmdlineTests/ast_json_import_wrong_qrvmVersion/input.hyp"
   ],
   "sources":
   {
-    "test/cmdlineTests/ast_json_import_wrong_zvmVersion/input.hyp":
+    "test/cmdlineTests/ast_json_import_wrong_qrvmVersion/input.hyp":
     {
       "AST":
       {
-        "absolutePath": "test/cmdlineTests/ast_json_import_wrong_zvmVersion/input.hyp",
+        "absolutePath": "test/cmdlineTests/ast_json_import_wrong_qrvmVersion/input.hyp",
         "exportedSymbols":
         {
           "C":

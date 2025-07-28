@@ -55,7 +55,7 @@ DEFINE_PROTO_FUZZER(Contract const& _contract)
 		auto [encodeStatus, encodedData] = coder.encode(typeString, valueString);
 		hypAssert(encodeStatus, "Isabelle abicoder fuzzer: Encoding failed");
 
-		// We target the default ZVM which is the latest
+		// We target the default QRVM which is the latest
 		langutil::ZVMVersion version;
 		ZVMHost hostContext(version, zvmone);
 		string contractName = "C";
@@ -69,7 +69,7 @@ DEFINE_PROTO_FUZZER(Contract const& _contract)
 			{}
 		);
 		auto result = zvmoneUtil.compileDeployAndExecute(encodedData);
-		hypAssert(result.status_code != ZVMC_REVERT, "Proto ABIv2 fuzzer: ZVM One reverted.");
+		hypAssert(result.status_code != ZVMC_REVERT, "Proto ABIv2 fuzzer: QRVM One reverted.");
 		if (result.status_code == ZVMC_SUCCESS)
 			hypAssert(
 				ZvmoneUtility::zeroWord(result.output_data, result.output_size),

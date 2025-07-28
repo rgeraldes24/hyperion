@@ -30,8 +30,8 @@ as individual values.
 
 .. warning::
     When using elements that are smaller than 32 bytes, your contract's gas usage may be higher.
-    This is because the ZVM operates on 32 bytes at a time. Therefore, if the element is smaller
-    than that, the ZVM must use more operations in order to reduce the size of the element from 32
+    This is because the QRVM operates on 32 bytes at a time. Therefore, if the element is smaller
+    than that, the QRVM must use more operations in order to reduce the size of the element from 32
     bytes to the desired size.
 
     It might be beneficial to use reduced-size types if you are dealing with storage values
@@ -45,7 +45,7 @@ as individual values.
     When dealing with function arguments or memory
     values, there is no inherent benefit because the compiler does not pack these values.
 
-    Finally, in order to allow the ZVM to optimize for this, ensure that you try to order your
+    Finally, in order to allow the QRVM to optimize for this, ensure that you try to order your
     storage variables and ``struct`` members such that they can be packed tightly. For example,
     declaring your storage variables in the order of ``uint128, uint128, uint256`` instead of
     ``uint128, uint256, uint128``, as the former will only take up two slots of storage whereas the

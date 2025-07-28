@@ -727,7 +727,7 @@ std::string IRGenerator::generateExternalFunction(ContractDefinition const& _con
 		unsigned paramVars = std::make_shared<TupleType>(_functionType.parameterTypes())->sizeOnStack();
 		unsigned retVars = std::make_shared<TupleType>(_functionType.returnParameterTypes())->sizeOnStack();
 
-		ABIFunctions abiFunctions(m_zvmVersion, m_context.revertStrings(), m_context.functionCollector());
+		ABIFunctions abiFunctions(m_qrvmVersion, m_context.revertStrings(), m_context.functionCollector());
 		t("abiDecode", abiFunctions.tupleDecoder(_functionType.parameterTypes()));
 		t("params",  suffixedVariableNameList("param_", 0, paramVars));
 		t("retParams",  suffixedVariableNameList("ret_", 0, retVars));
@@ -1060,7 +1060,7 @@ std::string IRGenerator::dispatchRoutine(ContractDefinition const& _contract)
 
 std::string IRGenerator::memoryInit(bool _useMemoryGuard)
 {
-	// This function should be called at the beginning of the ZVM call frame
+	// This function should be called at the beginning of the QRVM call frame
 	// and thus can assume all memory to be zero, including the contents of
 	// the "zero memory area" (the position CompilerUtils::zeroPointer points to).
 	return
@@ -1091,7 +1091,7 @@ void IRGenerator::resetContext(ContractDefinition const& _contract, ExecutionCon
 		"Reset internal dispatch map without consuming it."
 	);
 	IRGenerationContext newContext(
-		m_zvmVersion,
+		m_qrvmVersion,
 		_context,
 		m_context.revertStrings(),
 		m_context.sourceIndices(),

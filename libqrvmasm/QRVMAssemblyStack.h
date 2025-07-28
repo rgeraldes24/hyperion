@@ -33,7 +33,7 @@ namespace hyperion::zvmasm
 class ZVMAssemblyStack: public AbstractAssemblyStack
 {
 public:
-	explicit ZVMAssemblyStack(langutil::ZVMVersion _zvmVersion): m_zvmVersion(_zvmVersion) {}
+	explicit ZVMAssemblyStack(langutil::ZVMVersion _qrvmVersion): m_qrvmVersion(_qrvmVersion) {}
 
 	/// Runs parsing and analysis steps.
 	/// Multiple calls overwrite the previous state.
@@ -70,7 +70,7 @@ public:
 	}
 
 private:
-	langutil::ZVMVersion m_zvmVersion;
+	langutil::ZVMVersion m_qrvmVersion;
 	std::string m_name;
 	std::shared_ptr<zvmasm::Assembly> m_zvmAssembly;
 	std::shared_ptr<zvmasm::Assembly> m_zvmRuntimeAssembly;

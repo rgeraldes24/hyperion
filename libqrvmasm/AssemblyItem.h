@@ -108,7 +108,7 @@ public:
 
 	/// This function is used in `Assembly::assemblyJSON`.
 	/// It returns the name & data of the current assembly item.
-	/// @param _zvmVersion the ZVM version.
+	/// @param _qrvmVersion the QRVM version.
 	/// @returns a pair, where the first element is the json-assembly
 	/// item name, where second element is the string representation
 	/// of it's data.

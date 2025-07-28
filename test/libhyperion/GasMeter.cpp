@@ -45,7 +45,7 @@ public:
 		m_compiler.setSources({{"", "pragma hyperion >=0.0;\n"
 				"// SPDX-License-Identifier: GPL-3.0\n" + _sourceCode}});
 		m_compiler.setOptimiserSettings(hyperion::test::CommonOptions::get().optimize);
-		m_compiler.setZVMVersion(m_zvmVersion);
+		m_compiler.setZVMVersion(m_qrvmVersion);
 		BOOST_REQUIRE_MESSAGE(m_compiler.compile(), "Compiling contract failed");
 	}
 

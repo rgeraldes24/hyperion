@@ -31,12 +31,12 @@ class YulAssembler
 {
 public:
 	YulAssembler(
-		langutil::ZVMVersion _zvmVersion,
+		langutil::ZVMVersion _qrvmVersion,
 		hyperion::frontend::OptimiserSettings _optSettings,
 		std::string const& _yulSource
 	):
 		m_stack(
-			_zvmVersion,
+			_qrvmVersion,
 			hyperion::yul::YulStack::Language::StrictAssembly,
 			_optSettings,
 			langutil::DebugInfoSelection::All()

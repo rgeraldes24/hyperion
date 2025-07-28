@@ -44,7 +44,7 @@ solver.add(diff <= 2**(n_bits-1))
 # x is a potential point where the memory operations
 # overlap.
 # Note that we do not use wrapping arithmetic
-# here, because it is not done in the ZVM either.
+# here, because it is not done in the QRVM either.
 # For example calldatacopy(2**256 - 2, 0, 10)
 # (copy 10 bytes from calldata position zero to memory
 # position 2**256 - 2) would not write to memory position

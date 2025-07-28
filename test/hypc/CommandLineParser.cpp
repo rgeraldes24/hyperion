@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(cli_mode_options)
 			"--ignore-missing",
 			"--output-dir=/tmp/out",
 			"--overwrite",
-			"--zvm-version=shanghai",
+			"--qrvm-version=shanghai",
 			"--via-ir",
 			"--experimental-via-ir",
 			"--revert-strings=strip",
@@ -128,8 +128,8 @@ BOOST_AUTO_TEST_CASE(cli_mode_options)
 			"--no-color",
 			"--error-codes",
 			"--libraries="
-				"dir1/file1.hyp:L=Z1234567890123456789012345678901234567890,"
-				"dir2/file2.hyp:L=Z1111122222333334444455555666667777788888",
+				"dir1/file1.hyp:L=Q1234567890123456789012345678901234567890,"
+				"dir2/file2.hyp:L=Q1111122222333334444455555666667777788888",
 			"--ast-compact-json", "--asm", "--asm-json", "--opcodes", "--bin", "--bin-runtime", "--abi",
 			"--ir", "--ir-ast-json", "--ir-optimized", "--ir-optimized-ast-json", "--hashes", "--userdoc", "--devdoc", "--metadata", "--storage-layout",
 			"--gas",
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(cli_mode_options)
 		expectedOptions.input.ignoreMissingFiles = true;
 		expectedOptions.output.dir = "/tmp/out";
 		expectedOptions.output.overwriteFiles = true;
-		expectedOptions.output.zvmVersion = ZVMVersion::shanghai();
+		expectedOptions.output.qrvmVersion= ZVMVersion::shanghai();
 		expectedOptions.output.viaIR = true;
 		expectedOptions.output.revertStrings = RevertStrings::Strip;
 		expectedOptions.output.debugInfoSelection = DebugInfoSelection::fromString("location");
@@ -300,7 +300,7 @@ BOOST_AUTO_TEST_CASE(assembly_mode_options)
 			"--allow-paths=/tmp,/home,project,../contracts",
 			"--ignore-missing",
 			"--overwrite",
-			"--zvm-version=shanghai",
+			"--qrvm-version=shanghai",
 			"--revert-strings=strip",      // Accepted but has no effect in assembly mode
 			"--debug-info=location",
 			"--pretty-json",
@@ -308,8 +308,8 @@ BOOST_AUTO_TEST_CASE(assembly_mode_options)
 			"--no-color",
 			"--error-codes",
 			"--libraries="
-				"dir1/file1.hyp:L=Z1234567890123456789012345678901234567890,"
-				"dir2/file2.hyp:L=Z1111122222333334444455555666667777788888",
+				"dir1/file1.hyp:L=Q1234567890123456789012345678901234567890,"
+				"dir2/file2.hyp:L=Q1111122222333334444455555666667777788888",
 			"--asm",
 			"--bin",
 			"--ir-optimized",
@@ -338,7 +338,7 @@ BOOST_AUTO_TEST_CASE(assembly_mode_options)
 		expectedOptions.input.allowedDirectories = {"/tmp", "/home", "project", "../contracts", "c", "/usr/lib"};
 		expectedOptions.input.ignoreMissingFiles = true;
 		expectedOptions.output.overwriteFiles = true;
-		expectedOptions.output.zvmVersion = ZVMVersion::shanghai();
+		expectedOptions.output.qrvmVersion= ZVMVersion::shanghai();
 		expectedOptions.output.revertStrings = RevertStrings::Strip;
 		expectedOptions.output.debugInfoSelection = DebugInfoSelection::fromString("location");
 		expectedOptions.formatting.json = JsonFormat {JsonFormat::Pretty, 1};
@@ -381,15 +381,15 @@ BOOST_AUTO_TEST_CASE(standard_json_mode_options)
 		"--ignore-missing",
 		"--output-dir=/tmp/out",           // Accepted but has no effect in Standard JSON mode
 		"--overwrite",                     // Accepted but has no effect in Standard JSON mode
-		"--zvm-version=shanghai",    // Ignored in Standard JSON mode
+		"--qrvm-version=shanghai",    // Ignored in Standard JSON mode
 		"--revert-strings=strip",          // Accepted but has no effect in Standard JSON mode
 		"--pretty-json",
 		"--json-indent=1",
 		"--no-color",                      // Accepted but has no effect in Standard JSON mode
 		"--error-codes",                   // Accepted but has no effect in Standard JSON mode
 		"--libraries="                     // Ignored in Standard JSON mode
-			"dir1/file1.hyp:L=Z1234567890123456789012345678901234567890,"
-			"dir2/file2.hyp:L=Z1111122222333334444455555666667777788888",
+			"dir1/file1.hyp:L=Q1234567890123456789012345678901234567890,"
+			"dir2/file2.hyp:L=Q1111122222333334444455555666667777788888",
 		"--gas",                           // Accepted but has no effect in Standard JSON mode
 		"--combined-json=abi,bin",         // Accepted but has no effect in Standard JSON mode
 	};

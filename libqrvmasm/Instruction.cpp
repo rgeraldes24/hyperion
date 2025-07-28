@@ -172,7 +172,7 @@ std::map<std::string, Instruction> const hyperion::zvmasm::c_instructions =
 	{ "INVALID", Instruction::INVALID }
 };
 
-/// @note InstructionInfo is assumed to be the same across all ZVM versions except for the instruction name.
+/// @note InstructionInfo is assumed to be the same across all QRVM versions except for the instruction name.
 static std::map<Instruction, InstructionInfo> const c_instructionInfo =
 { //												Add, Args, Ret, SideEffects, GasPriceTier
 	{ Instruction::STOP,		{ "STOP",			0, 0, 0, true,  Tier::Zero } },

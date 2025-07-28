@@ -37,7 +37,7 @@ void CodeGenerator::assemble(
 	Block const& _parsedData,
 	AsmAnalysisInfo& _analysisInfo,
 	zvmasm::Assembly& _assembly,
-	langutil::ZVMVersion _zvmVersion,
+	langutil::ZVMVersion _qrvmVersion,
 	ExternalIdentifierAccess::CodeGenerator _identifierAccessCodeGen,
 	bool _useNamedLabelsForFunctions,
 	bool _optimizeStackAllocation
@@ -49,7 +49,7 @@ void CodeGenerator::assemble(
 		assemblyAdapter,
 		_analysisInfo,
 		_parsedData,
-		ZVMDialect::strictAssemblyForZVM(_zvmVersion),
+		ZVMDialect::strictAssemblyForZVM(_qrvmVersion),
 		builtinContext,
 		_optimizeStackAllocation,
 		_identifierAccessCodeGen,

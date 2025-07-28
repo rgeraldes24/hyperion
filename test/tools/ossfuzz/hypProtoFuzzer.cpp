@@ -63,7 +63,7 @@ DEFINE_PROTO_FUZZER(Program const& _input)
 		std::cout << hyp_source << std::endl;
 	}
 
-	// We target the default ZVM which is the latest
+	// We target the default QRVM which is the latest
 	langutil::ZVMVersion version;
 	ZVMHost hostContext(version, zvmone);
 	string contractName = "C";

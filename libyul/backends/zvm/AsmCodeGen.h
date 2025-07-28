@@ -43,7 +43,7 @@ public:
 		Block const& _parsedData,
 		AsmAnalysisInfo& _analysisInfo,
 		zvmasm::Assembly& _assembly,
-		langutil::ZVMVersion _zvmVersion,
+		langutil::ZVMVersion _qrvmVersion,
 		ExternalIdentifierAccess::CodeGenerator _identifierAccess = {},
 		bool _useNamedLabelsForFunctions = false,
 		bool _optimizeStackAllocation = false

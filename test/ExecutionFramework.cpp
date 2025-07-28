@@ -52,8 +52,8 @@ ExecutionFramework::ExecutionFramework():
 {
 }
 
-ExecutionFramework::ExecutionFramework(langutil::ZVMVersion _zvmVersion, vector<boost::filesystem::path> const& _vmPaths):
-	m_zvmVersion(_zvmVersion),
+ExecutionFramework::ExecutionFramework(langutil::ZVMVersion _qrvmVersion, vector<boost::filesystem::path> const& _vmPaths):
+	m_qrvmVersion(_qrvmVersion),
 	m_optimiserSettings(hyperion::frontend::OptimiserSettings::minimal()),
 	m_showMessages(hyperion::test::CommonOptions::get().showMessages),
 	m_vmPaths(_vmPaths)
@@ -71,7 +71,7 @@ void ExecutionFramework::selectVM(zvmc_capabilities _cap)
 		zvmc::VM& vm = ZVMHost::getVM(path.string());
 		if (vm.has_capability(_cap))
 		{
-			m_zvmcHost = make_unique<ZVMHost>(m_zvmVersion, vm);
+			m_zvmcHost = make_unique<ZVMHost>(m_qrvmVersion, vm);
 			break;
 		}
 	}
@@ -285,7 +285,7 @@ bool ExecutionFramework::storageEmpty(h160 const& _addr) const
 	if (it != m_zvmcHost->accounts.end())
 	{
 		for (auto const& entry: it->second.storage)
-			if (entry.second.current != zvmc::bytes32{})
+			if (entry.second.current != qrvmc::bytes32{})
 				return false;
 	}
 	return true;
@@ -298,7 +298,7 @@ vector<hyperion::frontend::test::LogRecord> ExecutionFramework::recordedLogs() c
 		logs.emplace_back(
 			ZVMHost::convertFromZVMC(logRecord.creator),
 			bytes{logRecord.data.begin(), logRecord.data.end()},
-			logRecord.topics | ranges::views::transform([](zvmc::bytes32 _bytes) { return ZVMHost::convertFromZVMC(_bytes); }) | ranges::to<vector>
+			logRecord.topics | ranges::views::transform([](qrvmc::bytes32 _bytes) { return ZVMHost::convertFromZVMC(_bytes); }) | ranges::to<vector>
 		);
 	return logs;
 }

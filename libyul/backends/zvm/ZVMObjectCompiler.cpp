@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Compiler that transforms Yul Objects to ZVM bytecode objects.
+ * Compiler that transforms Yul Objects to QRVM bytecode objects.
  */
 
 #include <libyul/backends/zvm/ZVMObjectCompiler.h>

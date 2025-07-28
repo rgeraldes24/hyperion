@@ -81,7 +81,7 @@ DEFINE_PROTO_FUZZER(Program const& _input)
 		filterUnboundedLoops
 	);
 	string yul_source = converter.programToString(_input);
-	// Do not fuzz the ZVM Version field.
+	// Do not fuzz the QRVM Version field.
 	// See https://github.com/ethereum/solidity/issues/12590
 	langutil::ZVMVersion version;
 	ZVMHost hostContext(version, zvmone);
@@ -127,7 +127,7 @@ DEFINE_PROTO_FUZZER(Program const& _input)
 		auto callMessage = YulZvmoneUtility{}.callMessage(deployResult.create_address);
 		zvmc::Result callResult = hostContext.call(callMessage);
 		// If the fuzzer synthesized input does not contain the revert opcode which
-		// we lazily check by string find, the ZVM call should not revert.
+		// we lazily check by string find, the QRVM call should not revert.
 		noRevertInSource = yul_source.find("revert") == string::npos;
 		noInvalidInSource = yul_source.find("invalid") == string::npos;
 		if (noInvalidInSource)
@@ -138,7 +138,7 @@ DEFINE_PROTO_FUZZER(Program const& _input)
 		if (noRevertInSource)
 			hypAssert(
 				callResult.status_code != ZVMC_REVERT,
-				"HyperionZvmoneInterface: ZVM One reverted"
+				"HyperionZvmoneInterface: QRVM One reverted"
 			);
 		// Bail out on serious errors encountered during a call.
 		if (YulZvmoneUtility{}.seriousCallError(callResult.status_code))
@@ -181,7 +181,7 @@ DEFINE_PROTO_FUZZER(Program const& _input)
 	if (noRevertInSource)
 		hypAssert(
 			callResultOpt.status_code != ZVMC_REVERT,
-			"HyperionZvmoneInterface: ZVM One reverted"
+			"HyperionZvmoneInterface: QRVM One reverted"
 		);
 	if (noInvalidInSource)
 		hypAssert(

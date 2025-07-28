@@ -50,8 +50,8 @@ bool isRestrictedIdentifier(Dialect const& _dialect, YulString const& _identifie
 /// Helper function that returns the instruction, if the `_name` is a BuiltinFunction
 std::optional<zvmasm::Instruction> toZVMInstruction(Dialect const& _dialect, YulString const& _name);
 
-/// Helper function that returns the ZVM version from a dialect.
-/// It returns the default ZVM version if dialect is not an ZVMDialect.
+/// Helper function that returns the QRVM version from a dialect.
+/// It returns the default QRVM version if dialect is not an ZVMDialect.
 langutil::ZVMVersion const zvmVersionFromDialect(Dialect const& _dialect);
 
 class StatementRemover: public ASTModifier

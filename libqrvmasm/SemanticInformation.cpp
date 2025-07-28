@@ -433,7 +433,7 @@ SemanticInformation::Effect SemanticInformation::otherState(Instruction _instruc
 	case Instruction::CREATE:
 	case Instruction::CREATE2:
 	case Instruction::STATICCALL: // because it can affect returndatasize
-		// Strictly speaking, log0, .., log4 writes to the state, but the ZVM cannot read it, so they
+		// Strictly speaking, log0, .., log4 writes to the state, but the QRVM cannot read it, so they
 		// are just marked as having 'other side effects.'
 		return SemanticInformation::Write;
 

@@ -798,7 +798,7 @@ std::vector<SimplificationRule<Pattern>> zvmRuleList(
 /// arbitrary operations.
 template <class Pattern>
 std::vector<SimplificationRule<Pattern>> simplificationRuleList(
-	std::optional<langutil::ZVMVersion> _zvmVersion,
+	std::optional<langutil::ZVMVersion> _qrvmVersion,
 	Pattern A,
 	Pattern B,
 	Pattern C,
@@ -822,12 +822,12 @@ std::vector<SimplificationRule<Pattern>> simplificationRuleList(
 	rules += simplificationRuleListPart3(A, B, C, W, X);
 	rules += simplificationRuleListPart4(A, B, C, W, X);
 	rules += simplificationRuleListPart4_5(A, B, C, W, X);
-	rules += simplificationRuleListPart5(_zvmVersion.has_value(), A, B, C, W, X);
+	rules += simplificationRuleListPart5(_qrvmVersion.has_value(), A, B, C, W, X);
 	rules += simplificationRuleListPart6(A, B, C, W, X);
 	rules += simplificationRuleListPart7(A, B, C, W, X, Y);
 	rules += simplificationRuleListPart8(A, B, C, W, X);
 
-	if (_zvmVersion.has_value())
+	if (_qrvmVersion.has_value())
 		rules += zvmRuleList(A, B, C, W, X, Y, Z);
 
 	return rules;

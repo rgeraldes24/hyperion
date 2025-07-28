@@ -129,8 +129,8 @@ public:
 	};
 
 	/// Constructs a new gas meter given the current state.
-	GasMeter(std::shared_ptr<KnownState>  _state, langutil::ZVMVersion _zvmVersion, u256  _largestMemoryAccess = 0):
-		m_state(std::move(_state)), m_zvmVersion(_zvmVersion), m_largestMemoryAccess(std::move(_largestMemoryAccess)) {}
+	GasMeter(std::shared_ptr<KnownState>  _state, langutil::ZVMVersion _qrvmVersion, u256  _largestMemoryAccess = 0):
+		m_state(std::move(_state)), m_qrvmVersion(_qrvmVersion), m_largestMemoryAccess(std::move(_largestMemoryAccess)) {}
 
 	/// @returns an upper bound on the gas consumed by the given instruction and updates
 	/// the state.
@@ -140,7 +140,7 @@ public:
 	u256 const& largestMemoryAccess() const { return m_largestMemoryAccess; }
 
 	/// @returns gas costs for simple instructions with constant gas costs (that do not
-	/// change with ZVM versions)
+	/// change with QRVM versions)
 	static unsigned runGas(Instruction _instruction);
 
 	/// @returns the gas cost of the supplied data, depending whether it is in creation code, or not.
@@ -164,7 +164,7 @@ private:
 	GasConsumption memoryGas(int _stackPosOffset, int _stackPosSize);
 
 	std::shared_ptr<KnownState> m_state;
-	langutil::ZVMVersion m_zvmVersion;
+	langutil::ZVMVersion m_qrvmVersion;
 	/// Largest point where memory was accessed since the creation of this object.
 	u256 m_largestMemoryAccess;
 };

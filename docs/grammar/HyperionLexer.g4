@@ -262,7 +262,7 @@ LINE_COMMENT: '//' ~[\r\n]* -> channel(HIDDEN);
 mode AssemblyBlockMode;
 
 //@doc:inline
-AssemblyDialect: '"zvmasm"';
+AssemblyDialect: '"qrvmasm"';
 AssemblyLBrace: '{' -> popMode, pushMode(YulMode);
 
 AssemblyFlagString: '"' DoubleQuotedStringCharacter+ '"';
@@ -292,9 +292,9 @@ YulTrue: 'true';
 YulHex: 'hex';
 
 /**
- * Builtin functions in the ZVM Yul dialect.
+ * Builtin functions in the QRVM Yul dialect.
  */
-YulZVMBuiltin:
+YulQRVMBuiltin:
 	'stop' | 'add' | 'sub' | 'mul' | 'div' | 'sdiv' | 'mod' | 'smod' | 'exp' | 'not'
 	| 'lt' | 'gt' | 'slt' | 'sgt' | 'eq' | 'iszero' | 'and' | 'or' | 'xor' | 'byte'
 	| 'shl' | 'shr' | 'sar' | 'addmod' | 'mulmod' | 'signextend' | 'keccak256'

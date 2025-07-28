@@ -1162,10 +1162,10 @@ Assembly const* Assembly::subAssemblyById(size_t _subId) const
 	return currentAssembly;
 }
 
-Assembly::OptimiserSettings Assembly::OptimiserSettings::translateSettings(frontend::OptimiserSettings const& _settings, langutil::ZVMVersion const& _zvmVersion)
+Assembly::OptimiserSettings Assembly::OptimiserSettings::translateSettings(frontend::OptimiserSettings const& _settings, langutil::ZVMVersion const& _qrvmVersion)
 {
 	// Constructing it this way so that we notice changes in the fields.
-	zvmasm::Assembly::OptimiserSettings asmSettings{false,  false, false, false, false, false, _zvmVersion, 0};
+	zvmasm::Assembly::OptimiserSettings asmSettings{false,  false, false, false, false, false, _qrvmVersion, 0};
 	asmSettings.runInliner = _settings.runInliner;
 	asmSettings.runJumpdestRemover = _settings.runJumpdestRemover;
 	asmSettings.runPeephole = _settings.runPeephole;
@@ -1173,6 +1173,6 @@ Assembly::OptimiserSettings Assembly::OptimiserSettings::translateSettings(front
 	asmSettings.runCSE = _settings.runCSE;
 	asmSettings.runConstantOptimiser = _settings.runConstantOptimiser;
 	asmSettings.expectedExecutionsPerDeployment = _settings.expectedExecutionsPerDeployment;
-	asmSettings.zvmVersion = _zvmVersion;
+	asmSettings.qrvmVersion= _qrvmVersion;
 	return asmSettings;
 }

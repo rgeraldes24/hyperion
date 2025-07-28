@@ -6,7 +6,7 @@
 Events
 ******
 
-Hyperion events give an abstraction on top of the ZVM's logging functionality.
+Hyperion events give an abstraction on top of the QRVM's logging functionality.
 Applications can subscribe and listen to these events through the RPC interface of an Ethereum client.
 
 Events can be defined at file level or as inheritable members of contracts (including interfaces and libraries).

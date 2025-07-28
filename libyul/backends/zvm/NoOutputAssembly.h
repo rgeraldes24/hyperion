@@ -45,7 +45,7 @@ namespace hyperion::yul
 class NoOutputAssembly: public AbstractAssembly
 {
 public:
-	explicit NoOutputAssembly(langutil::ZVMVersion _zvmVersion): m_zvmVersion(_zvmVersion) { }
+	explicit NoOutputAssembly(langutil::ZVMVersion _qrvmVersion): m_qrvmVersion(_qrvmVersion) { }
 	~NoOutputAssembly() override = default;
 
 	void setSourceLocation(langutil::SourceLocation const&) override {}
@@ -77,16 +77,16 @@ public:
 
 	void markAsInvalid() override {}
 
-	langutil::ZVMVersion zvmVersion() const override { return m_zvmVersion; }
+	langutil::ZVMVersion zvmVersion() const override { return m_qrvmVersion; }
 
 private:
 	int m_stackHeight = 0;
-	langutil::ZVMVersion m_zvmVersion;
+	langutil::ZVMVersion m_qrvmVersion;
 };
 
 
 /**
- * ZVM dialect that does not generate any code.
+ * QRVM dialect that does not generate any code.
  */
 struct NoOutputZVMDialect: public ZVMDialect
 {

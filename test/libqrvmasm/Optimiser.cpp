@@ -1250,7 +1250,7 @@ BOOST_AUTO_TEST_CASE(jumpdest_removal_subassemblies)
 	settings.runDeduplicate = true;
 	settings.runCSE = true;
 	settings.runConstantOptimiser = true;
-	settings.zvmVersion = hyperion::test::CommonOptions::get().zvmVersion();
+	settings.qrvmVersion= hyperion::test::CommonOptions::get().zvmVersion();
 	settings.expectedExecutionsPerDeployment = OptimiserSettings{}.expectedExecutionsPerDeployment;
 
 	Assembly main{settings.zvmVersion, false, {}};

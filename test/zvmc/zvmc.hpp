@@ -67,22 +67,22 @@ struct address : zvmc_address
     inline constexpr operator bytes_view() const noexcept { return {bytes, sizeof(bytes)}; }
 };
 
-/// The fixed size array of 32 bytes for storing 256-bit ZVM values.
+/// The fixed size array of 32 bytes for storing 256-bit QRVM values.
 ///
-/// This type wraps C ::zvmc_bytes32 to make sure objects of this type are always initialized.
-struct bytes32 : zvmc_bytes32
+/// This type wraps C ::qrvmc_bytes32 to make sure objects of this type are always initialized.
+struct bytes32 : qrvmc_bytes32
 {
     /// Default and converting constructor.
     ///
     /// Initializes bytes to zeros if not other @p init value provided.
-    constexpr bytes32(zvmc_bytes32 init = {}) noexcept : zvmc_bytes32{init} {}
+    constexpr bytes32(qrvmc_bytes32 init = {}) noexcept : qrvmc_bytes32{init} {}
 
     /// Converting constructor from unsigned integer value.
     ///
     /// This constructor assigns the @p v value to the last 8 bytes [24:31]
     /// in big-endian order.
     constexpr explicit bytes32(uint64_t v) noexcept
-      : zvmc_bytes32{{0,
+      : qrvmc_bytes32{{0,
                       0,
                       0,
                       0,
@@ -123,7 +123,7 @@ struct bytes32 : zvmc_bytes32
     inline constexpr operator bytes_view() const noexcept { return {bytes, sizeof(bytes)}; }
 };
 
-/// The alias for zvmc::bytes32 to represent a big-endian 256-bit integer.
+/// The alias for qrvmc::bytes32 to represent a big-endian 256-bit integer.
 using uint256be = bytes32;
 
 
@@ -170,7 +170,7 @@ inline constexpr uint64_t fnv1a_by64(uint64_t h, uint64_t x) noexcept
 }  // namespace fnv
 
 
-/// The "equal to" comparison operator for the zvmc::address type.
+/// The "equal to" comparison operator for the qrvmc::address type.
 inline constexpr bool operator==(const address& a, const address& b) noexcept
 {
     return load64le(&a.bytes[0]) == load64le(&b.bytes[0]) &&
@@ -178,13 +178,13 @@ inline constexpr bool operator==(const address& a, const address& b) noexcept
            load32le(&a.bytes[16]) == load32le(&b.bytes[16]);
 }
 
-/// The "not equal to" comparison operator for the zvmc::address type.
+/// The "not equal to" comparison operator for the qrvmc::address type.
 inline constexpr bool operator!=(const address& a, const address& b) noexcept
 {
     return !(a == b);
 }
 
-/// The "less than" comparison operator for the zvmc::address type.
+/// The "less than" comparison operator for the qrvmc::address type.
 inline constexpr bool operator<(const address& a, const address& b) noexcept
 {
     return load64be(&a.bytes[0]) < load64be(&b.bytes[0]) ||
@@ -194,25 +194,25 @@ inline constexpr bool operator<(const address& a, const address& b) noexcept
               load32be(&a.bytes[16]) < load32be(&b.bytes[16]))));
 }
 
-/// The "greater than" comparison operator for the zvmc::address type.
+/// The "greater than" comparison operator for the qrvmc::address type.
 inline constexpr bool operator>(const address& a, const address& b) noexcept
 {
     return b < a;
 }
 
-/// The "less than or equal to" comparison operator for the zvmc::address type.
+/// The "less than or equal to" comparison operator for the qrvmc::address type.
 inline constexpr bool operator<=(const address& a, const address& b) noexcept
 {
     return !(b < a);
 }
 
-/// The "greater than or equal to" comparison operator for the zvmc::address type.
+/// The "greater than or equal to" comparison operator for the qrvmc::address type.
 inline constexpr bool operator>=(const address& a, const address& b) noexcept
 {
     return !(a < b);
 }
 
-/// The "equal to" comparison operator for the zvmc::bytes32 type.
+/// The "equal to" comparison operator for the qrvmc::bytes32 type.
 inline constexpr bool operator==(const bytes32& a, const bytes32& b) noexcept
 {
     return load64le(&a.bytes[0]) == load64le(&b.bytes[0]) &&
@@ -221,13 +221,13 @@ inline constexpr bool operator==(const bytes32& a, const bytes32& b) noexcept
            load64le(&a.bytes[24]) == load64le(&b.bytes[24]);
 }
 
-/// The "not equal to" comparison operator for the zvmc::bytes32 type.
+/// The "not equal to" comparison operator for the qrvmc::bytes32 type.
 inline constexpr bool operator!=(const bytes32& a, const bytes32& b) noexcept
 {
     return !(a == b);
 }
 
-/// The "less than" comparison operator for the zvmc::bytes32 type.
+/// The "less than" comparison operator for the qrvmc::bytes32 type.
 inline constexpr bool operator<(const bytes32& a, const bytes32& b) noexcept
 {
     return load64be(&a.bytes[0]) < load64be(&b.bytes[0]) ||
@@ -239,19 +239,19 @@ inline constexpr bool operator<(const bytes32& a, const bytes32& b) noexcept
                 load64be(&a.bytes[24]) < load64be(&b.bytes[24]))))));
 }
 
-/// The "greater than" comparison operator for the zvmc::bytes32 type.
+/// The "greater than" comparison operator for the qrvmc::bytes32 type.
 inline constexpr bool operator>(const bytes32& a, const bytes32& b) noexcept
 {
     return b < a;
 }
 
-/// The "less than or equal to" comparison operator for the zvmc::bytes32 type.
+/// The "less than or equal to" comparison operator for the qrvmc::bytes32 type.
 inline constexpr bool operator<=(const bytes32& a, const bytes32& b) noexcept
 {
     return !(b < a);
 }
 
-/// The "greater than or equal to" comparison operator for the zvmc::bytes32 type.
+/// The "greater than or equal to" comparison operator for the qrvmc::bytes32 type.
 inline constexpr bool operator>=(const bytes32& a, const bytes32& b) noexcept
 {
     return !(a < b);
@@ -303,13 +303,13 @@ constexpr T parse(std::string_view s, std::string_view prefix) noexcept
     return from_prefixed_hex<T>(s, prefix).value();
 }
 
-/// Literal for zvmc::address.
+/// Literal for qrvmc::address.
 constexpr address operator""_address(const char* s, size_t) noexcept
 {
-    return parse<address>(s, "Z");
+    return parse<address>(s, "Q");
 }
 
-/// Literal for zvmc::bytes32.
+/// Literal for qrvmc::bytes32.
 constexpr bytes32 operator""_bytes32(const char* s) noexcept
 {
     return parse<bytes32>(s);
@@ -319,40 +319,40 @@ constexpr bytes32 operator""_bytes32(const char* s) noexcept
 using namespace literals;
 
 
-/// @copydoc zvmc_status_code_to_string
+/// @copydoc qrvmc_status_code_to_string
 inline const char* to_string(zvmc_status_code status_code) noexcept
 {
-    return zvmc_status_code_to_string(status_code);
+    return qrvmc_status_code_to_string(status_code);
 }
 
-/// @copydoc zvmc_revision_to_string
+/// @copydoc qrvmc_revision_to_string
 inline const char* to_string(zvmc_revision rev) noexcept
 {
-    return zvmc_revision_to_string(rev);
+    return qrvmc_revision_to_string(rev);
 }
 
 
-/// Alias for zvmc_make_result().
-constexpr auto make_result = zvmc_make_result;
+/// Alias for qrvmc_make_result().
+constexpr auto make_result = qrvmc_make_result;
 
-/// @copydoc zvmc_result
+/// @copydoc qrvmc_result
 ///
-/// This is a RAII wrapper for zvmc_result and objects of this type
+/// This is a RAII wrapper for qrvmc_result and objects of this type
 /// automatically release attached resources.
-class Result : private zvmc_result
+class Result : private qrvmc_result
 {
 public:
-    using zvmc_result::create_address;
-    using zvmc_result::gas_left;
-    using zvmc_result::gas_refund;
-    using zvmc_result::output_data;
-    using zvmc_result::output_size;
-    using zvmc_result::status_code;
+    using qrvmc_result::create_address;
+    using qrvmc_result::gas_left;
+    using qrvmc_result::gas_refund;
+    using qrvmc_result::output_data;
+    using qrvmc_result::output_size;
+    using qrvmc_result::status_code;
 
     /// Creates the result from the provided arguments.
     ///
     /// The provided output is copied to memory allocated with malloc()
-    /// and the zvmc_result::release function is set to one invoking free().
+    /// and the qrvmc_result::release function is set to one invoking free().
     ///
     /// @param _status_code  The status code.
     /// @param _gas_left     The amount of gas left.
@@ -364,7 +364,7 @@ public:
                     int64_t _gas_refund,
                     const uint8_t* _output_data,
                     size_t _output_size) noexcept
-      : zvmc_result{make_result(_status_code, _gas_left, _gas_refund, _output_data, _output_size)}
+      : qrvmc_result{make_result(_status_code, _gas_left, _gas_refund, _output_data, _output_size)}
     {}
 
     /// Creates the result without output.
@@ -375,7 +375,7 @@ public:
     explicit Result(zvmc_status_code _status_code = ZVMC_INTERNAL_ERROR,
                     int64_t _gas_left = 0,
                     int64_t _gas_refund = 0) noexcept
-      : zvmc_result{make_result(_status_code, _gas_left, _gas_refund, nullptr, 0)}
+      : qrvmc_result{make_result(_status_code, _gas_left, _gas_refund, nullptr, 0)}
     {}
 
     /// Creates the result of contract creation.
@@ -388,15 +388,15 @@ public:
                     int64_t _gas_left,
                     int64_t _gas_refund,
                     const zvmc_address& _create_address) noexcept
-      : zvmc_result{make_result(_status_code, _gas_left, _gas_refund, nullptr, 0)}
+      : qrvmc_result{make_result(_status_code, _gas_left, _gas_refund, nullptr, 0)}
     {
         create_address = _create_address;
     }
 
-    /// Converting constructor from raw zvmc_result.
+    /// Converting constructor from raw qrvmc_result.
     ///
     /// This object takes ownership of the resources of @p res.
-    explicit Result(const zvmc_result& res) noexcept : zvmc_result{res} {}
+    explicit Result(const qrvmc_result& res) noexcept : qrvmc_result{res} {}
 
     /// Destructor responsible for automatically releasing attached resources.
     ~Result() noexcept
@@ -406,7 +406,7 @@ public:
     }
 
     /// Move constructor.
-    Result(Result&& other) noexcept : zvmc_result{other}
+    Result(Result&& other) noexcept : qrvmc_result{other}
     {
         other.release = nullptr;  // Disable releasing of the rvalue object.
     }
@@ -420,28 +420,28 @@ public:
     Result& operator=(Result&& other) noexcept
     {
         this->~Result();                           // Release this object.
-        static_cast<zvmc_result&>(*this) = other;  // Copy data.
+        static_cast<qrvmc_result&>(*this) = other;  // Copy data.
         other.release = nullptr;                   // Disable releasing of the rvalue object.
         return *this;
     }
 
-    /// Access the result object as a referenced to ::zvmc_result.
-    zvmc_result& raw() noexcept { return *this; }
+    /// Access the result object as a referenced to ::qrvmc_result.
+    qrvmc_result& raw() noexcept { return *this; }
 
-    /// Access the result object as a const referenced to ::zvmc_result.
-    const zvmc_result& raw() const noexcept { return *this; }
+    /// Access the result object as a const referenced to ::qrvmc_result.
+    const qrvmc_result& raw() const noexcept { return *this; }
 
-    /// Releases the ownership and returns the raw copy of zvmc_result.
+    /// Releases the ownership and returns the raw copy of qrvmc_result.
     ///
     /// This method drops the ownership of the result
     /// (result's resources are not going to be released when this object is destructed).
     /// It is the caller's responsibility having the returned copy of the result to release it.
     /// This object MUST NOT be used after this method is invoked.
     ///
-    /// @return  The copy of this object converted to raw zvmc_result.
-    zvmc_result release_raw() noexcept
+    /// @return  The copy of this object converted to raw qrvmc_result.
+    qrvmc_result release_raw() noexcept
     {
-        const auto out = zvmc_result{*this};  // Copy data.
+        const auto out = qrvmc_result{*this};  // Copy data.
         this->release = nullptr;              // Disable releasing of this object.
         return out;
     }
@@ -759,43 +759,43 @@ inline VM::VM(zvmc_vm* vm,
 
 namespace internal
 {
-inline bool account_exists(zvmc_host_context* h, const zvmc_address* addr) noexcept
+inline bool account_exists(zvmc_host_context* h, const qrvmc_address addr) noexcept
 {
     return Host::from_context(h)->account_exists(*addr);
 }
 
-inline zvmc_bytes32 get_storage(zvmc_host_context* h,
-                                const zvmc_address* addr,
-                                const zvmc_bytes32* key) noexcept
+inline qrvmc_bytes32 get_storage(zvmc_host_context* h,
+                                const qrvmc_address addr,
+                                const qrvmc_bytes32* key) noexcept
 {
     return Host::from_context(h)->get_storage(*addr, *key);
 }
 
 inline zvmc_storage_status set_storage(zvmc_host_context* h,
-                                       const zvmc_address* addr,
-                                       const zvmc_bytes32* key,
-                                       const zvmc_bytes32* value) noexcept
+                                       const qrvmc_address addr,
+                                       const qrvmc_bytes32* key,
+                                       const qrvmc_bytes32* value) noexcept
 {
     return Host::from_context(h)->set_storage(*addr, *key, *value);
 }
 
-inline zvmc_uint256be get_balance(zvmc_host_context* h, const zvmc_address* addr) noexcept
+inline zvmc_uint256be get_balance(zvmc_host_context* h, const qrvmc_address addr) noexcept
 {
     return Host::from_context(h)->get_balance(*addr);
 }
 
-inline size_t get_code_size(zvmc_host_context* h, const zvmc_address* addr) noexcept
+inline size_t get_code_size(zvmc_host_context* h, const qrvmc_address addr) noexcept
 {
     return Host::from_context(h)->get_code_size(*addr);
 }
 
-inline zvmc_bytes32 get_code_hash(zvmc_host_context* h, const zvmc_address* addr) noexcept
+inline qrvmc_bytes32 get_code_hash(zvmc_host_context* h, const qrvmc_address addr) noexcept
 {
     return Host::from_context(h)->get_code_hash(*addr);
 }
 
 inline size_t copy_code(zvmc_host_context* h,
-                        const zvmc_address* addr,
+                        const qrvmc_address addr,
                         size_t code_offset,
                         uint8_t* buffer_data,
                         size_t buffer_size) noexcept
@@ -803,7 +803,7 @@ inline size_t copy_code(zvmc_host_context* h,
     return Host::from_context(h)->copy_code(*addr, code_offset, buffer_data, buffer_size);
 }
 
-inline zvmc_result call(zvmc_host_context* h, const zvmc_message* msg) noexcept
+inline qrvmc_result call(zvmc_host_context* h, const zvmc_message* msg) noexcept
 {
     return Host::from_context(h)->call(*msg).release_raw();
 }
@@ -813,79 +813,79 @@ inline zvmc_tx_context get_tx_context(zvmc_host_context* h) noexcept
     return Host::from_context(h)->get_tx_context();
 }
 
-inline zvmc_bytes32 get_block_hash(zvmc_host_context* h, int64_t block_number) noexcept
+inline qrvmc_bytes32 get_block_hash(zvmc_host_context* h, int64_t block_number) noexcept
 {
     return Host::from_context(h)->get_block_hash(block_number);
 }
 
 inline void emit_log(zvmc_host_context* h,
-                     const zvmc_address* addr,
+                     const qrvmc_address addr,
                      const uint8_t* data,
                      size_t data_size,
-                     const zvmc_bytes32 topics[],
+                     const qrvmc_bytes32 topics[],
                      size_t num_topics) noexcept
 {
     Host::from_context(h)->emit_log(*addr, data, data_size, static_cast<const bytes32*>(topics),
                                     num_topics);
 }
 
-inline zvmc_access_status access_account(zvmc_host_context* h, const zvmc_address* addr) noexcept
+inline zvmc_access_status access_account(zvmc_host_context* h, const qrvmc_address addr) noexcept
 {
     return Host::from_context(h)->access_account(*addr);
 }
 
 inline zvmc_access_status access_storage(zvmc_host_context* h,
-                                         const zvmc_address* addr,
-                                         const zvmc_bytes32* key) noexcept
+                                         const qrvmc_address addr,
+                                         const qrvmc_bytes32* key) noexcept
 {
     return Host::from_context(h)->access_storage(*addr, *key);
 }
 }  // namespace internal
 
-inline const zvmc_host_interface& Host::get_interface() noexcept
+inline const qrvmc_host_interface& Host::get_interface() noexcept
 {
-    static constexpr zvmc_host_interface interface = {
-        ::zvmc::internal::account_exists, ::zvmc::internal::get_storage,
-        ::zvmc::internal::set_storage,    ::zvmc::internal::get_balance,
-        ::zvmc::internal::get_code_size,  ::zvmc::internal::get_code_hash,
-        ::zvmc::internal::copy_code,      
-        ::zvmc::internal::call,           ::zvmc::internal::get_tx_context,
-        ::zvmc::internal::get_block_hash, ::zvmc::internal::emit_log,
-        ::zvmc::internal::access_account, ::zvmc::internal::access_storage,
+    static constexpr qrvmc_host_interface interface = {
+        ::qrvmc::internal::account_exists, ::qrvmc::internal::get_storage,
+        ::qrvmc::internal::set_storage,    ::qrvmc::internal::get_balance,
+        ::qrvmc::internal::get_code_size,  ::qrvmc::internal::get_code_hash,
+        ::qrvmc::internal::copy_code,      
+        ::qrvmc::internal::call,           ::qrvmc::internal::get_tx_context,
+        ::qrvmc::internal::get_block_hash, ::qrvmc::internal::emit_log,
+        ::qrvmc::internal::access_account, ::qrvmc::internal::access_storage,
     };
     return interface;
 }
-}  // namespace zvmc
+}  // namespace qrvmc
 
 
-/// "Stream out" operator implementation for ::zvmc_status_code.
+/// "Stream out" operator implementation for ::qrvmc_status_code.
 ///
-/// @note This is defined in global namespace to match ::zvmc_status_code definition and allow
+/// @note This is defined in global namespace to match ::qrvmc_status_code definition and allow
 ///       convenient operator overloading usage.
-inline std::ostream& operator<<(std::ostream& os, zvmc_status_code status_code)
+inline std::ostream& operator<<(std::ostream& os, qrvmc_status_code status_code)
 {
-    return os << zvmc::to_string(status_code);
+    return os << qrvmc::to_string(status_code);
 }
 
-/// "Stream out" operator implementation for ::zvmc_revision.
+/// "Stream out" operator implementation for ::qrvmc_revision.
 ///
-/// @note This is defined in global namespace to match ::zvmc_revision definition and allow
+/// @note This is defined in global namespace to match ::qrvmc_revision definition and allow
 ///       convenient operator overloading usage.
-inline std::ostream& operator<<(std::ostream& os, zvmc_revision rev)
+inline std::ostream& operator<<(std::ostream& os, qrvmc_revision rev)
 {
-    return os << zvmc::to_string(rev);
+    return os << qrvmc::to_string(rev);
 }
 
 namespace std
 {
-/// Hash operator template specialization for zvmc::address. Needed for unordered containers.
+/// Hash operator template specialization for qrvmc::address. Needed for unordered containers.
 template <>
-struct hash<zvmc::address>
+struct hash<qrvmc::address>
 {
     /// Hash operator using FNV1a-based folding.
-    constexpr size_t operator()(const zvmc::address& s) const noexcept
+    constexpr size_t operator()(const qrvmc::address& s) const noexcept
     {
-        using namespace zvmc;
+        using namespace qrvmc;
         using namespace fnv;
         return static_cast<size_t>(fnv1a_by64(
             fnv1a_by64(fnv1a_by64(fnv::offset_basis, load64le(&s.bytes[0])), load64le(&s.bytes[8])),
@@ -893,14 +893,14 @@ struct hash<zvmc::address>
     }
 };
 
-/// Hash operator template specialization for zvmc::bytes32. Needed for unordered containers.
+/// Hash operator template specialization for qrvmc::bytes32. Needed for unordered containers.
 template <>
-struct hash<zvmc::bytes32>
+struct hash<qrvmc::bytes32>
 {
     /// Hash operator using FNV1a-based folding.
-    constexpr size_t operator()(const zvmc::bytes32& s) const noexcept
+    constexpr size_t operator()(const qrvmc::bytes32& s) const noexcept
     {
-        using namespace zvmc;
+        using namespace qrvmc;
         using namespace fnv;
         return static_cast<size_t>(
             fnv1a_by64(fnv1a_by64(fnv1a_by64(fnv1a_by64(fnv::offset_basis, load64le(&s.bytes[0])),

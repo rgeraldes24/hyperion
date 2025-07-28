@@ -89,7 +89,7 @@ static inline enum zvmc_set_option_result zvmc_set_option(struct zvmc_vm* vm,
  *
  * @see zvmc_execute_fn.
  */
-static inline struct zvmc_result zvmc_execute(struct zvmc_vm* vm,
+static inline struct qrvmc_result zvmc_execute(struct zvmc_vm* vm,
                                               const struct zvmc_host_interface* host,
                                               struct zvmc_host_context* context,
                                               enum zvmc_revision rev,
@@ -100,13 +100,13 @@ static inline struct zvmc_result zvmc_execute(struct zvmc_vm* vm,
     return vm->execute(vm, host, context, rev, msg, code, code_size);
 }
 
-/// The zvmc_result release function using free() for releasing the memory.
+/// The qrvmc_result release function using free() for releasing the memory.
 ///
 /// This function is used in the zvmc_make_result(),
 /// but may be also used in other case if convenient.
 ///
 /// @param result The result object.
-static void zvmc_free_result_memory(const struct zvmc_result* result)
+static void zvmc_free_result_memory(const struct qrvmc_result* result)
 {
     free((uint8_t*)result->output_data);
 }
@@ -114,23 +114,23 @@ static void zvmc_free_result_memory(const struct zvmc_result* result)
 /// Creates the result from the provided arguments.
 ///
 /// The provided output is copied to memory allocated with malloc()
-/// and the zvmc_result::release function is set to one invoking free().
+/// and the qrvmc_result::release function is set to one invoking free().
 ///
 /// In case of memory allocation failure, the result has all fields zeroed
-/// and only zvmc_result::status_code is set to ::ZVMC_OUT_OF_MEMORY internal error.
+/// and only qrvmc_result::status_code is set to ::ZVMC_OUT_OF_MEMORY internal error.
 ///
 /// @param status_code  The status code.
 /// @param gas_left     The amount of gas left.
 /// @param gas_refund   The amount of refunded gas.
 /// @param output_data  The pointer to the output.
 /// @param output_size  The output size.
-static inline struct zvmc_result zvmc_make_result(enum zvmc_status_code status_code,
+static inline struct qrvmc_result zvmc_make_result(enum zvmc_status_code status_code,
                                                   int64_t gas_left,
                                                   int64_t gas_refund,
                                                   const uint8_t* output_data,
                                                   size_t output_size)
 {
-    struct zvmc_result result;
+    struct qrvmc_result result;
     memset(&result, 0, sizeof(result));
 
     if (output_size != 0)
@@ -160,9 +160,9 @@ static inline struct zvmc_result zvmc_make_result(enum zvmc_status_code status_c
  *
  * @param result  The result object to be released. MUST NOT be NULL.
  *
- * @see zvmc_result::release() zvmc_release_result_fn
+ * @see qrvmc_result::release() zvmc_release_result_fn
  */
-static inline void zvmc_release_result(struct zvmc_result* result)
+static inline void zvmc_release_result(struct qrvmc_result* result)
 {
     if (result->release)
         result->release(result);
@@ -170,10 +170,10 @@ static inline void zvmc_release_result(struct zvmc_result* result)
 
 
 /**
- * Helpers for optional storage of zvmc_result.
+ * Helpers for optional storage of qrvmc_result.
  *
- * In some contexts (i.e. zvmc_result::create_address is unused) objects of
- * type zvmc_result contains a memory storage that MAY be used by the object
+ * In some contexts (i.e. qrvmc_result::create_address is unused) objects of
+ * type qrvmc_result contains a memory storage that MAY be used by the object
  * owner. This group defines helper types and functions for accessing
  * the optional storage.
  *
@@ -182,11 +182,11 @@ static inline void zvmc_release_result(struct zvmc_result* result)
  */
 
 /**
- * The union representing zvmc_result "optional storage".
+ * The union representing qrvmc_result "optional storage".
  *
- * The zvmc_result struct contains 24 bytes of optional storage that can be
+ * The qrvmc_result struct contains 24 bytes of optional storage that can be
  * reused by the object creator if the object does not contain
- * zvmc_result::create_address.
+ * qrvmc_result::create_address.
  *
  * A VM implementation MAY use this memory to keep additional data
  * when returning result from zvmc_execute_fn().
@@ -201,16 +201,16 @@ union zvmc_result_optional_storage
     void* pointer;     /**< Optional pointer. */
 };
 
-/** Provides read-write access to zvmc_result "optional storage". */
+/** Provides read-write access to qrvmc_result "optional storage". */
 static inline union zvmc_result_optional_storage* zvmc_get_optional_storage(
-    struct zvmc_result* result)
+    struct qrvmc_result* result)
 {
     return (union zvmc_result_optional_storage*)&result->create_address;
 }
 
-/** Provides read-only access to zvmc_result "optional storage". */
+/** Provides read-only access to qrvmc_result "optional storage". */
 static inline const union zvmc_result_optional_storage* zvmc_get_const_optional_storage(
-    const struct zvmc_result* result)
+    const struct qrvmc_result* result)
 {
     return (const union zvmc_result_optional_storage*)&result->create_address;
 }

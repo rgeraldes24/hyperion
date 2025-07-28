@@ -52,7 +52,7 @@ this nonsensical example:
         function f() internal pure returns (uint ret) { return g(7) + f(); }
     }
 
-These function calls are translated into simple jumps inside the ZVM. This has
+These function calls are translated into simple jumps inside the QRVM. This has
 the effect that the current memory is not cleared, i.e. passing memory references
 to internally-called functions is very efficient. Only functions of the same
 contract instance can be called internally.
@@ -111,7 +111,7 @@ otherwise, the ``value`` option would not be available.
   the ``value`` and ``gas`` settings are lost, only
   ``feed.info{value: 10, gas: 800}()`` performs the function call.
 
-Due to the fact that the ZVM considers a call to a non-existing contract to
+Due to the fact that the QRVM considers a call to a non-existing contract to
 always succeed, Hyperion uses the ``extcodesize`` opcode to check that
 the contract that is about to be called actually exists (it contains code)
 and causes an exception if it does not. This check is skipped if the return
@@ -581,7 +581,7 @@ of an exception instead of "bubbling up".
     The low-level functions ``call``, ``delegatecall`` and
     ``staticcall`` return ``true`` as their first return value
     if the account called is non-existent, as part of the design
-    of the ZVM. Account existence must be checked prior to calling if needed.
+    of the QRVM. Account existence must be checked prior to calling if needed.
 
 Exceptions can contain error data that is passed back to the caller
 in the form of :ref:`error instances <errors>`.
@@ -688,7 +688,7 @@ and ``assert`` for internal error checking.
 
 Internally, Hyperion performs a revert operation (instruction
 ``0xfd``). This causes
-the ZVM to revert all changes made to the state. The reason for reverting
+the QRVM to revert all changes made to the state. The reason for reverting
 is that there is no safe way to continue execution, because an expected effect
 did not occur. Because we want to keep the atomicity of transactions, the
 safest action is to revert all changes and make the whole transaction

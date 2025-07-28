@@ -45,8 +45,8 @@ ControlFlowGraphTest::ControlFlowGraphTest(string const& _filename):
 	TestCase(_filename)
 {
 	m_source = m_reader.source();
-	auto dialectName = m_reader.stringSetting("dialect", "zvm");
-	m_dialect = &dialect(dialectName, hyperion::test::CommonOptions::get().zvmVersion());
+	auto dialectName = m_reader.stringSetting("dialect", "qrvm");
+	m_dialect = &dialect(dialectName, hyperion::test::CommonOptions::get().qrvmVersion());
 	m_expectation = m_reader.simpleExpectations();
 }
 

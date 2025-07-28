@@ -41,7 +41,7 @@ namespace hyperion::frontend::test
  * // g(), 1 planck                # (Optional) Planck to be sent with the call #
  * // -> 2, 3
  * // h(uint256), 1 zond: 42
- * // -> FAILURE                # If REVERT or other ZVM failure was detected #
+ * // -> FAILURE                # If REVERT or other QRVM failure was detected #
  * // ()                        # Call fallback function #
  * // (), 1 zond               # Call receive zond function #
  * // EMPTY_STORAGE             # Check that storage is empty

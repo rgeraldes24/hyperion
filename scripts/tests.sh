@@ -117,7 +117,7 @@ do
             then
                 force_abiv1_flag=(--abiencoderv1)
             fi
-            printTask "--> Running tests using $optimize --zvm-version $vm ${force_abiv1_flag[*]}..."
+            printTask "--> Running tests using $optimize --qrvm-version $vm ${force_abiv1_flag[*]}..."
 
             log=()
             if [ -n "$log_directory" ]
@@ -131,7 +131,7 @@ do
             fi
 
             set +e
-            "${HYPERION_BUILD_DIR}"/test/hyptest --show-progress "${log[@]}" -- --testpath "$REPO_ROOT"/test "$optimize" --zvm-version "$vm" "${SMT_FLAGS[@]}" "${force_abiv1_flag[@]}"
+            "${HYPERION_BUILD_DIR}"/test/hyptest --show-progress "${log[@]}" -- --testpath "$REPO_ROOT"/test "$optimize" --qrvm-version "$vm" "${SMT_FLAGS[@]}" "${force_abiv1_flag[@]}"
 
             if test "0" -ne "$?"; then
                 exit 1

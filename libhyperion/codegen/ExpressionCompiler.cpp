@@ -18,7 +18,7 @@
 /**
  * @author Christian <c@ethdev.com>
  * @date 2014
- * Hyperion AST to ZVM bytecode compiler for expressions.
+ * Hyperion AST to QRVM bytecode compiler for expressions.
  */
 
 #include <libhyperion/codegen/ExpressionCompiler.h>

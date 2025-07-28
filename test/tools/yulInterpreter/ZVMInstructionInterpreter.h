@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Yul interpreter module that evaluates ZVM instructions.
+ * Yul interpreter module that evaluates QRVM instructions.
  */
 
 #pragma once
@@ -55,7 +55,7 @@ void copyZeroExtended(
 struct InterpreterState;
 
 /**
- * Interprets ZVM instructions based on the current state and logs instructions with
+ * Interprets QRVM instructions based on the current state and logs instructions with
  * side-effects.
  *
  * Since this is mainly meant to be used for differential fuzz testing, it is focused
@@ -76,8 +76,8 @@ struct InterpreterState;
 class ZVMInstructionInterpreter
 {
 public:
-	explicit ZVMInstructionInterpreter(langutil::ZVMVersion _zvmVersion, InterpreterState& _state, bool _disableMemWriteTrace):
-		m_zvmVersion(_zvmVersion),
+	explicit ZVMInstructionInterpreter(langutil::ZVMVersion _qrvmVersion, InterpreterState& _state, bool _disableMemWriteTrace):
+		m_qrvmVersion(_qrvmVersion),
 		m_state(_state),
 		m_disableMemoryWriteInstructions(_disableMemWriteTrace)
 	{}
@@ -144,7 +144,7 @@ private:
 		return m_disableMemoryWriteInstructions;
 	}
 
-	langutil::ZVMVersion m_zvmVersion;
+	langutil::ZVMVersion m_qrvmVersion;
 	InterpreterState& m_state;
 	/// Flag to disable trace of instructions that write to memory.
 	bool m_disableMemoryWriteInstructions;

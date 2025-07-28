@@ -91,7 +91,7 @@ Block and Transaction Properties
 .. note::
     When contracts are evaluated off-chain rather than in context of a transaction included in a
     block, you should not assume that ``block.*`` and ``tx.*`` refer to values from any specific
-    block or transaction. These values are provided by the ZVM implementation that executes the
+    block or transaction. These values are provided by the QRVM implementation that executes the
     contract and can be arbitrary.
 
 .. note::
@@ -240,7 +240,7 @@ For more information, see the section on :ref:`address`.
     Use a pattern where the recipient withdraws the Zond.
 
 .. warning::
-    Due to the fact that the ZVM considers a call to a non-existing contract to always succeed,
+    Due to the fact that the QRVM considers a call to a non-existing contract to always succeed,
     Hyperion includes an extra check using the ``extcodesize`` opcode when performing external calls.
     This ensures that the contract that is about to be called either actually exists (it contains code)
     or an exception is raised.

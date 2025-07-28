@@ -76,7 +76,7 @@ struct MiniZVMInterpreter
 	{
 		BuiltinFunctionForZVM const* fun = m_dialect.builtin(_funCall.functionName.name);
 		yulAssert(fun, "Expected builtin function.");
-		yulAssert(fun->instruction, "Expected ZVM instruction.");
+		yulAssert(fun->instruction, "Expected QRVM instruction.");
 		return eval(*fun->instruction, _funCall.arguments);
 	}
 	u256 operator()(Literal const& _literal)

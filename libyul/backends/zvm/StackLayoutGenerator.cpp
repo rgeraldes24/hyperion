@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Stack layout generator for Yul to ZVM code generation.
+ * Stack layout generator for Yul to QRVM code generation.
  */
 
 #include <libyul/backends/zvm/StackLayoutGenerator.h>
@@ -769,7 +769,7 @@ void StackLayoutGenerator::fillInJunk(CFG::BasicBlock const& _block, CFG::Functi
 					// We at least sanity-check that it is among the return variables at all.
 					yulAssert(m_currentFunctionInfo && std::holds_alternative<VariableSlot>(_slot));
 					yulAssert(util::contains(m_currentFunctionInfo->returnVariables, std::get<VariableSlot>(_slot)));
-					// Strictly speaking the cost of the PUSH0 depends on the targeted ZVM version, but the difference
+					// Strictly speaking the cost of the PUSH0 depends on the targeted QRVM version, but the difference
 					// will not matter here.
 					opGas += zvmasm::GasMeter::runGas(zvmasm::pushInstruction(0));;
 				}

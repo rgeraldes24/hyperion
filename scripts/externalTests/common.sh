@@ -612,7 +612,7 @@ function bytecode_size_json_from_hardhat_artifacts
         # Note that one Hardhat artifact often represents multiple input files.
         jq '.output.contracts | to_entries[] | {
             "\(.key)": .value | to_entries[] | {
-                "\(.key)": (.value.zvm.bytecode.object | length / 2)
+                "\(.key)": (.value.qrvm.bytecode.object | length / 2)
             }
         }' "$artifact"
     done

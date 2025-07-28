@@ -67,7 +67,7 @@ public:
 	/// Returns zvm version
 	hyperion::langutil::ZVMVersion version()
 	{
-		return m_zvmVersion;
+		return m_qrvmVersion;
 	}
 private:
 	void visit(BinaryOp const&);
@@ -379,7 +379,7 @@ private:
 	/// block is enabled.
 	bool m_forInitScopeExtEnabled;
 	/// Object that holds the targeted zvm version specified by protobuf input
-	hyperion::langutil::ZVMVersion m_zvmVersion;
+	hyperion::langutil::ZVMVersion m_qrvmVersion;
 	/// Flag that, if set, stops the converter from generating state changing
 	/// opcodes.
 	bool m_filterStatefulInstructions;

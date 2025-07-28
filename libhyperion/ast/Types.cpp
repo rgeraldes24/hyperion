@@ -523,8 +523,8 @@ std::string AddressType::canonicalName() const
 u256 AddressType::literalValue(Literal const* _literal) const
 {
 	hypAssert(_literal, "");
-	hypAssert(boost::starts_with(_literal->value(), "Z"), "");
-	return u256(boost::replace_all_copy(_literal->value(), "Z", "0x"));
+	hypAssert(boost::starts_with(_literal->value(), "Q"), "");
+	return u256(boost::replace_all_copy(_literal->value(), "Q", "0x"));
 }
 
 TypeResult AddressType::unaryOperatorResult(Token _operator) const
@@ -915,10 +915,10 @@ std::tuple<bool, rational> RationalNumberType::isValidLiteral(Literal const& _li
 			// process as hex
 			value = bigint(valueString);
 		}
-		else if (boost::starts_with(valueString, "Z")) 
+		else if (boost::starts_with(valueString, "Q")) 
 		{
 			// process as hex
-			value = bigint(boost::replace_all_copy(valueString, "Z", "0x"));
+			value = bigint(boost::replace_all_copy(valueString, "Q", "0x"));
 		}
 		else if (expPoint != valueString.end())
 		{

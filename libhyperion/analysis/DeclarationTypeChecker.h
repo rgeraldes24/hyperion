@@ -41,10 +41,10 @@ class DeclarationTypeChecker: private ASTConstVisitor
 public:
 	DeclarationTypeChecker(
 		langutil::ErrorReporter& _errorReporter,
-		langutil::ZVMVersion _zvmVersion
+		langutil::ZVMVersion _qrvmVersion
 	):
 		m_errorReporter(_errorReporter),
-		m_zvmVersion(_zvmVersion)
+		m_qrvmVersion(_qrvmVersion)
 	{}
 
 	bool check(ASTNode const& _contract);
@@ -65,7 +65,7 @@ private:
 	bool visit(InheritanceSpecifier const& _inheritanceSpecifier) override;
 
 	langutil::ErrorReporter& m_errorReporter;
-	langutil::ZVMVersion m_zvmVersion;
+	langutil::ZVMVersion m_qrvmVersion;
 	bool m_insideFunctionType = false;
 	bool m_recursiveStructSeen = false;
 	std::set<StructDefinition const*> m_currentStructsSeen;

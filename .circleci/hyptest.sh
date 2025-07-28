@@ -9,7 +9,7 @@
 # ------------------------------------------------------------------------------
 # Configuration Environment Variables:
 #
-#     ZVM=version_string      Specifies ZVM version to compile for (such as homestead, etc)
+#     QRVM=version_string      Specifies QRVM version to compile for (such as homestead, etc)
 #     OPTIMIZE=1              Enables backend optimizer
 #     ABI_ENCODER_V1=1        Forcibly enables ABI coder version 1
 #     SOLTEST_FLAGS=<flags>   Appends <flags> to default SOLTEST_ARGS
@@ -35,7 +35,7 @@
 set -e
 
 OPTIMIZE=${OPTIMIZE:-"0"}
-ZVM=${ZVM:-"invalid"}
+QRVM=${QRVM:-"invalid"}
 CPUs=${CPUs:-3}
 REPODIR="$(realpath "$(dirname "$0")/..")"
 
@@ -52,7 +52,7 @@ ulimit -s 16384
 
 get_logfile_basename() {
     local run="$1"
-    local filename="${ZVM}"
+    local filename="${QRVM}"
     test "${OPTIMIZE}" = "1" && filename="${filename}_opt"
     test "${ABI_ENCODER_V1}" = "1" && filename="${filename}_abiv1"
     filename="${filename}_${run}"
@@ -78,7 +78,7 @@ do
         "--logger=HRF,error,stdout"
         "${BOOST_TEST_ARGS[@]}"
     )
-    HYPTEST_ARGS=("--zvm-version=$ZVM" "${HYPTEST_FLAGS[@]}")
+    HYPTEST_ARGS=("--qrvm-version=$QRVM" "${HYPTEST_FLAGS[@]}")
 
     test "${OPTIMIZE}" = "1" && HYPTEST_ARGS+=(--optimize)
     test "${ABI_ENCODER_V1}" = "1" && HYPTEST_ARGS+=(--abiencoderv1)

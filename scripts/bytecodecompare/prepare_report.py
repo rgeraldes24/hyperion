@@ -231,7 +231,7 @@ def prepare_compiler_input(
                 'optimizer': {'enabled': settings.optimize},
                 # NOTE: We omit viaIR rather than set it to false to handle older versions that don't have it.
                 **({'viaIR': True} if settings.via_ir else {}),
-                'outputSelection': {'*': {'*': ['zvm.bytecode.object', 'metadata']}},
+                'outputSelection': {'*': {'*': ['qrvm.bytecode.object', 'metadata']}},
             }
         }
 

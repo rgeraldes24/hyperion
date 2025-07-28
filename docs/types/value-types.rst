@@ -148,7 +148,7 @@ large enough to hold the result and prepare for potential assertion failures or 
   In any case, gas cost tests and the use of the optimizer are advisable.
 
 .. note::
-  Note that ``0**0`` is defined by the ZVM as ``1``.
+  Note that ``0**0`` is defined by the QRVM as ``1``.
 
 .. index:: ! ufixed, ! fixed, ! fixed point number
 
@@ -223,8 +223,8 @@ Operators:
     To reduce conversion ambiguity, starting with version 0.4.24, the compiler will force you to make the truncation explicit in the conversion.
     Take for example the 32-byte value ``0x111122223333444455556666777788889999AAAABBBBCCCCDDDDEEEEFFFFCCCC``.
 
-    You can use ``address(uint160(bytes20(b)))``, which results in ``Z111122223333444455556666777788889999aAaa``,
-    or you can use ``address(uint160(uint256(b)))``, which results in ``Z777788889999AaAAbBbbCcccddDdeeeEfFFfCcCc``.
+    You can use ``address(uint160(bytes20(b)))``, which results in ``Q111122223333444455556666777788889999aAaa``,
+    or you can use ``address(uint160(uint256(b)))``, which results in ``Q777788889999AaAAbBbbCcccddDdeeeEfFFfCcCc``.
 
 .. note::
     Mixed-case hexadecimal numbers conforming to `EIP-55 <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md>`_ are automatically treated as literals of the ``address`` type. See :ref:`Address Literals<address_literals>`.
@@ -253,7 +253,7 @@ or if the Zond transfer is rejected by the receiving account. The ``transfer`` f
 reverts on failure.
 
 .. note::
-    If ``x`` is a contract address, its code (more specifically: its :ref:`receive-zond-function`, if present, or otherwise its :ref:`fallback-function`, if present) will be executed together with the ``transfer`` call (this is a feature of the ZVM and cannot be prevented). If that execution runs out of gas or fails in any way, the Zond transfer will be reverted and the current contract will stop with an exception.
+    If ``x`` is a contract address, its code (more specifically: its :ref:`receive-zond-function`, if present, or otherwise its :ref:`fallback-function`, if present) will be executed together with the ``transfer`` call (this is a feature of the QRVM and cannot be prevented). If that execution runs out of gas or fails in any way, the Zond transfer will be reverted and the current contract will stop with an exception.
 
 * ``send``
 
@@ -331,7 +331,7 @@ on ``call``.
 
 * ``code`` and ``codehash``
 
-You can query the deployed code for any smart contract. Use ``.code`` to get the ZVM bytecode as a
+You can query the deployed code for any smart contract. Use ``.code`` to get the QRVM bytecode as a
 ``bytes memory``, which might be empty. Use ``.codehash`` to get the Keccak-256 hash of that code
 (as a ``bytes32``). Note that ``addr.codehash`` is cheaper than using ``keccak256(addr.code)``.
 
@@ -428,7 +428,7 @@ Address Literals
 ----------------
 
 Address literals that pass the address checksum test, for example
-``ZdCad3a6d3569DF655070DEd06cb7A1b2Ccd1D3AF`` are of ``address`` type.
+``QdCad3a6d3569DF655070DEd06cb7A1b2Ccd1D3AF`` are of ``address`` type.
 Address literals that do not pass the checksum test produce
 an error.
 
@@ -928,7 +928,7 @@ Another example that uses external function types:
 
 
     contract OracleUser {
-        Oracle constant private ORACLE_CONST = Oracle(Z00000000219ab540356cBB839Cbe05303d7705Fa); // known contract
+        Oracle constant private ORACLE_CONST = Oracle(Q00000000219ab540356cBB839Cbe05303d7705Fa); // known contract
         uint private exchangeRate;
 
         function buySomething() public {

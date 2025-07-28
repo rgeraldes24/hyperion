@@ -1356,7 +1356,7 @@ ASTPointer<InlineAssembly> Parser::parseInlineAssembly(ASTPointer<ASTString> con
 	SourceLocation location = currentLocation();
 
 	expectToken(Token::Assembly);
-	yul::Dialect const& dialect = yul::ZVMDialect::strictAssemblyForZVM(m_zvmVersion);
+	yul::Dialect const& dialect = yul::ZVMDialect::strictAssemblyForZVM(m_qrvmVersion);
 	if (m_scanner->currentToken() == Token::StringLiteral)
 	{
 		if (m_scanner->currentLiteral() != "zvmasm")

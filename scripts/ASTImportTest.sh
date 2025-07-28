@@ -25,9 +25,9 @@
 #     and exporting it again. The second JSON should be identical to the first.
 #
 # zvm-assembly import/export tests:
-#   - first a .hyp file will be compiled and the ZVM Assembly will be exported
+#   - first a .hyp file will be compiled and the QRVM Assembly will be exported
 #     to JSON format using --asm-json command-line option.
-#     The ZVM Assembly JSON output is then imported with --import-asm-json
+#     The QRVM Assembly JSON output is then imported with --import-asm-json
 #     and compiled again. The binary generated initially and after the import
 #     should be identical.
 
@@ -204,7 +204,7 @@ function test_zvmjson_import_export_equivalence
     local sol_file="$1"
     local input_files=( "${@:2}" )
 
-    # Generate bytecode and ZVM assembly JSON through normal complication
+    # Generate bytecode and QRVM assembly JSON through normal complication
     mkdir -p export/
     local export_options=(--bin --asm-json "${input_files[@]}" --output-dir export/)
     run_hypc "${export_options[@]}"
@@ -221,7 +221,7 @@ function test_zvmjson_import_export_equivalence
         mv "${asm_json_file}" "${asm_json_file/_zvm/}"
     done
 
-    # Import ZVM assembly JSON
+    # Import QRVM assembly JSON
     mkdir -p import/
     for asm_json_file in export/*.json
     do
@@ -241,7 +241,7 @@ function test_zvmjson_import_export_equivalence
         local bin_file_from_asm_import=${bin_file/export/import}
         if ! diff --strip-trailing-cr --ignore-all-space "${bin_file}" "${bin_file_from_asm_import}" > diff_error
         then
-            printError "ERROR: Bytecode from compilation (${bin_file}) differs from bytecode from ZVM asm import (${bin_file_from_asm_import}):"
+            printError "ERROR: Bytecode from compilation (${bin_file}) differs from bytecode from QRVM asm import (${bin_file_from_asm_import}):"
             printError "    $(cat diff_error)"
             if (( EXIT_ON_ERROR == 1 ))
             then

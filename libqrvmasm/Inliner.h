@@ -42,13 +42,13 @@ public:
 		std::set<size_t> const& _tagsReferencedFromOutside,
 		size_t _runs,
 		bool _isCreation,
-		langutil::ZVMVersion _zvmVersion
+		langutil::ZVMVersion _qrvmVersion
 	):
 	m_items(_items),
 	m_tagsReferencedFromOutside(_tagsReferencedFromOutside),
 	m_runs(_runs),
 	m_isCreation(_isCreation),
-	m_zvmVersion(_zvmVersion)
+	m_qrvmVersion(_qrvmVersion)
 	{
 	}
 	virtual ~Inliner() = default;
@@ -78,7 +78,7 @@ private:
 	std::set<size_t> const& m_tagsReferencedFromOutside;
 	size_t const m_runs = Assembly::OptimiserSettings{}.expectedExecutionsPerDeployment;
 	bool const m_isCreation = false;
-	langutil::ZVMVersion const m_zvmVersion;
+	langutil::ZVMVersion const m_qrvmVersion;
 };
 
 }

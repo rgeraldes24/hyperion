@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * ZVM execution host, i.e. component that implements a simulated Ethereum blockchain
+ * QRVM execution host, i.e. component that implements a simulated Ethereum blockchain
  * for testing purposes.
  */
 
@@ -35,7 +35,7 @@
 namespace hyperion::test
 {
 using Address = util::h160;
-using StorageMap = std::map<zvmc::bytes32, zvmc::StorageValue>;
+using StorageMap = std::map<qrvmc::bytes32, zvmc::StorageValue>;
 
 struct ZVMPrecompileOutput {
 	bytes const output;
@@ -60,7 +60,7 @@ public:
 
 	// Modified features of MockedHost.
 	zvmc::Result call(zvmc_message const& _message) noexcept final;
-	zvmc::bytes32 get_block_hash(int64_t number) const noexcept final;
+	qrvmc::bytes32 get_block_hash(int64_t number) const noexcept final;
 
 	// Hyperion testing specific features.
 
@@ -74,7 +74,7 @@ public:
 	/// @returns true, if an zvmc vm supporting zvm1 was loaded properly,
 	static bool checkVmPaths(std::vector<boost::filesystem::path> const& _vmPaths);
 
-	explicit ZVMHost(langutil::ZVMVersion _zvmVersion, zvmc::VM& _vm);
+	explicit ZVMHost(langutil::ZVMVersion _qrvmVersion, zvmc::VM& _vm);
 
 	/// Reset entire state (including accounts).
 	void reset();
@@ -89,12 +89,12 @@ public:
 	}
 
 	/// @returns contents of storage at @param _addr.
-	StorageMap const& get_address_storage(zvmc::address const& _addr);
+	StorageMap const& get_address_storage(qrvmc::address const& _addr);
 
-	static Address convertFromZVMC(zvmc::address const& _addr);
-	static zvmc::address convertToZVMC(Address const& _addr);
-	static util::h256 convertFromZVMC(zvmc::bytes32 const& _data);
-	static zvmc::bytes32 convertToZVMC(util::h256 const& _data);
+	static Address convertFromZVMC(qrvmc::address const& _addr);
+	static qrvmc::address convertToZVMC(Address const& _addr);
+	static util::h256 convertFromZVMC(qrvmc::bytes32 const& _data);
+	static qrvmc::bytes32 convertToZVMC(util::h256 const& _data);
 private:
 	/// Transfer value between accounts. Checks for sufficient balance.
 	void transfer(zvmc::MockedAccount& _sender, zvmc::MockedAccount& _recipient, u256 const& _value) noexcept;
@@ -122,9 +122,9 @@ private:
 	static zvmc::Result resultWithFailure() noexcept;
 
 	zvmc::VM& m_vm;
-	/// ZVM version requested by the testing tool
-	langutil::ZVMVersion m_zvmVersion;
-	/// ZVM version requested from ZVMC (matches the above)
+	/// QRVM version requested by the testing tool
+	langutil::ZVMVersion m_qrvmVersion;
+	/// QRVM version requested from ZVMC (matches the above)
 	zvmc_revision m_zvmRevision;
 };
 
@@ -132,7 +132,7 @@ class ZVMHostPrinter
 {
 public:
 	/// Constructs a host printer object for state at @param _address.
-	explicit ZVMHostPrinter(ZVMHost& _host, zvmc::address _address):
+	explicit ZVMHostPrinter(ZVMHost& _host, qrvmc::address _address):
 		m_host(_host),
 		m_account(_address)
 	{}
@@ -148,7 +148,7 @@ private:
 
 	std::ostringstream m_stateStream;
 	ZVMHost& m_host;
-	zvmc::address m_account;
+	qrvmc::address m_account;
 };
 
 }

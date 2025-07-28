@@ -31,32 +31,32 @@ REPODIR="$(realpath "$(dirname "$0")"/..)"
 # shellcheck source=scripts/common.sh
 source "${REPODIR}/scripts/common.sh"
 
-ZVM_VALUES=(homestead byzantium constantinople petersburg istanbul berlin london paris shanghai)
-DEFAULT_ZVM=shanghai
-[[ " ${ZVM_VALUES[*]} " =~ $DEFAULT_ZVM ]]
+QRVM_VALUES=(homestead byzantium constantinople petersburg istanbul berlin london paris shanghai)
+DEFAULT_QRVM=shanghai
+[[ " ${QRVM_VALUES[*]} " =~ $DEFAULT_QRVM ]]
 OPTIMIZE_VALUES=(0 1)
 
 # Run for ABI encoder v1, without SMTChecker tests.
-ZVM="${DEFAULT_ZVM}" \
+QRVM="${DEFAULT_QRVM}" \
 OPTIMIZE=1 \
 ABI_ENCODER_V1=1 \
 BOOST_TEST_ARGS="-t !smtCheckerTests" \
 "${REPODIR}/.circleci/hyptest.sh"
 
 # We shift the batch index so that long-running tests
-# do not always run in the same executor for all ZVM versions
+# do not always run in the same executor for all QRVM versions
 INDEX_SHIFT=0
 for OPTIMIZE in "${OPTIMIZE_VALUES[@]}"
 do
-    for ZVM in "${ZVM_VALUES[@]}"
+    for QRVM in "${QRVM_VALUES[@]}"
     do
         ENFORCE_GAS_ARGS=""
-        [ "${ZVM}" = "${DEFAULT_ZVM}" ] && ENFORCE_GAS_ARGS="--enforce-gas-cost"
+        [ "${QRVM}" = "${DEFAULT_QRVM}" ] && ENFORCE_GAS_ARGS="--enforce-gas-cost"
         # Run SMTChecker tests only when OPTIMIZE == 0
         DISABLE_SMTCHECKER=""
         [ "${OPTIMIZE}" != "0" ] && DISABLE_SMTCHECKER="-t !smtCheckerTests"
 
-        ZVM="$ZVM" \
+        QRVM="$QRVM" \
         OPTIMIZE="$OPTIMIZE" \
         HYPTEST_FLAGS="$HYPTEST_FLAGS $ENFORCE_GAS_ARGS" \
         BOOST_TEST_ARGS="-t !@nooptions $DISABLE_SMTCHECKER" \

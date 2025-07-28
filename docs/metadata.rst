@@ -133,7 +133,7 @@ explanatory purposes.
           "myDirectory/myFile.hyp": "MyContract"
         },
         // Required for Hyperion.
-        "zvmVersion": "shanghai",
+        "qrvmVersion": "shanghai",
         // Required for Hyperion: Addresses for libraries used.
         "libraries": {
           "MyLib": "0x123123..."

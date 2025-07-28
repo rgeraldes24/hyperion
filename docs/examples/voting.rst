@@ -87,7 +87,7 @@ of votes.
             // to `false`, execution terminates and all
             // changes to the state and to Zond balances
             // are reverted.
-            // This used to consume all gas in old ZVM versions, but
+            // This used to consume all gas in old QRVM versions, but
             // not anymore.
             // It is often a good idea to use `require` to check if
             // functions are called correctly.

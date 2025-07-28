@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
-* Module providing metrics for the ZVM optimizer.
+* Module providing metrics for the QRVM optimizer.
 */
 
 #include <libyul/backends/zvm/ZVMMetrics.h>

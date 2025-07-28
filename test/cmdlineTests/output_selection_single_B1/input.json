@@ -13,7 +13,7 @@
   "outputSelection": {
    "b.hyp": {
     "B2": [
-     "zvm.bytecode.object"
+     "qrvm.bytecode.object"
     ]
    }
   }

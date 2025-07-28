@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Stack layout generator for Yul to ZVM code generation.
+ * Stack layout generator for Yul to QRVM code generation.
  */
 
 #pragma once

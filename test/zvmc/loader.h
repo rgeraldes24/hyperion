@@ -64,8 +64,8 @@ enum zvmc_loader_error_code
  * If the file does not exist or is not a valid shared library the ::ZVMC_LOADER_CANNOT_OPEN error
  * code is signaled and NULL is returned.
  *
- * After the DLL is successfully loaded the function tries to find the ZVM create function in the
- * library. The `filename` is used to guess the ZVM name and the name of the create function.
+ * After the DLL is successfully loaded the function tries to find the QRVM create function in the
+ * library. The `filename` is used to guess the QRVM name and the name of the create function.
  * The create function name is constructed by the following rules. Consider example path:
  * "/zond/libexample-interpreter.so.1.0".
  * - the filename is taken from the path:
@@ -90,7 +90,7 @@ enum zvmc_loader_error_code
  *                    the ::ZVMC_LOADER_INVALID_ARGUMENT is signaled.
  * @param error_code  The pointer to the error code. If not NULL the value is set to
  *                    ::ZVMC_LOADER_SUCCESS on success or any other error code as described above.
- * @return            The pointer to the ZVM create function or NULL in case of error.
+ * @return            The pointer to the QRVM create function or NULL in case of error.
  */
 zvmc_create_fn zvmc_load(const char* filename, enum zvmc_loader_error_code* error_code);
 

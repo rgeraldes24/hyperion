@@ -1030,7 +1030,7 @@ deployment transaction.
 However, the contract's address may already have funds before deployment,
 which are kept by the contract.
 Therefore, the SMTChecker assumes that ``address(this).balance >= msg.value``
-in the constructor in order to be consistent with the ZVM rules.
+in the constructor in order to be consistent with the QRVM rules.
 The contract's balance may also increase without triggering any calls to the
 contract, if
 
@@ -1043,7 +1043,7 @@ the contract's balance may grow by at least ``msg.value``.
 Real World Assumptions
 **********************
 
-Some scenarios can be expressed in Hyperion and the ZVM, but are expected to
+Some scenarios can be expressed in Hyperion and the QRVM, but are expected to
 never occur in practice.
 One of such cases is the length of a dynamic storage array overflowing during a
 push: If the ``push`` operation is applied to an array of length 2^256 - 1, its

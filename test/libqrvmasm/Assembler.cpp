@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(all_assembly_items)
 		{ "sub.asm", 1 },
 		{ "verbatim.asm", 2 }
 	};
-	ZVMVersion zvmVersion = hyperion::test::CommonOptions::get().zvmVersion();
+	ZVMVersion qrvmVersion= hyperion::test::CommonOptions::get().zvmVersion();
 	Assembly _assembly{zvmVersion, false, {}};
 	auto root_asm = std::make_shared<std::string>("root.asm");
 	_assembly.setSourceLocation({1, 3, root_asm});
@@ -217,7 +217,7 @@ BOOST_AUTO_TEST_CASE(all_assembly_items)
 
 BOOST_AUTO_TEST_CASE(immutables_and_its_source_maps)
 {
-	ZVMVersion zvmVersion = hyperion::test::CommonOptions::get().zvmVersion();
+	ZVMVersion qrvmVersion= hyperion::test::CommonOptions::get().zvmVersion();
 	// Tests for 1, 2, 3 number of immutables.
 	for (int numImmutables = 1; numImmutables <= 3; ++numImmutables)
 	{
@@ -305,7 +305,7 @@ BOOST_AUTO_TEST_CASE(immutable)
 		{ "root.asm", 0 },
 		{ "sub.asm", 1 }
 	};
-	ZVMVersion zvmVersion = hyperion::test::CommonOptions::get().zvmVersion();
+	ZVMVersion qrvmVersion= hyperion::test::CommonOptions::get().zvmVersion();
 	Assembly _assembly{zvmVersion, true, {}};
 	auto root_asm = std::make_shared<std::string>("root.asm");
 	_assembly.setSourceLocation({1, 3, root_asm});
@@ -403,7 +403,7 @@ BOOST_AUTO_TEST_CASE(immutable)
 
 BOOST_AUTO_TEST_CASE(subobject_encode_decode)
 {
-	ZVMVersion zvmVersion = hyperion::test::CommonOptions::get().zvmVersion();
+	ZVMVersion qrvmVersion= hyperion::test::CommonOptions::get().zvmVersion();
 	Assembly assembly{zvmVersion, true, {}};
 
 	std::shared_ptr<Assembly> subAsmPtr = std::make_shared<Assembly>(zvmVersion, false, std::string{});

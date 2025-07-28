@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Full assembly stack that can support ZVM-assembly and Yul as input and ZVM.
+ * Full assembly stack that can support QRVM-assembly and Yul as input and QRVM.
  */
 
 #pragma once
@@ -61,13 +61,13 @@ struct MachineAssemblyObject
 };
 
 /*
- * Full assembly stack that can support ZVM-assembly and Yul as input and ZVM as output.
+ * Full assembly stack that can support ZVM-assembly and Yul as input and QRVM as output.
  */
 class YulStack: public langutil::CharStreamProvider
 {
 public:
 	enum class Language { Yul, Assembly, StrictAssembly };
-	enum class Machine { ZVM };
+	enum class Machine { QRVM };
 
 	YulStack():
 		YulStack(
@@ -79,13 +79,13 @@ public:
 	{}
 
 	YulStack(
-		langutil::ZVMVersion _zvmVersion,
+		langutil::ZVMVersion _qrvmVersion,
 		Language _language,
 		hyperion::frontend::OptimiserSettings _optimiserSettings,
 		langutil::DebugInfoSelection const& _debugInfoSelection
 	):
 		m_language(_language),
-		m_zvmVersion(_zvmVersion),
+		m_qrvmVersion(_qrvmVersion),
 		m_optimiserSettings(std::move(_optimiserSettings)),
 		m_debugInfoSelection(_debugInfoSelection),
 		m_errorReporter(m_errors)
@@ -108,15 +108,15 @@ public:
 	/// Run the assembly step (should only be called after parseAndAnalyze).
 	/// In addition to the value returned by @a assemble, returns
 	/// a second object that is the runtime code.
-	/// Only available for ZVM.
+	/// Only available for QRVM.
 	std::pair<MachineAssemblyObject, MachineAssemblyObject>
 	assembleWithDeployed(
 		std::optional<std::string_view> _deployName = {}
 	) const;
 
 	/// Run the assembly step (should only be called after parseAndAnalyze).
-	/// Similar to @a assemblyWithDeployed, but returns ZVM assembly objects.
-	/// Only available for ZVM.
+	/// Similar to @a assemblyWithDeployed, but returns QRVM assembly objects.
+	/// Only available for QRVM.
 	std::pair<std::shared_ptr<zvmasm::Assembly>, std::shared_ptr<zvmasm::Assembly>>
 	assembleZVMWithDeployed(
 		std::optional<std::string_view> _deployName = {}
@@ -142,7 +142,7 @@ private:
 	void optimize(yul::Object& _object, bool _isCreation);
 
 	Language m_language = Language::Assembly;
-	langutil::ZVMVersion m_zvmVersion;
+	langutil::ZVMVersion m_qrvmVersion;
 	hyperion::frontend::OptimiserSettings m_optimiserSettings;
 	langutil::DebugInfoSelection m_debugInfoSelection{};
 

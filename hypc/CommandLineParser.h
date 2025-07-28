@@ -57,7 +57,7 @@ enum class InputMode
 	Linker,
 	Assembler,
 	LanguageServer,
-	ZVMAssemblerJSON
+	QRVMAssemblerJSON
 };
 
 struct CompilerOutputs

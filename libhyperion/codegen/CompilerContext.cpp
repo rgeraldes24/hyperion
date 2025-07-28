@@ -436,7 +436,7 @@ void CompilerContext::appendInlineAssembly(
 	ErrorList errors;
 	ErrorReporter errorReporter(errors);
 	langutil::CharStream charStream(_assembly, _sourceName);
-	yul::ZVMDialect const& dialect = yul::ZVMDialect::strictAssemblyForZVM(m_zvmVersion);
+	yul::ZVMDialect const& dialect = yul::ZVMDialect::strictAssemblyForZVM(m_qrvmVersion);
 	std::optional<langutil::SourceLocation> locationOverride;
 	if (!_system)
 		locationOverride = m_asm->currentSourceLocation();
@@ -521,7 +521,7 @@ void CompilerContext::appendInlineAssembly(
 		*parserResult,
 		analysisInfo,
 		*m_asm,
-		m_zvmVersion,
+		m_qrvmVersion,
 		identifierAccess.generateCode,
 		_system,
 		_optimiserSettings.optimizeStackAllocation

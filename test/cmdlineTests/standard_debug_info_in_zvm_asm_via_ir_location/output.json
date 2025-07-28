@@ -5,7 +5,7 @@
         {
             "C":
             {
-                "zvm":
+                "qrvm":
                 {
                     "assembly": "    /* \"C\":79:428  contract C... */
   0xa0
@@ -354,7 +354,7 @@ sub_0: assembly {
         {
             "D":
             {
-                "zvm":
+                "qrvm":
                 {
                     "assembly": "    /* \"D\":91:166  contract D is C(3)... */
   0xa0

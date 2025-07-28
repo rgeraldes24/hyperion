@@ -73,7 +73,7 @@ public:
 
 	/// Returns true, if the test case is supported in the current environment and false
 	/// otherwise which causes this test to be skipped.
-	/// This might check e.g. for restrictions on the ZVM version.
+	/// This might check e.g. for restrictions on the QRVM version.
 	/// The function throws an exception if there are unread settings.
 	bool shouldRun();
 

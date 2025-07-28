@@ -113,17 +113,17 @@ zvmc::Result ZvmoneUtility::deployAndExecute(
 		"HyperionZvmoneInterface: Contract creation failed"
 	);
 
-	// Execute test function and signal failure if ZVM reverted or
+	// Execute test function and signal failure if QRVM reverted or
 	// did not return expected output on successful execution.
 	zvmc::Result callResult = executeContract(
 		util::fromHex(_hexEncodedInput),
 		createResult.create_address
 	);
 
-	// We don't care about ZVM One failures other than ZVMC_REVERT
+	// We don't care about QRVM One failures other than ZVMC_REVERT
 	hypAssert(
 		callResult.status_code != ZVMC_REVERT,
-		"HyperionZvmoneInterface: ZVM One reverted"
+		"HyperionZvmoneInterface: QRVM One reverted"
 	);
 	return callResult;
 }

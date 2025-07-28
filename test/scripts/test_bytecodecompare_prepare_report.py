@@ -216,7 +216,7 @@ class TestPrepareCompilerInput(PrepareReportTestBase):
             },
             'settings': {
                 'optimizer': {'enabled': True},
-                'outputSelection': {'*': {'*': ['zvm.bytecode.object', 'metadata']}},
+                'outputSelection': {'*': {'*': ['qrvm.bytecode.object', 'metadata']}},
                 'modelChecker': {'engine': 'none'},
             }
         }
@@ -266,7 +266,7 @@ class TestPrepareCompilerInput(PrepareReportTestBase):
             'settings': {
                 'optimizer': {'enabled': True},
                 'viaIR': True,
-                'outputSelection': {'*': {'*': ['zvm.bytecode.object', 'metadata']}},
+                'outputSelection': {'*': {'*': ['qrvm.bytecode.object', 'metadata']}},
                 'modelChecker': {'engine': 'none'},
             }
         }
@@ -438,11 +438,11 @@ class TestParseCLIOutput(PrepareReportTestBase):
                 "contracts": {
                     "contract.hyp": {
                         "A": {
-                            "zvm": {"bytecode": {"object": ""}},
+                            "qrvm": {"bytecode": {"object": ""}},
                             "metadata": ""
                         },
                         "B": {
-                            "zvm": {"bytecode": {"object": "  "}},
+                            "qrvm": {"bytecode": {"object": "  "}},
                             "metadata": "  "
                         }
                     }

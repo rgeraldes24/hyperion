@@ -151,7 +151,7 @@ object \"C_6\" {
     }
 }
 ",
-                "zvm":
+                "qrvm":
                 {
                     "assembly": "    /* \"C\":60:101  contract C {... */
   mstore(0x40, 0x80)

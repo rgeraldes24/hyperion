@@ -105,7 +105,7 @@ public:
     bytes32 block_hash = {};
 
     /// The call result to be returned by the call() method.
-    zvmc_result call_result = {};
+    qrvmc_result call_result = {};
 
     /// The record of all block numbers for which get_block_hash() was called.
     mutable std::vector<int64_t> recorded_blockhashes;
@@ -174,7 +174,7 @@ public:
 
         // Get the reference to the storage entry value.
         // This will create the account in case it was not present.
-        // This is convenient for unit testing and standalone ZVM execution to preserve the
+        // This is convenient for unit testing and standalone QRVM execution to preserve the
         // storage values after the execution terminates.
         auto& s = accounts[addr].storage[key];
 
@@ -435,8 +435,8 @@ public:
         record_account_access(addr);
 
         // Accessing precompiled contracts is always warm.
-        if (addr >= "Z0000000000000000000000000000000000000001"_address &&
-            addr <= "Z0000000000000000000000000000000000000009"_address)
+        if (addr >= "Q0000000000000000000000000000000000000001"_address &&
+            addr <= "Q0000000000000000000000000000000000000009"_address)
             return ZVMC_ACCESS_WARM;
 
         return already_accessed ? ZVMC_ACCESS_WARM : ZVMC_ACCESS_COLD;

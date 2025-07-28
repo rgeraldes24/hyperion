@@ -61,23 +61,23 @@ class CompilerContext
 {
 public:
 	explicit CompilerContext(
-		langutil::ZVMVersion _zvmVersion,
+		langutil::ZVMVersion _qrvmVersion,
 		RevertStrings _revertStrings,
 		CompilerContext* _runtimeContext = nullptr
 	):
-		m_asm(std::make_shared<zvmasm::Assembly>(_zvmVersion, _runtimeContext != nullptr, std::string{})),
-		m_zvmVersion(_zvmVersion),
+		m_asm(std::make_shared<zvmasm::Assembly>(_qrvmVersion, _runtimeContext != nullptr, std::string{})),
+		m_qrvmVersion(_qrvmVersion),
 		m_revertStrings(_revertStrings),
 		m_reservedMemory{0},
 		m_runtimeContext(_runtimeContext),
-		m_abiFunctions(m_zvmVersion, m_revertStrings, m_yulFunctionCollector),
-		m_yulUtilFunctions(m_zvmVersion, m_revertStrings, m_yulFunctionCollector)
+		m_abiFunctions(m_qrvmVersion, m_revertStrings, m_yulFunctionCollector),
+		m_yulUtilFunctions(m_qrvmVersion, m_revertStrings, m_yulFunctionCollector)
 	{
 		if (m_runtimeContext)
 			m_runtimeSub = size_t(m_asm->newSub(m_runtimeContext->m_asm).data());
 	}
 
-	langutil::ZVMVersion const& zvmVersion() const { return m_zvmVersion; }
+	langutil::ZVMVersion const& zvmVersion() const { return m_qrvmVersion; }
 
 	void setUseABICoderV2(bool _value) { m_useABICoderV2 = _value; }
 	bool useABICoderV2() const { return m_useABICoderV2; }
@@ -204,7 +204,7 @@ public:
 	CompilerContext& appendRevert(std::string const& _message = "");
 	/// Appends a conditional REVERT-call, either forwarding the RETURNDATA or providing the
 	/// empty string. Consumes the condition.
-	/// If the current ZVM version does not support RETURNDATA, uses REVERT but does not forward
+	/// If the current QRVM version does not support RETURNDATA, uses REVERT but does not forward
 	/// the data.
 	/// @param _message is an optional revert message used in debug mode
 	CompilerContext& appendConditionalRevert(bool _forwardReturnData = false, std::string const& _message = "");
@@ -283,7 +283,7 @@ public:
 	void appendToAuxiliaryData(bytes const& _data) { m_asm->appendToAuxiliaryData(_data); }
 
 	/// Run optimisation step.
-	void optimise(OptimiserSettings const& _settings) { m_asm->optimise(zvmasm::Assembly::OptimiserSettings::translateSettings(_settings, m_zvmVersion)); }
+	void optimise(OptimiserSettings const& _settings) { m_asm->optimise(zvmasm::Assembly::OptimiserSettings::translateSettings(_settings, m_qrvmVersion)); }
 
 	/// @returns the runtime context if in creation mode and runtime context is set, nullptr otherwise.
 	CompilerContext* runtimeContext() const { return m_runtimeContext; }
@@ -347,8 +347,8 @@ private:
 	} m_functionCompilationQueue;
 
 	zvmasm::AssemblyPointer m_asm;
-	/// Version of the ZVM to compile against.
-	langutil::ZVMVersion m_zvmVersion;
+	/// Version of the QRVM to compile against.
+	langutil::ZVMVersion m_qrvmVersion;
 	RevertStrings const m_revertStrings;
 	bool m_useABICoderV2 = false;
 	/// Other already compiled contracts to be used in contract creation calls.

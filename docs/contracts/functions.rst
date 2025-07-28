@@ -165,7 +165,7 @@ Functions can be declared ``view`` in which case they promise not to modify the 
 
 .. note::
   The opcode ``STATICCALL`` is used when ``view`` functions are called, which enforces the
-  state to stay unmodified as part of the ZVM execution. For library ``view`` functions
+  state to stay unmodified as part of the QRVM execution. For library ``view`` functions
   ``DELEGATECALL`` is used, because there is no combined ``DELEGATECALL`` and ``STATICCALL``.
   This means library ``view`` functions do not have run-time checks that prevent state
   modifications. This should not impact security negatively because library code is
@@ -204,7 +204,7 @@ The following statements are considered modifying the state:
   This enabled state modifications in ``view`` functions through the use of
   invalid explicit type conversions.
   By using  ``STATICCALL`` for ``view`` functions, modifications to the
-  state are prevented on the level of the ZVM.
+  state are prevented on the level of the QRVM.
 
 .. index:: ! pure function, function;pure
 
@@ -252,8 +252,8 @@ This behavior is also in line with the ``STATICCALL`` opcode.
 
 .. warning::
   It is not possible to prevent functions from reading the state at the level
-  of the ZVM, it is only possible to prevent them from writing to the state
-  (i.e. only ``view`` can be enforced at the ZVM level, ``pure`` can not).
+  of the QRVM, it is only possible to prevent them from writing to the state
+  (i.e. only ``view`` can be enforced at the QRVM level, ``pure`` can not).
 
 .. note::
   Prior to version 0.5.0, the compiler did not use the ``STATICCALL`` opcode
@@ -261,7 +261,7 @@ This behavior is also in line with the ``STATICCALL`` opcode.
   This enabled state modifications in ``pure`` functions through the use of
   invalid explicit type conversions.
   By using  ``STATICCALL`` for ``pure`` functions, modifications to the
-  state are prevented on the level of the ZVM.
+  state are prevented on the level of the QRVM.
 
 .. note::
   Prior to version 0.4.17 the compiler did not enforce that ``pure`` is not reading the state.
@@ -323,7 +323,7 @@ will consume more gas than the 2300 gas stipend:
     recipient of a *coinbase transaction* (aka *miner block reward*).
 
     A contract cannot react to such Zond transfers and thus also
-    cannot reject them. This is a design choice of the ZVM and
+    cannot reject them. This is a design choice of the QRVM and
     Hyperion cannot work around it.
 
     It also means that ``address(this).balance`` can be higher

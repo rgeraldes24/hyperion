@@ -69,7 +69,7 @@ public:
 
 	explicit SemanticTest(
 		std::string const& _filename,
-		langutil::ZVMVersion _zvmVersion,
+		langutil::ZVMVersion _qrvmVersion,
 		std::vector<boost::filesystem::path> const& _vmPaths,
 		bool _enforceGasCost = false,
 		u256 _enforceGasCostMinValue = 100000

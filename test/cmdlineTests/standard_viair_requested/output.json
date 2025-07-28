@@ -66,7 +66,7 @@ object \"C_3\" {
 }
 
 ",
-                "zvm":
+                "qrvm":
                 {
                     "bytecode":
                     {
@@ -278,7 +278,7 @@ object \"D_16\" {
 }
 
 ",
-                "zvm":
+                "qrvm":
                 {
                     "bytecode":
                     {

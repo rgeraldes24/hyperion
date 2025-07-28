@@ -35,7 +35,7 @@ using namespace hyperion::test;
 namespace hyperion::frontend::test
 {
 
-#define CHECK_DEPLOY_GAS(_gasNoOpt, _gasOpt, _zvmVersion) \
+#define CHECK_DEPLOY_GAS(_gasNoOpt, _gasOpt, _qrvmVersion) \
 	do \
 	{ \
 		u256 metaCost = GasMeter::dataGas(m_compiler.cborMetadata(m_compiler.lastContractName()), true); \

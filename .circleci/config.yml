@@ -28,7 +28,7 @@ parameters:
         # NOTE: Please remember to update the `build_emscripten.sh` whenever the hash of this image changes.
         # solbuildpackpusher/solidity-buildpack-deps:emscripten-16
         default: "solbuildpackpusher/solidity-buildpack-deps@sha256:19fcb5ac029bbc27ec36e10f7d14ea224d8010145f9690562ef084fd16146b0c"
-    zvm-version:
+    qrvm-version:
         type: string
         default: london
 
@@ -1021,7 +1021,7 @@ jobs:
         <<: *base_ubuntu2204_large
         environment:
             <<: *base_ubuntu2204_large_env
-            ZVM: << pipeline.parameters.zvm-version >>
+            QRVM: << pipeline.parameters.qrvm-version >>
             OPTIMIZE: 1
         steps:
             - checkout
@@ -1114,7 +1114,7 @@ jobs:
         <<: *base_osx
         environment:
             <<: *base_osx_env
-            ZVM: << pipeline.parameters.zvm-version >>
+            QRVM: << pipeline.parameters.qrvm-version >>
             OPTIMIZE: 0
         steps:
             - checkout
@@ -1193,9 +1193,9 @@ jobs:
         parallelism: 20
         environment:
             <<: *base_archlinux_env
-            ZVM: << pipeline.parameters.zvm-version >>
+            QRVM: << pipeline.parameters.qrvm-version >>
             OPTIMIZE: 0
-            # For Archlinux we do not have prebuilt docker images and we would need to build zvmone from source,
+            # For Archlinux we do not have prebuilt docker images and we would need to build qrvmone from source,
             # thus we forgo semantics tests to speed things up.
             HYPTEST_FLAGS: --no-semantic-tests --no-smt
         steps:
@@ -1210,7 +1210,7 @@ jobs:
         parallelism: 20
         environment:
             <<: *base_ubuntu2204_clang_env
-            ZVM: << pipeline.parameters.zvm-version >>
+            QRVM: << pipeline.parameters.qrvm-version >>
             OPTIMIZE: 0
             # The high parallelism in this job is causing the SMT tests to run out of memory,
             # so disabling for now.
@@ -1259,7 +1259,7 @@ jobs:
         parallelism: 20
         environment:
             <<: *base_ubuntu2204_env
-            ZVM: << pipeline.parameters.zvm-version >>
+            QRVM: << pipeline.parameters.qrvm-version >>
             OPTIMIZE: 0
             HYPTEST_FLAGS: --no-smt
             ASAN_OPTIONS: check_initialization_order=true:detect_stack_use_after_return=true:strict_init_order=true:strict_string_checks=true:detect_invalid_pointer_pairs=2
@@ -1274,7 +1274,7 @@ jobs:
         parallelism: 20
         environment:
             <<: *base_ubuntu2204_clang_env
-            ZVM: << pipeline.parameters.zvm-version >>
+            QRVM: << pipeline.parameters.qrvm-version >>
             OPTIMIZE: 0
             HYPTEST_FLAGS: --no-smt
             ASAN_OPTIONS: check_initialization_order=true:detect_stack_use_after_return=true:strict_init_order=true:strict_string_checks=true:detect_invalid_pointer_pairs=2
@@ -1286,7 +1286,7 @@ jobs:
         parallelism: 20
         environment:
             <<: *base_ubuntu2204_clang_env
-            ZVM: << pipeline.parameters.zvm-version >>
+            QRVM: << pipeline.parameters.qrvm-version >>
             HYPTEST_FLAGS: --no-smt
         steps:
             - hyptest
@@ -1539,8 +1539,8 @@ jobs:
             - attach_workspace:
                   at: build
             - run:
-                  name: "Install zvmone"
-                  command: scripts/install_zvmone.ps1
+                  name: "Install qrvmone"
+                  command: scripts/install_qrvmone.ps1
                   shell: powershell.exe
             - run:
                   name: "Run hyptest"
@@ -1778,7 +1778,7 @@ workflows:
             # NOTE: We are disabling gp2 tests due to constant failures.
             # - t_ext: *job_native_test_ext_gp2
             # NOTE: The external tests below were commented because they
-            # depend on a specific version of hardhat which does not support shanghai ZVM.
+            # depend on a specific version of hardhat which does not support shanghai QRVM.
             #- t_ext: *job_native_test_ext_trident
             #- t_ext: *job_native_test_ext_euler
             #- t_ext: *job_native_test_ext_bleeps
@@ -1805,7 +1805,7 @@ workflows:
                       # in the new Foundry external testing infrastructure.
                       # - t_native_test_ext_prb_math
                       # NOTE: The external tests below were commented because they
-                      # depend on a specific version of hardhat which does not support shanghai ZVM.
+                      # depend on a specific version of hardhat which does not support shanghai QRVM.
                       #- t_native_test_ext_trident
                       #- t_native_test_ext_euler
                       #- t_native_test_ext_bleeps

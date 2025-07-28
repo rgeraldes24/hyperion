@@ -50,7 +50,7 @@ public:
 	static unsigned optimiseConstants(
 		bool _isCreation,
 		size_t _runs,
-		langutil::ZVMVersion _zvmVersion,
+		langutil::ZVMVersion _qrvmVersion,
 		Assembly& _assembly
 	);
 
