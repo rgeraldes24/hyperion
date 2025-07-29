@@ -122,7 +122,7 @@ the `qrvmone <https://github.com/theQRL/qrvmone/releases>`_ for running the sema
 
 The ``qrvmone`` library must be located in the ``deps`` or ``deps/lib`` directory relative to the
 current working directory, to its parent or its parent's parent. Alternatively, an explicit location
-for the ``qrvmone`` shared object can be specified via the ``ZOND_QRVMONE`` environment variable.
+for the ``qrvmone`` shared object can be specified via the ``QRL_QRVMONE`` environment variable.
 
 ``qrvmone`` is needed mainly for running semantic and gas tests.
 If you do not have it installed, you can skip these tests by passing the ``--no-semantic-tests``

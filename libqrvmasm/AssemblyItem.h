@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include <libzvmasm/Instruction.h>
-#include <libzvmasm/Exceptions.h>
+#include <libqrvmasm/Instruction.h>
+#include <libqrvmasm/Exceptions.h>
 #include <liblangutil/SourceLocation.h>
 #include <libhyputil/Common.h>
 #include <libhyputil/Numeric.h>
@@ -32,7 +32,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 enum AssemblyItemType

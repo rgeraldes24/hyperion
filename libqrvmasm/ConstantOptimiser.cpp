@@ -20,17 +20,17 @@
  * @date 2015
  */
 
-#include <libzvmasm/ConstantOptimiser.h>
-#include <libzvmasm/Assembly.h>
-#include <libzvmasm/GasMeter.h>
+#include <libqrvmasm/ConstantOptimiser.h>
+#include <libqrvmasm/Assembly.h>
+#include <libqrvmasm/GasMeter.h>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
 unsigned ConstantOptimisationMethod::optimiseConstants(
 	bool _isCreation,
 	size_t _runs,
-	langutil::ZVMVersion _qrvmVersion,
+	langutil::QRVMVersion _qrvmVersion,
 	Assembly& _assembly
 )
 {
@@ -102,7 +102,7 @@ bigint ConstantOptimisationMethod::dataGas(bytes const& _data) const
 
 size_t ConstantOptimisationMethod::bytesRequired(AssemblyItems const& _items)
 {
-	return zvmasm::bytesRequired(_items, 3, Precision::Approximate); // assume 3 byte addresses
+	return qrvmasm::bytesRequired(_items, 3, Precision::Approximate); // assume 3 byte addresses
 }
 
 void ConstantOptimisationMethod::replaceConstants(

@@ -20,13 +20,13 @@
  * @date 2014
  */
 
-#include <libzvmasm/Instruction.h>
+#include <libqrvmasm/Instruction.h>
 
 using namespace hyperion;
 using namespace hyperion::util;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
-std::map<std::string, Instruction> const hyperion::zvmasm::c_instructions =
+std::map<std::string, Instruction> const hyperion::qrvmasm::c_instructions =
 {
 	{ "STOP", Instruction::STOP },
 	{ "ADD", Instruction::ADD },
@@ -319,7 +319,7 @@ static std::map<Instruction, InstructionInfo> const c_instructionInfo =
 	{ Instruction::INVALID,		{ "INVALID",		0, 0, 0, true, Tier::Zero } }
 };
 
-InstructionInfo hyperion::zvmasm::instructionInfo(Instruction _inst)
+InstructionInfo hyperion::qrvmasm::instructionInfo(Instruction _inst)
 {
 	try
 	{
@@ -331,7 +331,7 @@ InstructionInfo hyperion::zvmasm::instructionInfo(Instruction _inst)
 	}
 }
 
-bool hyperion::zvmasm::isValidInstruction(Instruction _inst)
+bool hyperion::qrvmasm::isValidInstruction(Instruction _inst)
 {
 	return !!c_instructionInfo.count(_inst);
 }

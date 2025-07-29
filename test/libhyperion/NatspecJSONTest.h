@@ -53,7 +53,7 @@ public:
 
 	static std::unique_ptr<TestCase> create(Config const& _config);
 
-	NatspecJSONTest(std::string const& _filename, langutil::ZVMVersion _qrvmVersion):
+	NatspecJSONTest(std::string const& _filename, langutil::QRVMVersion _qrvmVersion):
 		SyntaxTest(
 			_filename,
 			_qrvmVersion,

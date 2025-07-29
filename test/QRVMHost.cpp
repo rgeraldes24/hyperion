@@ -20,11 +20,11 @@
  * for testing purposes.
  */
 
-#include <test/ZVMHost.h>
+#include <test/QRVMHost.h>
 
-#include <test/zvmc/loader.h>
+#include <test/qrvmc/loader.h>
 
-#include <libzvmasm/GasMeter.h>
+#include <libqrvmasm/GasMeter.h>
 
 #include <libhyputil/Exceptions.h>
 #include <libhyputil/Assertions.h>
@@ -35,27 +35,27 @@ using namespace std;
 using namespace hyperion;
 using namespace hyperion::util;
 using namespace hyperion::test;
-using namespace zvmc::literals;
+using namespace qrvmc::literals;
 
-zvmc::VM& ZVMHost::getVM(string const& _path)
+qrvmc::VM& QRVMHost::getVM(string const& _path)
 {
-	static zvmc::VM NullVM{nullptr};
-	static map<string, unique_ptr<zvmc::VM>> vms;
+	static qrvmc::VM NullVM{nullptr};
+	static map<string, unique_ptr<qrvmc::VM>> vms;
 	if (vms.count(_path) == 0)
 	{
-		zvmc_loader_error_code errorCode = {};
-		auto vm = zvmc::VM{zvmc_load_and_configure(_path.c_str(), &errorCode)};
-		if (vm && errorCode == ZVMC_LOADER_SUCCESS)
+		qrvmc_loader_error_code errorCode = {};
+		auto vm = qrvmc::VM{qrvmc_load_and_configure(_path.c_str(), &errorCode)};
+		if (vm && errorCode == QRVMC_LOADER_SUCCESS)
 		{
-			if (vm.get_capabilities() & (ZVMC_CAPABILITY_ZVM1))
-				vms[_path] = make_unique<zvmc::VM>(zvmc::VM(std::move(vm)));
+			if (vm.get_capabilities() & (QRVMC_CAPABILITY_QRVM1))
+				vms[_path] = make_unique<qrvmc::VM>(qrvmc::VM(std::move(vm)));
 			else
-				cerr << "VM loaded does not support ZVM1" << endl;
+				cerr << "VM loaded does not support QRVM1" << endl;
 		}
 		else
 		{
 			cerr << "Error loading VM from " << _path;
-			if (char const* errorMsg = zvmc_last_error_msg())
+			if (char const* errorMsg = qrvmc_last_error_msg())
 				cerr << ":" << endl << errorMsg;
 			cerr << endl;
 		}
@@ -67,37 +67,37 @@ zvmc::VM& ZVMHost::getVM(string const& _path)
 	return NullVM;
 }
 
-bool ZVMHost::checkVmPaths(vector<boost::filesystem::path> const& _vmPaths)
+bool QRVMHost::checkVmPaths(vector<boost::filesystem::path> const& _vmPaths)
 {
-	bool zvmVmFound = false;
+	bool qrvmVmFound = false;
 	for (auto const& path: _vmPaths)
 	{
-		zvmc::VM& vm = ZVMHost::getVM(path.string());
+		qrvmc::VM& vm = QRVMHost::getVM(path.string());
 		if (!vm)
 			continue;
 
-		if (vm.has_capability(ZVMC_CAPABILITY_ZVM1))
+		if (vm.has_capability(QRVMC_CAPABILITY_QRVM1))
 		{
-			if (zvmVmFound)
-				BOOST_THROW_EXCEPTION(runtime_error("Multiple zvm1 zvmc vms defined. Please only define one zvm1 zvmc vm."));
-			zvmVmFound = true;
+			if (qrvmVmFound)
+				BOOST_THROW_EXCEPTION(runtime_error("Multiple qrvm1 qrvmc vms defined. Please only define one qrvm1 qrvmc vm."));
+			qrvmVmFound = true;
 		}
 	}
-	return zvmVmFound;
+	return qrvmVmFound;
 }
 
-ZVMHost::ZVMHost(langutil::ZVMVersion _qrvmVersion, zvmc::VM& _vm):
+QRVMHost::QRVMHost(langutil::QRVMVersion _qrvmVersion, qrvmc::VM& _vm):
 	m_vm(_vm),
 	m_qrvmVersion(_qrvmVersion)
 {
 	if (!m_vm)
 	{
-		cerr << "Unable to find zvmone library" << endl;
+		cerr << "Unable to find qrvmone library" << endl;
 		assertThrow(false, Exception, "");
 	}
 
-	if (_qrvmVersion == langutil::ZVMVersion::shanghai())
-		m_zvmRevision = ZVMC_SHANGHAI;
+	if (_qrvmVersion == langutil::QRVMVersion::shanghai())
+		m_qrvmRevision = QRVMC_SHANGHAI;
 	else
 		assertThrow(false, Exception, "Unsupported QRVM version");
 
@@ -106,10 +106,10 @@ ZVMHost::ZVMHost(langutil::ZVMVersion _qrvmVersion, zvmc::VM& _vm):
 	tx_context.block_prev_randao = 0xa86c2e601b6c44eb4848f7d23d9df3113fbcac42041c49cbed5000cb4f118777_bytes32;
 	tx_context.block_gas_limit = 20000000;
 	tx_context.block_coinbase = "Q7878787878787878787878787878787878787878"_address;
-	tx_context.tx_gas_price = zvmc::uint256be{3000000000};
+	tx_context.tx_gas_price = qrvmc::uint256be{3000000000};
 	tx_context.tx_origin = "Q9292929292929292929292929292929292929292"_address;
 	// Mainnet according to EIP-155
-	tx_context.chain_id = zvmc::uint256be{1};
+	tx_context.chain_id = qrvmc::uint256be{1};
 	// The minimum value of basefee
 	tx_context.block_base_fee = qrvmc::bytes32{7};
 
@@ -120,7 +120,7 @@ ZVMHost::ZVMHost(langutil::ZVMVersion _qrvmVersion, zvmc::VM& _vm):
 	reset();
 }
 
-void ZVMHost::reset()
+void QRVMHost::reset()
 {
 	accounts.clear();
 	// Clear call records
@@ -129,7 +129,7 @@ void ZVMHost::reset()
 	recorded_account_accesses.clear();
 
 	// Mark all precompiled contracts as existing. Existing here means to have a balance (as per EIP-161).
-	// NOTE: keep this in sync with `ZVMHost::call` below.
+	// NOTE: keep this in sync with `QRVMHost::call` below.
 	//
 	// A lot of precompile addresses had a balance before they became valid addresses for precompiles.
 	// For example all the precompile addresses allocated in Byzantium had a 1 planck balance sent to them
@@ -138,13 +138,13 @@ void ZVMHost::reset()
 	{
 		qrvmc::address address{precompiledAddress};
 		// 1planck
-		accounts[address].balance = zvmc::uint256be{1};
+		accounts[address].balance = qrvmc::uint256be{1};
 		// Set according to EIP-1052.
 		accounts[address].codehash = 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470_bytes32;		
 	}
 }
 
-void ZVMHost::newTransactionFrame()
+void QRVMHost::newTransactionFrame()
 {
 	// Clear EIP-2929 account access indicator
 	recorded_account_accesses.clear();
@@ -152,27 +152,27 @@ void ZVMHost::newTransactionFrame()
 	for (auto& [address, account]: accounts)
 		for (auto& [slot, value]: account.storage)
 		{
-			value.access_status = ZVMC_ACCESS_COLD; // Clear EIP-2929 storage access indicator
+			value.access_status = QRVMC_ACCESS_COLD; // Clear EIP-2929 storage access indicator
 			value.original = value.current;			// Clear EIP-2200 dirty slot
 		}
 }
 
-void ZVMHost::transfer(zvmc::MockedAccount& _sender, zvmc::MockedAccount& _recipient, u256 const& _value) noexcept
+void QRVMHost::transfer(qrvmc::MockedAccount& _sender, qrvmc::MockedAccount& _recipient, u256 const& _value) noexcept
 {
-	assertThrow(u256(convertFromZVMC(_sender.balance)) >= _value, Exception, "Insufficient balance for transfer");
-	_sender.balance = convertToZVMC(u256(convertFromZVMC(_sender.balance)) - _value);
-	_recipient.balance = convertToZVMC(u256(convertFromZVMC(_recipient.balance)) + _value);
+	assertThrow(u256(convertFromQRVMC(_sender.balance)) >= _value, Exception, "Insufficient balance for transfer");
+	_sender.balance = convertToQRVMC(u256(convertFromQRVMC(_sender.balance)) - _value);
+	_recipient.balance = convertToQRVMC(u256(convertFromQRVMC(_recipient.balance)) + _value);
 }
 
-void ZVMHost::recordCalls(zvmc_message const& _message) noexcept
+void QRVMHost::recordCalls(qrvmc_message const& _message) noexcept
 {
 	if (recorded_calls.size() < max_recorded_calls)
 		recorded_calls.emplace_back(_message);
 }
 
 // NOTE: this is used for both internal and external calls.
-// External calls are triggered from ExecutionFramework and contain only ZVMC_CREATE or ZVMC_CALL.
-zvmc::Result ZVMHost::call(zvmc_message const& _message) noexcept
+// External calls are triggered from ExecutionFramework and contain only QRVMC_CREATE or QRVMC_CALL.
+qrvmc::Result QRVMHost::call(qrvmc_message const& _message) noexcept
 {
 	recordCalls(_message);
 	if (_message.recipient == "Q0000000000000000000000000000000000000001"_address)
@@ -192,27 +192,27 @@ zvmc::Result ZVMHost::call(zvmc_message const& _message) noexcept
 
 	auto const stateBackup = accounts;
 
-	u256 value{convertFromZVMC(_message.value)};
+	u256 value{convertFromQRVMC(_message.value)};
 	auto& sender = accounts[_message.sender];
 
-	zvmc::bytes code;
+	qrvmc::bytes code;
 
-	zvmc_message message = _message;
+	qrvmc_message message = _message;
 	if (message.depth == 0)
 	{
-		message.gas -= message.kind == ZVMC_CREATE ? zvmasm::GasCosts::txCreateGas : zvmasm::GasCosts::txGas;
+		message.gas -= message.kind == QRVMC_CREATE ? qrvmasm::GasCosts::txCreateGas : qrvmasm::GasCosts::txGas;
 		for (size_t i = 0; i < message.input_size; ++i)
-			message.gas -= message.input_data[i] == 0 ? zvmasm::GasCosts::txDataZeroGas : zvmasm::GasCosts::txDataNonZeroGas;
+			message.gas -= message.input_data[i] == 0 ? qrvmasm::GasCosts::txDataZeroGas : qrvmasm::GasCosts::txDataNonZeroGas;
 		if (message.gas < 0)
 		{
-			zvmc::Result result;
-			result.status_code = ZVMC_OUT_OF_GAS;
+			qrvmc::Result result;
+			result.status_code = QRVMC_OUT_OF_GAS;
 			accounts = stateBackup;
 			return result;
 		}
 	}
 
-	if (message.kind == ZVMC_CREATE)
+	if (message.kind == QRVMC_CREATE)
 	{
 		// TODO is the nonce incremented on failure, too?
 		// NOTE: nonce for creation from contracts starts at 1
@@ -242,12 +242,12 @@ zvmc::Result ZVMHost::call(zvmc_message const& _message) noexcept
 			encodedNonce
 		), h160::AlignRight);
 
-		message.recipient = convertToZVMC(createAddress);
+		message.recipient = convertToQRVMC(createAddress);
 		assertThrow(accounts.count(message.recipient) == 0, Exception, "Account cannot exist");
 
-		code = zvmc::bytes(message.input_data, message.input_data + message.input_size);
+		code = qrvmc::bytes(message.input_data, message.input_data + message.input_size);
 	}
-	else if (message.kind == ZVMC_CREATE2)
+	else if (message.kind == QRVMC_CREATE2)
 	{
 		h160 createAddress(keccak256(
 			bytes{0xff} +
@@ -256,31 +256,31 @@ zvmc::Result ZVMHost::call(zvmc_message const& _message) noexcept
 			keccak256(bytes(message.input_data, message.input_data + message.input_size)).asBytes()
 		), h160::AlignRight);
 
-		message.recipient = convertToZVMC(createAddress);
+		message.recipient = convertToQRVMC(createAddress);
 		if (accounts.count(message.recipient) && (
 			accounts[message.recipient].nonce > 0 ||
 			!accounts[message.recipient].code.empty()
 		))
 		{
-			zvmc::Result result;
-			result.status_code = ZVMC_OUT_OF_GAS;
+			qrvmc::Result result;
+			result.status_code = QRVMC_OUT_OF_GAS;
 			accounts = stateBackup;
 			return result;
 		}
 
-		code = zvmc::bytes(message.input_data, message.input_data + message.input_size);
+		code = qrvmc::bytes(message.input_data, message.input_data + message.input_size);
 	}
 	else
 		code = accounts[message.code_address].code;
 
 	auto& destination = accounts[message.recipient];
 
-	if (value != 0 && message.kind != ZVMC_DELEGATECALL)
+	if (value != 0 && message.kind != QRVMC_DELEGATECALL)
 	{
-		if (value > convertFromZVMC(sender.balance))
+		if (value > convertFromQRVMC(sender.balance))
 		{
-			zvmc::Result result;
-			result.status_code = ZVMC_INSUFFICIENT_BALANCE;
+			qrvmc::Result result;
+			result.status_code = QRVMC_INSUFFICIENT_BALANCE;
 			accounts = stateBackup;
 			return result;
 		}
@@ -295,47 +295,47 @@ zvmc::Result ZVMHost::call(zvmc_message const& _message) noexcept
 	// EIP-3651 rule
 	access_account(tx_context.block_coinbase);
 
-	if (message.kind == ZVMC_CREATE || message.kind == ZVMC_CREATE2)
+	if (message.kind == QRVMC_CREATE || message.kind == QRVMC_CREATE2)
 	{
 		message.input_data = nullptr;
 		message.input_size = 0;
 	}
-	zvmc::Result result = m_vm.execute(*this, m_zvmRevision, message, code.data(), code.size());
+	qrvmc::Result result = m_vm.execute(*this, m_qrvmRevision, message, code.data(), code.size());
 
-	if (message.kind == ZVMC_CREATE || message.kind == ZVMC_CREATE2)
+	if (message.kind == QRVMC_CREATE || message.kind == QRVMC_CREATE2)
 	{
-		result.gas_left -= static_cast<int64_t>(zvmasm::GasCosts::createDataGas * result.output_size);
+		result.gas_left -= static_cast<int64_t>(qrvmasm::GasCosts::createDataGas * result.output_size);
 		if (result.gas_left < 0)
 		{
 			result.gas_left = 0;
-			result.status_code = ZVMC_OUT_OF_GAS;
+			result.status_code = QRVMC_OUT_OF_GAS;
 			// TODO clear some fields?
 		}
 		else
 		{
 			result.create_address = message.recipient;
-			destination.code = zvmc::bytes(result.output_data, result.output_data + result.output_size);
-			destination.codehash = convertToZVMC(keccak256({result.output_data, result.output_size}));
+			destination.code = qrvmc::bytes(result.output_data, result.output_data + result.output_size);
+			destination.codehash = convertToQRVMC(keccak256({result.output_data, result.output_size}));
 		}
 	}
 
-	if (result.status_code != ZVMC_SUCCESS)
+	if (result.status_code != QRVMC_SUCCESS)
 		accounts = stateBackup;
 
 	return result;
 }
 
-qrvmc::bytes32 ZVMHost::get_block_hash(int64_t _number) const noexcept
+qrvmc::bytes32 QRVMHost::get_block_hash(int64_t _number) const noexcept
 {
-	return convertToZVMC(u256("0x3737373737373737373737373737373737373737373737373737373737373737") + _number);
+	return convertToQRVMC(u256("0x3737373737373737373737373737373737373737373737373737373737373737") + _number);
 }
 
-h160 ZVMHost::convertFromZVMC(qrvmc::address const& _addr)
+h160 QRVMHost::convertFromQRVMC(qrvmc::address const& _addr)
 {
 	return h160(bytes(begin(_addr.bytes), end(_addr.bytes)));
 }
 
-qrvmc::address ZVMHost::convertToZVMC(h160 const& _addr)
+qrvmc::address QRVMHost::convertToQRVMC(h160 const& _addr)
 {
 	qrvmc::address a;
 	for (unsigned i = 0; i < 20; ++i)
@@ -343,12 +343,12 @@ qrvmc::address ZVMHost::convertToZVMC(h160 const& _addr)
 	return a;
 }
 
-h256 ZVMHost::convertFromZVMC(qrvmc::bytes32 const& _data)
+h256 QRVMHost::convertFromQRVMC(qrvmc::bytes32 const& _data)
 {
 	return h256(bytes(begin(_data.bytes), end(_data.bytes)));
 }
 
-qrvmc::bytes32 ZVMHost::convertToZVMC(h256 const& _data)
+qrvmc::bytes32 QRVMHost::convertToQRVMC(h256 const& _data)
 {
 	qrvmc::bytes32 d;
 	for (unsigned i = 0; i < 32; ++i)
@@ -356,13 +356,13 @@ qrvmc::bytes32 ZVMHost::convertToZVMC(h256 const& _data)
 	return d;
 }
 
-zvmc::Result ZVMHost::precompileDepositRoot(zvmc_message const& /*_message*/) noexcept
+qrvmc::Result QRVMHost::precompileDepositRoot(qrvmc_message const& /*_message*/) noexcept
 {
 	// TODO implement
 	return resultWithFailure();
 }
 
-zvmc::Result ZVMHost::precompileSha256(zvmc_message const& _message) noexcept
+qrvmc::Result QRVMHost::precompileSha256(qrvmc_message const& _message) noexcept
 {
 	// static data so that we do not need a release routine...
 	bytes static hash;
@@ -377,7 +377,7 @@ zvmc::Result ZVMHost::precompileSha256(zvmc_message const& _message) noexcept
 	return resultWithGas(_message.gas, gas_cost, hash);
 }
 
-zvmc::Result ZVMHost::precompileIdentity(zvmc_message const& _message) noexcept
+qrvmc::Result QRVMHost::precompileIdentity(qrvmc_message const& _message) noexcept
 {
 	// static data so that we do not need a release routine...
 	bytes static data;
@@ -389,19 +389,19 @@ zvmc::Result ZVMHost::precompileIdentity(zvmc_message const& _message) noexcept
 	return resultWithGas(_message.gas, gas_cost, data);
 }
 
-zvmc::Result ZVMHost::precompileModExp(zvmc_message const&) noexcept
+qrvmc::Result QRVMHost::precompileModExp(qrvmc_message const&) noexcept
 {
 	// TODO implement
 	return resultWithFailure();
 }
 
-zvmc::Result ZVMHost::precompileALTBN128G1Add(zvmc_message const& _message) noexcept
+qrvmc::Result QRVMHost::precompileALTBN128G1Add(qrvmc_message const& _message) noexcept
 {
 	// NOTE this is a partial implementation for some inputs.
 
 	int64_t gas_cost = 150;
 
-	static map<bytes, ZVMPrecompileOutput> const inputOutput{
+	static map<bytes, QRVMPrecompileOutput> const inputOutput{
 		{
 			fromHex(
 				"0000000000000000000000000000000000000000000000000000000000000000"
@@ -661,13 +661,13 @@ zvmc::Result ZVMHost::precompileALTBN128G1Add(zvmc_message const& _message) noex
 	return precompileGeneric(_message, inputOutput);
 }
 
-zvmc::Result ZVMHost::precompileALTBN128G1Mul(zvmc_message const& _message) noexcept
+qrvmc::Result QRVMHost::precompileALTBN128G1Mul(qrvmc_message const& _message) noexcept
 {
 	// NOTE this is a partial implementation for some inputs.
 
 	int64_t gas_cost = 6000;
 
-	static map<bytes, ZVMPrecompileOutput> const inputOutput{
+	static map<bytes, QRVMPrecompileOutput> const inputOutput{
 		{
 			fromHex("0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000"),
 			{
@@ -749,7 +749,7 @@ zvmc::Result ZVMHost::precompileALTBN128G1Mul(zvmc_message const& _message) noex
 	return precompileGeneric(_message, inputOutput);
 }
 
-zvmc::Result ZVMHost::precompileALTBN128PairingProduct(zvmc_message const& _message) noexcept
+qrvmc::Result QRVMHost::precompileALTBN128PairingProduct(qrvmc_message const& _message) noexcept
 {
 	// Base + per pairing gas.
 	constexpr auto calc_cost = [](unsigned points) -> int64_t {
@@ -758,7 +758,7 @@ zvmc::Result ZVMHost::precompileALTBN128PairingProduct(zvmc_message const& _mess
 	};
 
 	// NOTE this is a partial implementation for some inputs.
-	static map<bytes, ZVMPrecompileOutput> const inputOutput{
+	static map<bytes, QRVMPrecompileOutput> const inputOutput{
 		{
 			fromHex(
 				"17c139df0efee0f766bc0204762b774362e4ded88953a39ce849a8a7fa163fa9"
@@ -915,9 +915,9 @@ zvmc::Result ZVMHost::precompileALTBN128PairingProduct(zvmc_message const& _mess
 	return precompileGeneric(_message, inputOutput);
 }
 
-zvmc::Result ZVMHost::precompileGeneric(
-	zvmc_message const& _message,
-	map<bytes, ZVMPrecompileOutput> const& _inOut) noexcept
+qrvmc::Result QRVMHost::precompileGeneric(
+	qrvmc_message const& _message,
+	map<bytes, QRVMPrecompileOutput> const& _inOut) noexcept
 {
 	bytes input(_message.input_data, _message.input_data + _message.input_size);
 	if (_inOut.count(input))
@@ -929,28 +929,28 @@ zvmc::Result ZVMHost::precompileGeneric(
 		return resultWithFailure();
 }
 
-zvmc::Result ZVMHost::resultWithFailure() noexcept
+qrvmc::Result QRVMHost::resultWithFailure() noexcept
 {
-	zvmc::Result result;
-	result.status_code = ZVMC_FAILURE;
+	qrvmc::Result result;
+	result.status_code = QRVMC_FAILURE;
 	return result;
 }
 
-zvmc::Result ZVMHost::resultWithGas(
+qrvmc::Result QRVMHost::resultWithGas(
 	int64_t gas_limit,
 	int64_t gas_required,
 	bytes const& _data
 ) noexcept
 {
-	zvmc::Result result;
+	qrvmc::Result result;
 	if (gas_limit < gas_required)
 	{
-		result.status_code = ZVMC_OUT_OF_GAS;
+		result.status_code = QRVMC_OUT_OF_GAS;
 		result.gas_left = 0;
 	}
 	else
 	{
-		result.status_code = ZVMC_SUCCESS;
+		result.status_code = QRVMC_SUCCESS;
 		result.gas_left = gas_limit - gas_required;
 	}
 	result.output_data = _data.empty() ? nullptr : _data.data();
@@ -958,13 +958,13 @@ zvmc::Result ZVMHost::resultWithGas(
 	return result;
 }
 
-StorageMap const& ZVMHost::get_address_storage(qrvmc::address const& _addr)
+StorageMap const& QRVMHost::get_address_storage(qrvmc::address const& _addr)
 {
 	assertThrow(account_exists(_addr), Exception, "Account does not exist.");
 	return accounts[_addr].storage;
 }
 
-string ZVMHostPrinter::state()
+string QRVMHostPrinter::state()
 {
 	// Print state and execution trace.
 	if (m_host.account_exists(m_account))
@@ -977,37 +977,37 @@ string ZVMHostPrinter::state()
 	return m_stateStream.str();
 }
 
-void ZVMHostPrinter::storage()
+void QRVMHostPrinter::storage()
 {
 	for (auto const& [slot, value]: m_host.get_address_storage(m_account))
 		if (m_host.get_storage(m_account, slot))
 			m_stateStream << "  "
-				<< m_host.convertFromZVMC(slot)
+				<< m_host.convertFromQRVMC(slot)
 				<< ": "
-				<< m_host.convertFromZVMC(value.current)
+				<< m_host.convertFromQRVMC(value.current)
 				<< endl;
 }
 
-void ZVMHostPrinter::balance()
+void QRVMHostPrinter::balance()
 {
 	m_stateStream << "BALANCE "
-		<< m_host.convertFromZVMC(m_host.get_balance(m_account))
+		<< m_host.convertFromQRVMC(m_host.get_balance(m_account))
 		<< endl;
 }
 
-void ZVMHostPrinter::callRecords()
+void QRVMHostPrinter::callRecords()
 {
-	static auto constexpr callKind = [](zvmc_call_kind _kind) -> string
+	static auto constexpr callKind = [](qrvmc_call_kind _kind) -> string
 	{
 		switch (_kind)
 		{
-			case zvmc_call_kind::ZVMC_CALL:
+			case qrvmc_call_kind::QRVMC_CALL:
 				return "CALL";
-			case zvmc_call_kind::ZVMC_DELEGATECALL:
+			case qrvmc_call_kind::QRVMC_DELEGATECALL:
 				return "DELEGATECALL";
-			case zvmc_call_kind::ZVMC_CREATE:
+			case qrvmc_call_kind::QRVMC_CREATE:
 				return "CREATE";
-			case zvmc_call_kind::ZVMC_CREATE2:
+			case qrvmc_call_kind::QRVMC_CREATE2:
 				return "CREATE2";
 			default:
 				assertThrow(false, Exception, "Invalid call kind.");
@@ -1017,6 +1017,6 @@ void ZVMHostPrinter::callRecords()
 	for (auto const& record: m_host.recorded_calls)
 		m_stateStream << callKind(record.kind)
 			<< " VALUE "
-			<< m_host.convertFromZVMC(record.value)
+			<< m_host.convertFromQRVMC(record.value)
 			<< endl;
 }

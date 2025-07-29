@@ -22,14 +22,14 @@
 #pragma once
 
 #include <libyul/optimiser/ASTWalker.h>
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 #include <libhyputil/Numeric.h>
-#include <libzvmasm/Instruction.h>
+#include <libqrvmasm/Instruction.h>
 
 namespace hyperion::yul
 {
 
-struct ZVMDialect;
+struct QRVMDialect;
 
 /**
  * Gas meter for expressions only involving literals, identifiers and
@@ -43,7 +43,7 @@ struct ZVMDialect;
 class GasMeter
 {
 public:
-	GasMeter(ZVMDialect const& _dialect, bool _isCreation, bigint _runs):
+	GasMeter(QRVMDialect const& _dialect, bool _isCreation, bigint _runs):
 		m_dialect(_dialect),
 		m_isCreation{_isCreation},
 		m_runs(_isCreation? 1 : _runs)
@@ -53,12 +53,12 @@ public:
 	bigint costs(Expression const& _expression) const;
 	/// @returns the combined costs of deploying and running the instruction, not including
 	/// the costs for its arguments.
-	bigint instructionCosts(zvmasm::Instruction _instruction) const;
+	bigint instructionCosts(qrvmasm::Instruction _instruction) const;
 
 private:
 	bigint combineCosts(std::pair<bigint, bigint> _costs) const;
 
-	ZVMDialect const& m_dialect;
+	QRVMDialect const& m_dialect;
 	bool m_isCreation = false;
 	bigint m_runs;
 };
@@ -68,18 +68,18 @@ class GasMeterVisitor: public ASTWalker
 public:
 	static std::pair<bigint, bigint> costs(
 		Expression const& _expression,
-		ZVMDialect const& _dialect,
+		QRVMDialect const& _dialect,
 		bool _isCreation
 	);
 
 	static std::pair<bigint, bigint> instructionCosts(
-		zvmasm::Instruction _instruction,
-		ZVMDialect const& _dialect,
+		qrvmasm::Instruction _instruction,
+		QRVMDialect const& _dialect,
 		bool _isCreation = false
 	);
 
 public:
-	GasMeterVisitor(ZVMDialect const& _dialect, bool _isCreation):
+	GasMeterVisitor(QRVMDialect const& _dialect, bool _isCreation):
 		m_dialect(_dialect),
 		m_isCreation{_isCreation}
 	{}
@@ -93,9 +93,9 @@ private:
 	/// Computes the cost of storing and executing the single instruction (excluding its arguments).
 	/// For EXP, it assumes that the exponent is at most 255.
 	/// Does not work particularly exact for anything apart from arithmetic.
-	void instructionCostsInternal(zvmasm::Instruction _instruction);
+	void instructionCostsInternal(qrvmasm::Instruction _instruction);
 
-	ZVMDialect const& m_dialect;
+	QRVMDialect const& m_dialect;
 	bool m_isCreation = false;
 	bigint m_runGas = 0;
 	bigint m_dataGas = 0;

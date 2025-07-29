@@ -24,7 +24,7 @@
 
 #include <libhyputil/Exceptions.h>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 struct AssemblyException: virtual util::Exception {};

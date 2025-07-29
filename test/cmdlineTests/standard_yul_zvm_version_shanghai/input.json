@@ -4,6 +4,6 @@
 		"input.yul": {"content": "{}"}
 	},
 	"settings": {
-		"zvmVersion": "shanghai"
+		"qrvmVersion": "shanghai"
 	}
 }

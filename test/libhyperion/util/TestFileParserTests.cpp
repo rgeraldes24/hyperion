@@ -319,10 +319,10 @@ BOOST_AUTO_TEST_CASE(call_arguments)
 	);
 }
 
-BOOST_AUTO_TEST_CASE(call_arguments_zond)
+BOOST_AUTO_TEST_CASE(call_arguments_quanta)
 {
 	char const* source = R"(
-		// f(uint256), 1 zond: 5 # optional zond value #
+		// f(uint256), 1 quanta: 5 # optional quanta value #
 		// -> 4
 	)";
 	auto const calls = parse(source);
@@ -334,8 +334,8 @@ BOOST_AUTO_TEST_CASE(call_arguments_zond)
 		false,
 		fmt::encodeArgs(5),
 		fmt::encodeArgs(4),
-		{exp256(u256(10), u256(18)) , FunctionValueUnit::Zond},
-		" optional zond value "
+		{exp256(u256(10), u256(18)) , FunctionValueUnit::Quanta},
+		" optional quanta value "
 	);
 }
 
@@ -840,7 +840,7 @@ BOOST_AUTO_TEST_CASE(call_zond_value_invalid)
 BOOST_AUTO_TEST_CASE(call_zond_value_invalid_decimal)
 {
 	char const* source = R"(
-		// sig(): 0.1hd zond ->
+		// sig(): 0.1hd quanta ->
 	)";
 	BOOST_REQUIRE_THROW(parse(source), TestParserError);
 }

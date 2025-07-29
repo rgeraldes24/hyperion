@@ -30,7 +30,7 @@
 #include <libhyperion/interface/OptimiserSettings.h>
 
 #include <liblangutil/CharStreamProvider.h>
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
 #include <json/json.h>
 
@@ -47,7 +47,7 @@ public:
 	using ExecutionContext = IRGenerationContext::ExecutionContext;
 
 	IRGenerator(
-		langutil::ZVMVersion _qrvmVersion,
+		langutil::QRVMVersion _qrvmVersion,
 		RevertStrings _revertStrings,
 		std::map<std::string, unsigned> _sourceIndices,
 		langutil::DebugInfoSelection const& _debugInfoSelection,
@@ -137,7 +137,7 @@ private:
 
 	std::string dispenseLocationComment(ASTNode const& _node);
 
-	langutil::ZVMVersion const m_qrvmVersion;
+	langutil::QRVMVersion const m_qrvmVersion;
 
 	IRGenerationContext m_context;
 	YulUtilFunctions m_utils;

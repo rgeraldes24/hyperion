@@ -18,22 +18,22 @@
 
 #pragma once
 
-#include <libzvmasm/AbstractAssemblyStack.h>
-#include <libzvmasm/Assembly.h>
-#include <libzvmasm/LinkerObject.h>
+#include <libqrvmasm/AbstractAssemblyStack.h>
+#include <libqrvmasm/Assembly.h>
+#include <libqrvmasm/LinkerObject.h>
 
 #include <libhyputil/JSON.h>
 
 #include <map>
 #include <string>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
-class ZVMAssemblyStack: public AbstractAssemblyStack
+class QRVMAssemblyStack: public AbstractAssemblyStack
 {
 public:
-	explicit ZVMAssemblyStack(langutil::ZVMVersion _qrvmVersion): m_qrvmVersion(_qrvmVersion) {}
+	explicit QRVMAssemblyStack(langutil::QRVMVersion _qrvmVersion): m_qrvmVersion(_qrvmVersion) {}
 
 	/// Runs parsing and analysis steps.
 	/// Multiple calls overwrite the previous state.
@@ -47,8 +47,8 @@ public:
 	virtual LinkerObject const& object(std::string const& _contractName) const override;
 	virtual LinkerObject const& runtimeObject(std::string const& _contractName) const override;
 
-	std::shared_ptr<zvmasm::Assembly> const& zvmAssembly() const { return m_zvmAssembly; }
-	std::shared_ptr<zvmasm::Assembly> const& zvmRuntimeAssembly() const { return m_zvmRuntimeAssembly; }
+	std::shared_ptr<qrvmasm::Assembly> const& qrvmAssembly() const { return m_qrvmAssembly; }
+	std::shared_ptr<qrvmasm::Assembly> const& qrvmRuntimeAssembly() const { return m_qrvmRuntimeAssembly; }
 
 	virtual std::string const* sourceMapping(std::string const& _contractName) const override;
 	virtual std::string const* runtimeSourceMapping(std::string const& _contractName) const override;
@@ -62,7 +62,7 @@ public:
 	virtual std::vector<std::string> sourceNames() const override;
 	std::map<std::string, unsigned> sourceIndices() const;
 
-	virtual bool compilationSuccessful() const override { return m_zvmAssembly != nullptr; }
+	virtual bool compilationSuccessful() const override { return m_qrvmAssembly != nullptr; }
 
 	void selectDebugInfo(langutil::DebugInfoSelection _debugInfoSelection)
 	{
@@ -70,16 +70,16 @@ public:
 	}
 
 private:
-	langutil::ZVMVersion m_qrvmVersion;
+	langutil::QRVMVersion m_qrvmVersion;
 	std::string m_name;
-	std::shared_ptr<zvmasm::Assembly> m_zvmAssembly;
-	std::shared_ptr<zvmasm::Assembly> m_zvmRuntimeAssembly;
-	zvmasm::LinkerObject m_object; ///< Deployment object (includes the runtime sub-object).
-	zvmasm::LinkerObject m_runtimeObject; ///< Runtime object.
+	std::shared_ptr<qrvmasm::Assembly> m_qrvmAssembly;
+	std::shared_ptr<qrvmasm::Assembly> m_qrvmRuntimeAssembly;
+	qrvmasm::LinkerObject m_object; ///< Deployment object (includes the runtime sub-object).
+	qrvmasm::LinkerObject m_runtimeObject; ///< Runtime object.
 	std::vector<std::string> m_sourceList;
 	langutil::DebugInfoSelection m_debugInfoSelection = langutil::DebugInfoSelection::Default();
 	std::string m_sourceMapping;
 	std::string m_runtimeSourceMapping;
 };
 
-} // namespace hyperion::zvmasm
+} // namespace hyperion::qrvmasm

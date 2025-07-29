@@ -257,9 +257,9 @@ invalid bids.
 
         /// Place a blinded bid with `blindedBid` =
         /// keccak256(abi.encodePacked(value, fake, secret)).
-        /// The sent zond is only refunded if the bid is correctly
+        /// The sent quanta is only refunded if the bid is correctly
         /// revealed in the revealing phase. The bid is valid if the
-        /// zond sent together with the bid is at least "value" and
+        /// quanta sent together with the bid is at least "value" and
         /// "fake" is not true. Setting "fake" to true and sending
         /// not the exact amount are ways to hide the real bid but
         /// still make the required deposit. The same address can

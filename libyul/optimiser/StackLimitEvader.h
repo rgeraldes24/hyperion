@@ -22,7 +22,7 @@
 #pragma once
 
 #include <libyul/optimiser/OptimiserStep.h>
-#include <libyul/backends/zvm/StackLayoutGenerator.h>
+#include <libyul/backends/qrvm/StackLayoutGenerator.h>
 
 namespace hyperion::yul
 {

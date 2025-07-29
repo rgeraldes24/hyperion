@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 
-#include <libzvmasm/Disassemble.h>
+#include <libqrvmasm/Disassemble.h>
 
 #include <libhyputil/Common.h>
 #include <libhyputil/CommonIO.h>
@@ -24,10 +24,10 @@
 
 using namespace hyperion;
 using namespace hyperion::util;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
 
-void hyperion::zvmasm::eachInstruction(
+void hyperion::qrvmasm::eachInstruction(
 	bytes const& _mem,
 	std::function<void(Instruction,u256 const&)> const& _onInstruction
 )
@@ -56,7 +56,7 @@ void hyperion::zvmasm::eachInstruction(
 	}
 }
 
-std::string hyperion::zvmasm::disassemble(bytes const& _mem, std::string const& _delimiter)
+std::string hyperion::qrvmasm::disassemble(bytes const& _mem, std::string const& _delimiter)
 {
 	std::stringstream ret;
 	eachInstruction(_mem, [&](Instruction _instr, u256 const& _data) {

@@ -24,7 +24,7 @@
 #include <libyul/ASTForward.h>
 #include <libyul/optimiser/ASTWalker.h>
 
-#include <libzvmasm/Instruction.h>
+#include <libqrvmasm/Instruction.h>
 
 #include <libhyputil/FixedHash.h>
 #include <libhyputil/CommonData.h>
@@ -247,7 +247,7 @@ public:
 	std::vector<u256> values() const { return m_values; }
 
 protected:
-	void runExternalCall(zvmasm::Instruction _instruction);
+	void runExternalCall(qrvmasm::Instruction _instruction);
 	virtual std::unique_ptr<Interpreter> makeInterpreterCopy(std::map<YulString, u256> _variables = {}) const
 	{
 		return std::make_unique<Interpreter>(

@@ -18,7 +18,7 @@
 /**
  * Counts the number of references to a variable.
  */
-#include <libyul/backends/zvm/VariableReferenceCounter.h>
+#include <libyul/backends/qrvm/VariableReferenceCounter.h>
 #include <libyul/AsmAnalysisInfo.h>
 #include <libyul/AST.h>
 

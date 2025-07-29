@@ -6,7 +6,7 @@
   }
  },
  "settings": {
-  "zvmVersion": "shanghai",
+  "qrvmVersion": "shanghai",
   "optimizer": { "enabled": true },
   "outputSelection": {
    "*": {

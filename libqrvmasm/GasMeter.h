@@ -27,16 +27,16 @@
 
 #pragma once
 
-#include <libzvmasm/ExpressionClasses.h>
-#include <libzvmasm/AssemblyItem.h>
+#include <libqrvmasm/ExpressionClasses.h>
+#include <libqrvmasm/AssemblyItem.h>
 
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
 #include <ostream>
 #include <tuple>
 #include <utility>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class KnownState;
@@ -129,7 +129,7 @@ public:
 	};
 
 	/// Constructs a new gas meter given the current state.
-	GasMeter(std::shared_ptr<KnownState>  _state, langutil::ZVMVersion _qrvmVersion, u256  _largestMemoryAccess = 0):
+	GasMeter(std::shared_ptr<KnownState>  _state, langutil::QRVMVersion _qrvmVersion, u256  _largestMemoryAccess = 0):
 		m_state(std::move(_state)), m_qrvmVersion(_qrvmVersion), m_largestMemoryAccess(std::move(_largestMemoryAccess)) {}
 
 	/// @returns an upper bound on the gas consumed by the given instruction and updates
@@ -164,7 +164,7 @@ private:
 	GasConsumption memoryGas(int _stackPosOffset, int _stackPosSize);
 
 	std::shared_ptr<KnownState> m_state;
-	langutil::ZVMVersion m_qrvmVersion;
+	langutil::QRVMVersion m_qrvmVersion;
 	/// Largest point where memory was accessed since the creation of this object.
 	u256 m_largestMemoryAccess;
 };

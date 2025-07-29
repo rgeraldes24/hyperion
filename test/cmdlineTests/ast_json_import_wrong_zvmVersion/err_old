@@ -1,2 +1,2 @@
 # NOTE(rgeraldes24): not valid for now
-Error: Failed to import AST: Imported tree zvm version differs from configured zvm version!
+Error: Failed to import AST: Imported tree qrvm version differs from configured qrvm version!

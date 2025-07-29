@@ -24,7 +24,7 @@
 #include <libyul/optimiser/ASTWalker.h>
 #include <libyul/YulString.h>
 #include <libyul/Dialect.h>
-#include <libyul/backends/zvm/ZVMDialect.h>
+#include <libyul/backends/qrvm/QRVMDialect.h>
 #include <libyul/ASTForward.h>
 
 #include <liblangutil/SourceLocation.h>
@@ -48,7 +48,7 @@ class GasMeter;
 class ConstantOptimiser: public ASTModifier
 {
 public:
-	ConstantOptimiser(ZVMDialect const& _dialect, GasMeter const& _meter):
+	ConstantOptimiser(QRVMDialect const& _dialect, GasMeter const& _meter):
 		m_dialect(_dialect),
 		m_meter(_meter)
 	{}
@@ -62,7 +62,7 @@ public:
 	};
 
 private:
-	ZVMDialect const& m_dialect;
+	QRVMDialect const& m_dialect;
 	GasMeter const& m_meter;
 	std::map<u256, Representation> m_cache;
 };
@@ -72,7 +72,7 @@ class RepresentationFinder
 public:
 	using Representation = ConstantOptimiser::Representation;
 	RepresentationFinder(
-		ZVMDialect const& _dialect,
+		QRVMDialect const& _dialect,
 		GasMeter const& _meter,
 		std::shared_ptr<DebugData const> _debugData,
 		std::map<u256, Representation>& _cache
@@ -98,7 +98,7 @@ private:
 
 	Representation min(Representation _a, Representation _b);
 
-	ZVMDialect const& m_dialect;
+	QRVMDialect const& m_dialect;
 	GasMeter const& m_meter;
 	std::shared_ptr<DebugData const> m_debugData;
 	/// Counter for the complexity of optimization, will stop when it reaches zero.

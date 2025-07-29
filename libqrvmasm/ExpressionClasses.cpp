@@ -22,11 +22,11 @@
  * Container for equivalence classes of expressions for use in common subexpression elimination.
  */
 
-#include <libzvmasm/ExpressionClasses.h>
+#include <libqrvmasm/ExpressionClasses.h>
 
-#include <libzvmasm/Assembly.h>
-#include <libzvmasm/CommonSubexpressionEliminator.h>
-#include <libzvmasm/SimplificationRules.h>
+#include <libqrvmasm/Assembly.h>
+#include <libqrvmasm/CommonSubexpressionEliminator.h>
+#include <libqrvmasm/SimplificationRules.h>
 
 #include <boost/container_hash/hash.hpp>
 
@@ -35,7 +35,7 @@
 #include <tuple>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 using namespace hyperion::langutil;
 
 bool ExpressionClasses::Expression::operator==(ExpressionClasses::Expression const& _other) const

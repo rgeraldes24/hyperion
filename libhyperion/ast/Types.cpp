@@ -3136,7 +3136,7 @@ BoolResult FunctionType::isImplicitlyConvertibleTo(Type const& _convertTo) const
 	if (m_stateMutability != StateMutability::Payable && convertTo.stateMutability() == StateMutability::Payable)
 		return false;
 
-	// payable should be convertible to non-payable, because you are free to pay 0 zond
+	// payable should be convertible to non-payable, because you are free to pay 0 quanta
 	if (m_stateMutability == StateMutability::Payable && convertTo.stateMutability() == StateMutability::NonPayable)
 		return true;
 

@@ -20,9 +20,9 @@
 #include <test/libyul/Common.h>
 #include <test/Common.h>
 
-#include <libyul/backends/zvm/ControlFlowGraph.h>
-#include <libyul/backends/zvm/ControlFlowGraphBuilder.h>
-#include <libyul/backends/zvm/StackHelpers.h>
+#include <libyul/backends/qrvm/ControlFlowGraph.h>
+#include <libyul/backends/qrvm/ControlFlowGraphBuilder.h>
+#include <libyul/backends/qrvm/StackHelpers.h>
 #include <libyul/Object.h>
 
 #include <libhyputil/AnsiColorized.h>

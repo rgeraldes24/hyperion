@@ -5,19 +5,19 @@ macro(configure_project)
 	set(NAME ${PROJECT_NAME})
 
 	# features
-	zond_default_option(COVERAGE OFF)
-	zond_default_option(OSSFUZZ OFF)
+	qrl_default_option(COVERAGE OFF)
+	qrl_default_option(OSSFUZZ OFF)
 
 	# components
-	zond_default_option(TESTS ON)
-	zond_default_option(TOOLS ON)
+	qrl_default_option(TESTS ON)
+	qrl_default_option(TOOLS ON)
 
 	# Define a matching property name of each of the "features".
 	foreach(FEATURE ${ARGN})
 		set(SUPPORT_${FEATURE} TRUE)
 	endforeach()
 
-	include(ZondBuildInfo)
+	include(QRLBuildInfo)
 	create_build_info(${NAME})
 	print_config(${NAME})
 endmacro()

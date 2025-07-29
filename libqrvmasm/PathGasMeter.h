@@ -22,15 +22,15 @@
 
 #pragma once
 
-#include <libzvmasm/GasMeter.h>
+#include <libqrvmasm/GasMeter.h>
 
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
 #include <set>
 #include <vector>
 #include <memory>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class KnownState;
@@ -52,13 +52,13 @@ struct GasPath
 class PathGasMeter
 {
 public:
-	explicit PathGasMeter(AssemblyItems const& _items, langutil::ZVMVersion _qrvmVersion);
+	explicit PathGasMeter(AssemblyItems const& _items, langutil::QRVMVersion _qrvmVersion);
 
 	GasMeter::GasConsumption estimateMax(size_t _startIndex, std::shared_ptr<KnownState> const& _state);
 
 	static GasMeter::GasConsumption estimateMax(
 		AssemblyItems const& _items,
-		langutil::ZVMVersion _qrvmVersion,
+		langutil::QRVMVersion _qrvmVersion,
 		size_t _startIndex,
 		std::shared_ptr<KnownState> const& _state
 	)
@@ -80,7 +80,7 @@ private:
 	std::map<size_t, GasMeter::GasConsumption> m_highestGasUsagePerJumpdest;
 	std::map<u256, size_t> m_tagPositions;
 	AssemblyItems const& m_items;
-	langutil::ZVMVersion m_qrvmVersion;
+	langutil::QRVMVersion m_qrvmVersion;
 };
 
 }

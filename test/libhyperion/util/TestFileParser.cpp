@@ -279,12 +279,12 @@ FunctionValue TestFileParser::parseFunctionCallValue()
 	{
 		u256 value{ parseDecimalNumber() };
 		Token token = m_scanner.currentToken();
-		if (token != Token::Zond && token != Token::Planck)
-			BOOST_THROW_EXCEPTION(TestParserError("Invalid value unit provided. Coins can be planck or zond."));
+		if (token != Token::Quanta && token != Token::Planck)
+			BOOST_THROW_EXCEPTION(TestParserError("Invalid value unit provided. Coins can be planck or quanta."));
 
 		m_scanner.scanNextToken();
 
-		FunctionValueUnit unit = token == Token::Planck ? FunctionValueUnit::Planck : FunctionValueUnit::Zond;
+		FunctionValueUnit unit = token == Token::Planck ? FunctionValueUnit::Planck : FunctionValueUnit::Quanta;
 		return { (unit == FunctionValueUnit::Planck ? u256(1) : exp256(u256(10), u256(18))) * value, unit };
 	}
 	catch (std::exception const&)
@@ -569,7 +569,7 @@ void TestFileParser::Scanner::scanNextToken()
 	auto detectKeyword = [](std::string const& _literal = "") -> std::pair<Token, std::string> {
 		if (_literal == "true") return {Token::Boolean, "true"};
 		if (_literal == "false") return {Token::Boolean, "false"};
-		if (_literal == "zond") return {Token::Zond, ""};
+		if (_literal == "quanta") return {Token::Quanta, ""};
 		if (_literal == "planck") return {Token::Planck, ""};
 		if (_literal == "left") return {Token::Left, ""};
 		if (_literal == "library") return {Token::Library, ""};

@@ -56,7 +56,7 @@
                 "id": 3,
                 "nodeType": "InlineAssembly",
                 "src": "52:15:1",
-                "zvmVersion": %QRVMVERSION%
+                "qrvmVersion": %QRVMVERSION%
               }
             ]
           },

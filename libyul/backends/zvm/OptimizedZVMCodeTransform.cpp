@@ -15,15 +15,15 @@
 	along with hyperion.  If not, see <http://www.gnu.org/licenses/>.
 */
 // SPDX-License-Identifier: GPL-3.0
-#include <libyul/backends/zvm/OptimizedZVMCodeTransform.h>
+#include <libyul/backends/qrvm/OptimizedQRVMCodeTransform.h>
 
-#include <libyul/backends/zvm/ControlFlowGraphBuilder.h>
-#include <libyul/backends/zvm/StackHelpers.h>
-#include <libyul/backends/zvm/StackLayoutGenerator.h>
+#include <libyul/backends/qrvm/ControlFlowGraphBuilder.h>
+#include <libyul/backends/qrvm/StackHelpers.h>
+#include <libyul/backends/qrvm/StackLayoutGenerator.h>
 
 #include <libyul/Utilities.h>
 
-#include <libzvmasm/Instruction.h>
+#include <libqrvmasm/Instruction.h>
 
 #include <libhyputil/Visitor.h>
 #include <libhyputil/cxx20.h>
@@ -39,18 +39,18 @@
 using namespace hyperion;
 using namespace hyperion::yul;
 
-std::vector<StackTooDeepError> OptimizedZVMCodeTransform::run(
+std::vector<StackTooDeepError> OptimizedQRVMCodeTransform::run(
 	AbstractAssembly& _assembly,
 	AsmAnalysisInfo& _analysisInfo,
 	Block const& _block,
-	ZVMDialect const& _dialect,
+	QRVMDialect const& _dialect,
 	BuiltinContext& _builtinContext,
 	UseNamedLabels _useNamedLabelsForFunctions
 )
 {
 	std::unique_ptr<CFG> dfg = ControlFlowGraphBuilder::build(_analysisInfo, _dialect, _block);
 	StackLayout stackLayout = StackLayoutGenerator::run(*dfg);
-	OptimizedZVMCodeTransform optimizedCodeTransform(
+	OptimizedQRVMCodeTransform optimizedCodeTransform(
 		_assembly,
 		_builtinContext,
 		_useNamedLabelsForFunctions,
@@ -65,7 +65,7 @@ std::vector<StackTooDeepError> OptimizedZVMCodeTransform::run(
 	return std::move(optimizedCodeTransform.m_stackErrors);
 }
 
-void OptimizedZVMCodeTransform::operator()(CFG::FunctionCall const& _call)
+void OptimizedQRVMCodeTransform::operator()(CFG::FunctionCall const& _call)
 {
 	// Validate stack.
 	{
@@ -111,7 +111,7 @@ void OptimizedZVMCodeTransform::operator()(CFG::FunctionCall const& _call)
 	}
 }
 
-void OptimizedZVMCodeTransform::operator()(CFG::BuiltinCall const& _call)
+void OptimizedQRVMCodeTransform::operator()(CFG::BuiltinCall const& _call)
 {
 	// Validate stack.
 	{
@@ -134,7 +134,7 @@ void OptimizedZVMCodeTransform::operator()(CFG::BuiltinCall const& _call)
 	// Emit code.
 	{
 		m_assembly.setSourceLocation(originLocationOf(_call));
-		static_cast<BuiltinFunctionForZVM const&>(_call.builtin.get()).generateCode(
+		static_cast<BuiltinFunctionForQRVM const&>(_call.builtin.get()).generateCode(
 			_call.functionCall,
 			m_assembly,
 			m_builtinContext
@@ -153,7 +153,7 @@ void OptimizedZVMCodeTransform::operator()(CFG::BuiltinCall const& _call)
 	}
 }
 
-void OptimizedZVMCodeTransform::operator()(CFG::Assignment const& _assignment)
+void OptimizedQRVMCodeTransform::operator()(CFG::Assignment const& _assignment)
 {
 	yulAssert(m_assembly.stackHeight() == static_cast<int>(m_stack.size()), "");
 
@@ -172,7 +172,7 @@ void OptimizedZVMCodeTransform::operator()(CFG::Assignment const& _assignment)
 		currentSlot = varSlot;
 }
 
-OptimizedZVMCodeTransform::OptimizedZVMCodeTransform(
+OptimizedQRVMCodeTransform::OptimizedQRVMCodeTransform(
 	AbstractAssembly& _assembly,
 	BuiltinContext& _builtinContext,
 	UseNamedLabels _useNamedLabelsForFunctions,
@@ -207,19 +207,19 @@ OptimizedZVMCodeTransform::OptimizedZVMCodeTransform(
 {
 }
 
-void OptimizedZVMCodeTransform::assertLayoutCompatibility(Stack const& _currentStack, Stack const& _desiredStack)
+void OptimizedQRVMCodeTransform::assertLayoutCompatibility(Stack const& _currentStack, Stack const& _desiredStack)
 {
 	yulAssert(_currentStack.size() == _desiredStack.size(), "");
 	for (auto&& [currentSlot, desiredSlot]: ranges::zip_view(_currentStack, _desiredStack))
 		yulAssert(std::holds_alternative<JunkSlot>(desiredSlot) || currentSlot == desiredSlot, "");
 }
 
-AbstractAssembly::LabelID OptimizedZVMCodeTransform::getFunctionLabel(Scope::Function const& _function)
+AbstractAssembly::LabelID OptimizedQRVMCodeTransform::getFunctionLabel(Scope::Function const& _function)
 {
 	return m_functionLabels.at(&m_dfg.functionInfo.at(&_function));
 }
 
-void OptimizedZVMCodeTransform::validateSlot(StackSlot const& _slot, Expression const& _expression)
+void OptimizedQRVMCodeTransform::validateSlot(StackSlot const& _slot, Expression const& _expression)
 {
 	std::visit(util::GenericVisitor{
 		[&](yul::Literal const& _literal) {
@@ -237,7 +237,7 @@ void OptimizedZVMCodeTransform::validateSlot(StackSlot const& _slot, Expression 
 	}, _expression);
 }
 
-void OptimizedZVMCodeTransform::createStackLayout(std::shared_ptr<DebugData const> _debugData, Stack _targetStack)
+void OptimizedQRVMCodeTransform::createStackLayout(std::shared_ptr<DebugData const> _debugData, Stack _targetStack)
 {
 	static constexpr auto slotVariableName = [](StackSlot const& _slot) {
 		return std::visit(util::GenericVisitor{
@@ -259,7 +259,7 @@ void OptimizedZVMCodeTransform::createStackLayout(std::shared_ptr<DebugData cons
 			yulAssert(static_cast<int>(m_stack.size()) == m_assembly.stackHeight(), "");
 			yulAssert(_i > 0 && _i < m_stack.size(), "");
 			if (_i <= 16)
-				m_assembly.appendInstruction(zvmasm::swapInstruction(_i));
+				m_assembly.appendInstruction(qrvmasm::swapInstruction(_i));
 			else
 			{
 				int deficit = static_cast<int>(_i) - 16;
@@ -289,7 +289,7 @@ void OptimizedZVMCodeTransform::createStackLayout(std::shared_ptr<DebugData cons
 			{
 				if (*depth < 16)
 				{
-					m_assembly.appendInstruction(zvmasm::dupInstruction(static_cast<unsigned>(*depth + 1)));
+					m_assembly.appendInstruction(qrvmasm::dupInstruction(static_cast<unsigned>(*depth + 1)));
 					return;
 				}
 				else if (!canBeFreelyGenerated(_slot))
@@ -356,13 +356,13 @@ void OptimizedZVMCodeTransform::createStackLayout(std::shared_ptr<DebugData cons
 		// Pop callback.
 		[&]()
 		{
-			m_assembly.appendInstruction(zvmasm::Instruction::POP);
+			m_assembly.appendInstruction(qrvmasm::Instruction::POP);
 		}
 	);
 	yulAssert(m_assembly.stackHeight() == static_cast<int>(m_stack.size()), "");
 }
 
-void OptimizedZVMCodeTransform::operator()(CFG::BasicBlock const& _block)
+void OptimizedQRVMCodeTransform::operator()(CFG::BasicBlock const& _block)
 {
 	// Assert that this is the first visit of the block and mark as generated.
 	yulAssert(m_generated.insert(&_block).second, "");
@@ -411,7 +411,7 @@ void OptimizedZVMCodeTransform::operator()(CFG::BasicBlock const& _block)
 	std::visit(util::GenericVisitor{
 		[&](CFG::BasicBlock::MainExit const&)
 		{
-			m_assembly.appendInstruction(zvmasm::Instruction::STOP);
+			m_assembly.appendInstruction(qrvmasm::Instruction::STOP);
 		},
 		[&](CFG::BasicBlock::Jump const& _jump)
 		{
@@ -512,7 +512,7 @@ void OptimizedZVMCodeTransform::operator()(CFG::BasicBlock const& _block)
 	m_assembly.setStackHeight(0);
 }
 
-void OptimizedZVMCodeTransform::operator()(CFG::FunctionInfo const& _functionInfo)
+void OptimizedQRVMCodeTransform::operator()(CFG::FunctionInfo const& _functionInfo)
 {
 	yulAssert(!m_currentFunctionInfo, "");
 	ScopedSaveAndRestore currentFunctionInfoRestore(m_currentFunctionInfo, &_functionInfo);

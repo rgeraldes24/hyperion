@@ -15,7 +15,7 @@
     along with hyperion.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <test/tools/ossfuzz/YulZvmoneInterface.h>
+#include <test/tools/ossfuzz/YulQrvmoneInterface.h>
 
 #include <libyul/Exceptions.h>
 
@@ -35,7 +35,7 @@ bytes YulAssembler::assemble()
 
 	if (m_optimiseYul)
 		m_stack.optimize();
-	return m_stack.assemble(YulStack::Machine::ZVM).bytecode->bytecode;
+	return m_stack.assemble(YulStack::Machine::QRVM).bytecode->bytecode;
 }
 
 std::shared_ptr<yul::Object> YulAssembler::object()
@@ -43,10 +43,10 @@ std::shared_ptr<yul::Object> YulAssembler::object()
 	return m_stack.parserResult();
 }
 
-zvmc::Result YulZvmoneUtility::deployCode(bytes const& _input, ZVMHost& _host)
+qrvmc::Result YulQrvmoneUtility::deployCode(bytes const& _input, QRVMHost& _host)
 {
 	// Zero initialize all message fields
-	zvmc_message msg = {};
+	qrvmc_message msg = {};
 	// Gas available (value of type int64_t) is set to its maximum value
 	msg.gas = std::numeric_limits<int64_t>::max();
 	hypAssert(
@@ -71,33 +71,33 @@ zvmc::Result YulZvmoneUtility::deployCode(bytes const& _input, ZVMHost& _host)
 	} + _input;
 	msg.input_data = deployCode.data();
 	msg.input_size = deployCode.size();
-	msg.kind = ZVMC_CREATE;
+	msg.kind = QRVMC_CREATE;
 	return _host.call(msg);
 }
 
-zvmc_message YulZvmoneUtility::callMessage(zvmc_address _address)
+qrvmc_message YulQrvmoneUtility::callMessage(qrvmc_address _address)
 {
-	zvmc_message call = {};
+	qrvmc_message call = {};
 	call.gas = std::numeric_limits<int64_t>::max();
 	call.recipient = _address;
 	call.code_address = _address;
-	call.kind = ZVMC_CALL;
+	call.kind = QRVMC_CALL;
 	return call;
 }
 
-bool YulZvmoneUtility::seriousCallError(zvmc_status_code _code)
+bool YulQrvmoneUtility::seriousCallError(qrvmc_status_code _code)
 {
-	if (_code == ZVMC_OUT_OF_GAS)
+	if (_code == QRVMC_OUT_OF_GAS)
 		return true;
-	else if (_code == ZVMC_STACK_OVERFLOW)
+	else if (_code == QRVMC_STACK_OVERFLOW)
 		return true;
-	else if (_code == ZVMC_STACK_UNDERFLOW)
+	else if (_code == QRVMC_STACK_UNDERFLOW)
 		return true;
-	else if (_code == ZVMC_INTERNAL_ERROR)
+	else if (_code == QRVMC_INTERNAL_ERROR)
 		return true;
-	else if (_code == ZVMC_UNDEFINED_INSTRUCTION)
+	else if (_code == QRVMC_UNDEFINED_INSTRUCTION)
 		return true;
-	else if (_code == ZVMC_INVALID_MEMORY_ACCESS)
+	else if (_code == QRVMC_INVALID_MEMORY_ACCESS)
 		return true;
 	else
 		return false;

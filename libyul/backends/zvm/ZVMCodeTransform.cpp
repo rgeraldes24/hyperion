@@ -19,7 +19,7 @@
  * Code generator for translating Yul / inline assembly to QRVM.
  */
 
-#include <libyul/backends/zvm/ZVMCodeTransform.h>
+#include <libyul/backends/qrvm/QRVMCodeTransform.h>
 
 #include <libyul/optimiser/NameCollector.h>
 #include <libyul/AsmAnalysisInfo.h>
@@ -30,7 +30,7 @@
 
 #include <liblangutil/Exceptions.h>
 
-#include <libzvmasm/Instruction.h>
+#include <libqrvmasm/Instruction.h>
 
 #include <range/v3/view/reverse.hpp>
 
@@ -51,7 +51,7 @@ CodeTransform::CodeTransform(
 	AsmAnalysisInfo& _analysisInfo,
 	Block const& _block,
 	bool _allowStackOpt,
-	ZVMDialect const& _dialect,
+	QRVMDialect const& _dialect,
 	BuiltinContext& _builtinContext,
 	ExternalIdentifierAccess::CodeGenerator _identifierAccessCodeGen,
 	UseNamedLabels _useNamedLabelsForFunctions,
@@ -119,7 +119,7 @@ void CodeTransform::freeUnusedVariables(bool _popUnusedSlotsAtStackTop)
 		while (m_unusedStackSlots.count(m_assembly.stackHeight() - 1))
 		{
 			yulAssert(m_unusedStackSlots.erase(m_assembly.stackHeight() - 1), "");
-			m_assembly.appendInstruction(zvmasm::Instruction::POP);
+			m_assembly.appendInstruction(qrvmasm::Instruction::POP);
 		}
 }
 
@@ -169,7 +169,7 @@ void CodeTransform::operator()(VariableDeclaration const& _varDecl)
 			if (atTopOfStack)
 			{
 				m_context->variableStackHeights.erase(&var);
-				m_assembly.appendInstruction(zvmasm::Instruction::POP);
+				m_assembly.appendInstruction(qrvmasm::Instruction::POP);
 			}
 			else
 				m_variablesScheduledForDeletion.insert(&var);
@@ -186,8 +186,8 @@ void CodeTransform::operator()(VariableDeclaration const& _varDecl)
 				m_unusedStackSlots.erase(it);
 				m_context->variableStackHeights[&var] = slot;
 				if (size_t heightDiff = variableHeightDiff(var, varName, true))
-					m_assembly.appendInstruction(zvmasm::swapInstruction(static_cast<unsigned>(heightDiff - 1)));
-				m_assembly.appendInstruction(zvmasm::Instruction::POP);
+					m_assembly.appendInstruction(qrvmasm::swapInstruction(static_cast<unsigned>(heightDiff - 1)));
+				m_assembly.appendInstruction(qrvmasm::Instruction::POP);
 				break;
 			}
 			if (!foundUnusedSlot)
@@ -198,10 +198,10 @@ void CodeTransform::operator()(VariableDeclaration const& _varDecl)
 
 void CodeTransform::stackError(StackTooDeepError _error, int _targetStackHeight)
 {
-	m_assembly.appendInstruction(zvmasm::Instruction::INVALID);
+	m_assembly.appendInstruction(qrvmasm::Instruction::INVALID);
 	// Correct the stack.
 	while (m_assembly.stackHeight() > _targetStackHeight)
-		m_assembly.appendInstruction(zvmasm::Instruction::POP);
+		m_assembly.appendInstruction(qrvmasm::Instruction::POP);
 	while (m_assembly.stackHeight() < _targetStackHeight)
 		m_assembly.appendConstant(u256(0));
 	// Store error.
@@ -230,7 +230,7 @@ void CodeTransform::operator()(FunctionCall const& _call)
 	yulAssert(m_scope, "");
 
 	m_assembly.setSourceLocation(originLocationOf(_call));
-	if (BuiltinFunctionForZVM const* builtin = m_dialect.builtin(_call.functionName.name))
+	if (BuiltinFunctionForQRVM const* builtin = m_dialect.builtin(_call.functionName.name))
 	{
 		for (auto&& [i, arg]: _call.arguments | ranges::views::enumerate | ranges::views::reverse)
 			if (!builtin->literalArgument(i))
@@ -273,7 +273,7 @@ void CodeTransform::operator()(Identifier const& _identifier)
 			// TODO: opportunity for optimization: Do not DUP if this is the last reference
 			// to the top most element of the stack
 			if (size_t heightDiff = variableHeightDiff(_var, _identifier.name, false))
-				m_assembly.appendInstruction(zvmasm::dupInstruction(static_cast<unsigned>(heightDiff)));
+				m_assembly.appendInstruction(qrvmasm::dupInstruction(static_cast<unsigned>(heightDiff)));
 			else
 				// Store something to balance the stack
 				m_assembly.appendConstant(u256(0));
@@ -304,7 +304,7 @@ void CodeTransform::operator()(If const& _if)
 {
 	visitExpression(*_if.condition);
 	m_assembly.setSourceLocation(originLocationOf(_if));
-	m_assembly.appendInstruction(zvmasm::Instruction::ISZERO);
+	m_assembly.appendInstruction(qrvmasm::Instruction::ISZERO);
 	AbstractAssembly::LabelID end = m_assembly.newLabelId();
 	m_assembly.appendJumpToIf(end);
 	(*this)(_if.body);
@@ -327,8 +327,8 @@ void CodeTransform::operator()(Switch const& _switch)
 			AbstractAssembly::LabelID bodyLabel = m_assembly.newLabelId();
 			caseBodies[&c] = bodyLabel;
 			yulAssert(m_assembly.stackHeight() == expressionHeight + 1, "");
-			m_assembly.appendInstruction(zvmasm::dupInstruction(2));
-			m_assembly.appendInstruction(zvmasm::Instruction::EQ);
+			m_assembly.appendInstruction(qrvmasm::dupInstruction(2));
+			m_assembly.appendInstruction(qrvmasm::Instruction::EQ);
 			m_assembly.appendJumpToIf(bodyLabel);
 		}
 		else
@@ -354,7 +354,7 @@ void CodeTransform::operator()(Switch const& _switch)
 
 	m_assembly.setSourceLocation(originLocationOf(_switch));
 	m_assembly.appendLabel(end);
-	m_assembly.appendInstruction(zvmasm::Instruction::POP);
+	m_assembly.appendInstruction(qrvmasm::Instruction::POP);
 }
 
 void CodeTransform::operator()(FunctionDefinition const& _function)
@@ -472,12 +472,12 @@ void CodeTransform::operator()(FunctionDefinition const& _function)
 			while (!stackLayout.empty() && stackLayout.back() != static_cast<int>(stackLayout.size() - 1))
 				if (stackLayout.back() < 0)
 				{
-					m_assembly.appendInstruction(zvmasm::Instruction::POP);
+					m_assembly.appendInstruction(qrvmasm::Instruction::POP);
 					stackLayout.pop_back();
 				}
 				else
 				{
-					m_assembly.appendInstruction(zvmasm::swapInstruction(static_cast<unsigned>(stackLayout.size()) - static_cast<unsigned>(stackLayout.back()) - 1u));
+					m_assembly.appendInstruction(qrvmasm::swapInstruction(static_cast<unsigned>(stackLayout.size()) - static_cast<unsigned>(stackLayout.back()) - 1u));
 					std::swap(stackLayout[static_cast<size_t>(stackLayout.back())], stackLayout.back());
 				}
 			for (size_t i = 0; i < stackLayout.size(); ++i)
@@ -509,7 +509,7 @@ void CodeTransform::operator()(ForLoop const& _forLoop)
 
 	visitExpression(*_forLoop.condition);
 	m_assembly.setSourceLocation(originLocationOf(_forLoop));
-	m_assembly.appendInstruction(zvmasm::Instruction::ISZERO);
+	m_assembly.appendInstruction(qrvmasm::Instruction::ISZERO);
 	m_assembly.appendJumpToIf(loopEnd);
 
 	int const stackHeightBody = m_assembly.stackHeight();
@@ -534,7 +534,7 @@ int CodeTransform::appendPopUntil(int _targetDepth)
 {
 	int const stackDiffAfter = m_assembly.stackHeight() - _targetDepth;
 	for (int i = 0; i < stackDiffAfter; ++i)
-		m_assembly.appendInstruction(zvmasm::Instruction::POP);
+		m_assembly.appendInstruction(qrvmasm::Instruction::POP);
 	return stackDiffAfter;
 }
 
@@ -733,7 +733,7 @@ void CodeTransform::finalizeBlock(Block const& _block, std::optional<int> blockS
 				yulAssert(!m_context->variableReferences.count(&var), "");
 			}
 			else
-				m_assembly.appendInstruction(zvmasm::Instruction::POP);
+				m_assembly.appendInstruction(qrvmasm::Instruction::POP);
 		}
 
 	if (blockStartStackHeight)
@@ -757,8 +757,8 @@ void CodeTransform::generateAssignment(Identifier const& _variableName)
 	{
 		Scope::Variable const& _var = std::get<Scope::Variable>(*var);
 		if (size_t heightDiff = variableHeightDiff(_var, _variableName.name, true))
-			m_assembly.appendInstruction(zvmasm::swapInstruction(static_cast<unsigned>(heightDiff - 1)));
-		m_assembly.appendInstruction(zvmasm::Instruction::POP);
+			m_assembly.appendInstruction(qrvmasm::swapInstruction(static_cast<unsigned>(heightDiff - 1)));
+		m_assembly.appendInstruction(qrvmasm::Instruction::POP);
 		decreaseReference(_variableName.name, _var);
 	}
 	else

@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <test/ZVMHost.h>
+#include <test/QRVMHost.h>
 
 #include <libyul/YulStack.h>
 
@@ -31,7 +31,7 @@ class YulAssembler
 {
 public:
 	YulAssembler(
-		langutil::ZVMVersion _qrvmVersion,
+		langutil::QRVMVersion _qrvmVersion,
 		hyperion::frontend::OptimiserSettings _optSettings,
 		std::string const& _yulSource
 	):
@@ -52,13 +52,13 @@ private:
 	bool m_optimiseYul;
 };
 
-struct YulZvmoneUtility
+struct YulQrvmoneUtility
 {
 	/// @returns the result of deploying bytecode @param _input on @param _host.
-	static zvmc::Result deployCode(hyperion::bytes const& _input, ZVMHost& _host);
+	static qrvmc::Result deployCode(hyperion::bytes const& _input, QRVMHost& _host);
 	/// @returns call message to be sent to @param _address.
-	static zvmc_message callMessage(zvmc_address _address);
+	static qrvmc_message callMessage(qrvmc_address _address);
 	/// @returns true if call result indicates a serious error, false otherwise.
-	static bool seriousCallError(zvmc_status_code _code);
+	static bool seriousCallError(qrvmc_status_code _code);
 };
 }

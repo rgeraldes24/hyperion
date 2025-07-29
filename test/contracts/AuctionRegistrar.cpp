@@ -23,7 +23,7 @@
 
 #include <test/libhyperion/HyperionExecutionFramework.h>
 #include <test/contracts/ContractInterface.h>
-#include <test/ZVMHost.h>
+#include <test/QRVMHost.h>
 
 #include <libhyputil/LazyInit.h>
 
@@ -321,7 +321,7 @@ BOOST_AUTO_TEST_CASE(double_reserve_long)
 	registrar.reserve(name);
 	BOOST_CHECK_EQUAL(registrar.owner(name), m_sender);
 
-	sendZond(account(1), u256(10) * zond);
+	sendQuanta(account(1), u256(10) * quanta);
 	m_sender = account(1);
 	registrar.reserve(name);
 	BOOST_CHECK_EQUAL(registrar.owner(name), account(0));
@@ -338,7 +338,7 @@ BOOST_AUTO_TEST_CASE(properties)
 	for (std::string const& name: names)
 	{
 		m_sender = account(0);
-		sendZond(account(count), u256(20) * zond);
+		sendQuanta(account(count), u256(20) * quanta);
 		m_sender = account(count);
 		auto sender = m_sender;
 		addr += count;
@@ -390,7 +390,7 @@ BOOST_AUTO_TEST_CASE(disown)
 	BOOST_CHECK_EQUAL(registrar.name(h160(124)), name);
 
 	// someone else tries disowning
-	sendZond(account(1), u256(10) * zond);
+	sendQuanta(account(1), u256(10) * quanta);
 	m_sender = account(1);
 	registrar.disown(name);
 	BOOST_CHECK_EQUAL(registrar.owner(name), account(0));
@@ -416,7 +416,7 @@ BOOST_AUTO_TEST_CASE(auction_simple)
 	BOOST_CHECK_EQUAL(registrar.owner(name), h160());
 	// "wait" until auction end
 
-	m_zvmcHost->tx_context.block_timestamp += m_biddingTime + 10;
+	m_qrvmcHost->tx_context.block_timestamp += m_biddingTime + 10;
 	// trigger auction again
 	registrar.reserve(name);
 	BOOST_CHECK_EQUAL(registrar.owner(name), m_sender);
@@ -428,7 +428,7 @@ BOOST_AUTO_TEST_CASE(auction_bidding)
 	std::string name = "x";
 
 	unsigned startTime = 0x776347e2;
-	m_zvmcHost->tx_context.block_timestamp = startTime;
+	m_qrvmcHost->tx_context.block_timestamp = startTime;
 
 	RegistrarInterface registrar(*this);
 	// initiate auction
@@ -436,19 +436,19 @@ BOOST_AUTO_TEST_CASE(auction_bidding)
 	registrar.reserve(name);
 	BOOST_CHECK_EQUAL(registrar.owner(name), h160());
 	// overbid self
-	m_zvmcHost->tx_context.block_timestamp = startTime + m_biddingTime - 10;
+	m_qrvmcHost->tx_context.block_timestamp = startTime + m_biddingTime - 10;
 	registrar.setNextValue(12);
 	registrar.reserve(name);
 	// another bid by someone else
-	sendZond(account(1), 10 * zond);
+	sendQuanta(account(1), 10 * quanta);
 	m_sender = account(1);
-	m_zvmcHost->tx_context.block_timestamp = startTime + 2 * m_biddingTime - 50;
+	m_qrvmcHost->tx_context.block_timestamp = startTime + 2 * m_biddingTime - 50;
 	registrar.setNextValue(13);
 	registrar.reserve(name);
 	BOOST_CHECK_EQUAL(registrar.owner(name), h160());
 	// end auction by first bidder (which is not highest) trying to overbid again (too late)
 	m_sender = account(0);
-	m_zvmcHost->tx_context.block_timestamp = startTime + 4 * m_biddingTime;
+	m_qrvmcHost->tx_context.block_timestamp = startTime + 4 * m_biddingTime;
 	registrar.setNextValue(20);
 	registrar.reserve(name);
 	BOOST_CHECK_EQUAL(registrar.owner(name), account(1));

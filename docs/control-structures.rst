@@ -222,13 +222,13 @@ is compiled so recursive creation-dependencies are not possible.
         }
 
         function createAndEndowD(uint arg, uint amount) public payable {
-            // Send zond along with the creation
+            // Send quanta along with the creation
             D newD = new D{value: amount}(arg);
             newD.x();
         }
     }
 
-As seen in the example, it is possible to send Zond while creating
+As seen in the example, it is possible to send Quanta while creating
 an instance of ``D`` using the ``value`` option, but it is not possible
 to limit the amount of gas.
 If the creation fails (due to out-of-stack, not enough balance or other problems),
@@ -741,12 +741,12 @@ together with ``revert`` and the equivalent ``require``:
         address owner;
         error Unauthorized();
         function buy(uint amount) public payable {
-            if (amount > msg.value / 2 zond)
-                revert("Not enough Zond provided.");
+            if (amount > msg.value / 2 quanta)
+                revert("Not enough Quanta provided.");
             // Alternative way to do it:
             require(
-                amount <= msg.value / 2 zond,
-                "Not enough Zond provided."
+                amount <= msg.value / 2 quanta,
+                "Not enough Quanta provided."
             );
             // Perform the purchase.
         }

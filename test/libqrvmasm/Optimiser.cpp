@@ -23,13 +23,13 @@
 
 #include <test/Common.h>
 
-#include <libzvmasm/CommonSubexpressionEliminator.h>
-#include <libzvmasm/PeepholeOptimiser.h>
-#include <libzvmasm/Inliner.h>
-#include <libzvmasm/JumpdestRemover.h>
-#include <libzvmasm/ControlFlowGraph.h>
-#include <libzvmasm/BlockDeduplicator.h>
-#include <libzvmasm/Assembly.h>
+#include <libqrvmasm/CommonSubexpressionEliminator.h>
+#include <libqrvmasm/PeepholeOptimiser.h>
+#include <libqrvmasm/Inliner.h>
+#include <libqrvmasm/JumpdestRemover.h>
+#include <libqrvmasm/ControlFlowGraph.h>
+#include <libqrvmasm/BlockDeduplicator.h>
+#include <libqrvmasm/Assembly.h>
 
 #include <boost/test/unit_test.hpp>
 
@@ -40,7 +40,7 @@
 #include <memory>
 
 using namespace hyperion::langutil;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
 namespace hyperion::frontend::test
 {
@@ -56,22 +56,22 @@ namespace
 		return input;
 	}
 
-	zvmasm::KnownState createInitialState(AssemblyItems const& _input)
+	qrvmasm::KnownState createInitialState(AssemblyItems const& _input)
 	{
-		zvmasm::KnownState state;
+		qrvmasm::KnownState state;
 		for (auto const& item: addDummyLocations(_input))
 			state.feedItem(item, true);
 		return state;
 	}
 
-	AssemblyItems CSE(AssemblyItems const& _input, zvmasm::KnownState const& _state = zvmasm::KnownState())
+	AssemblyItems CSE(AssemblyItems const& _input, qrvmasm::KnownState const& _state = qrvmasm::KnownState())
 	{
 		AssemblyItems input = addDummyLocations(_input);
 
 		bool usesMsize = ranges::any_of(_input, [](AssemblyItem const& _i) {
 			return _i == AssemblyItem{Instruction::MSIZE} || _i.type() == VerbatimBytecode;
 		});
-		zvmasm::CommonSubexpressionEliminator cse(_state);
+		qrvmasm::CommonSubexpressionEliminator cse(_state);
 		BOOST_REQUIRE(cse.feedItems(input.begin(), input.end(), usesMsize) == input.end());
 		AssemblyItems output = cse.getOptimizedItems();
 
@@ -85,7 +85,7 @@ namespace
 	void checkCSE(
 		AssemblyItems const& _input,
 		AssemblyItems const& _expectation,
-		KnownState const& _state = zvmasm::KnownState()
+		KnownState const& _state = qrvmasm::KnownState()
 	)
 	{
 		AssemblyItems output = CSE(_input, _state);
@@ -189,15 +189,15 @@ BOOST_AUTO_TEST_CASE(cse_assign_immutable_breaks)
 		Instruction::ORIGIN
 	});
 
-	zvmasm::CommonSubexpressionEliminator cse{zvmasm::KnownState()};
+	qrvmasm::CommonSubexpressionEliminator cse{qrvmasm::KnownState()};
 	// Make sure CSE breaks after AssignImmutable.
 	BOOST_REQUIRE(cse.feedItems(input.begin(), input.end(), false) == input.begin() + 2);
 }
 
 BOOST_AUTO_TEST_CASE(cse_intermediate_swap)
 {
-	zvmasm::KnownState state;
-	zvmasm::CommonSubexpressionEliminator cse(state);
+	qrvmasm::KnownState state;
+	qrvmasm::CommonSubexpressionEliminator cse(state);
 	AssemblyItems input{
 		Instruction::SWAP1, Instruction::POP, Instruction::ADD, u256(0), Instruction::SWAP1,
 		Instruction::SLOAD, Instruction::SWAP1, u256(100), Instruction::EXP, Instruction::SWAP1,
@@ -723,7 +723,7 @@ BOOST_AUTO_TEST_CASE(cse_keccak256_twice_same_content_noninterfering_store_in_be
 
 BOOST_AUTO_TEST_CASE(cse_with_initially_known_stack)
 {
-	zvmasm::KnownState state = createInitialState(AssemblyItems{
+	qrvmasm::KnownState state = createInitialState(AssemblyItems{
 		u256(0x12),
 		u256(0x20),
 		Instruction::ADD
@@ -736,7 +736,7 @@ BOOST_AUTO_TEST_CASE(cse_with_initially_known_stack)
 
 BOOST_AUTO_TEST_CASE(cse_equality_on_initially_known_stack)
 {
-	zvmasm::KnownState state = createInitialState(AssemblyItems{Instruction::DUP1});
+	qrvmasm::KnownState state = createInitialState(AssemblyItems{Instruction::DUP1});
 	AssemblyItems input{
 		Instruction::EQ
 	};
@@ -749,7 +749,7 @@ BOOST_AUTO_TEST_CASE(cse_access_previous_sequence)
 {
 	// Tests that the code generator detects whether it tries to access SLOAD instructions
 	// from a sequenced expression which is not in its scope.
-	zvmasm::KnownState state = createInitialState(AssemblyItems{
+	qrvmasm::KnownState state = createInitialState(AssemblyItems{
 		u256(0),
 		Instruction::SLOAD,
 		u256(1),
@@ -1250,11 +1250,11 @@ BOOST_AUTO_TEST_CASE(jumpdest_removal_subassemblies)
 	settings.runDeduplicate = true;
 	settings.runCSE = true;
 	settings.runConstantOptimiser = true;
-	settings.qrvmVersion= hyperion::test::CommonOptions::get().zvmVersion();
+	settings.qrvmVersion= hyperion::test::CommonOptions::get().qrvmVersion();
 	settings.expectedExecutionsPerDeployment = OptimiserSettings{}.expectedExecutionsPerDeployment;
 
-	Assembly main{settings.zvmVersion, false, {}};
-	AssemblyPointer sub = std::make_shared<Assembly>(settings.zvmVersion, true, std::string{});
+	Assembly main{settings.qrvmVersion, false, {}};
+	AssemblyPointer sub = std::make_shared<Assembly>(settings.qrvmVersion, true, std::string{});
 
 	sub->append(u256(1));
 	auto t1 = sub->newTag();

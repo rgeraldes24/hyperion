@@ -125,9 +125,9 @@ for (const preset of presets)
                     let metadata = '<NO METADATA>'
 
                     if (
-                        'zvm' in contractResults &&
-                        'bytecode' in contractResults['zvm'] &&
-                        'object' in contractResults['zvm']['bytecode'] &&
+                        'qrvm' in contractResults &&
+                        'bytecode' in contractResults['qrvm'] &&
+                        'object' in contractResults['qrvm']['bytecode'] &&
                         cleanString(contractResults.qrvm.bytecode.object) !== undefined
                     )
                         bytecode = cleanString(contractResults.qrvm.bytecode.object)

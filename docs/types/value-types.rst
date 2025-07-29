@@ -307,13 +307,13 @@ Similarly, the supplied Zond value can be controlled too:
 
 .. code-block:: hyperion
 
-    address(nameReg).call{value: 1 zond}(abi.encodeWithSignature("register(string)", "MyName"));
+    address(nameReg).call{value: 1 quanta}(abi.encodeWithSignature("register(string)", "MyName"));
 
 Lastly, these modifiers can be combined. Their order does not matter:
 
 .. code-block:: hyperion
 
-    address(nameReg).call{gas: 1000000, value: 1 zond}(abi.encodeWithSignature("register(string)", "MyName"));
+    address(nameReg).call{gas: 1000000, value: 1 quanta}(abi.encodeWithSignature("register(string)", "MyName"));
 
 In a similar way, the function ``delegatecall`` can be used: the difference is that only the code of the given address is used, all other aspects (storage, balance, ...) are taken from the current contract. The purpose of ``delegatecall`` is to use library code which is stored in another contract. The user has to ensure that the layout of storage in both contracts is suitable for delegatecall to be used.
 
@@ -766,7 +766,7 @@ No other conversions between function types are possible.
 The rule about ``payable`` and ``non-payable`` might be a little
 confusing, but in essence, if a function is ``payable``, this means that it
 also accepts a payment of zero Zond, so it also is ``non-payable``.
-On the other hand, a ``non-payable`` function will reject Zond sent to it,
+On the other hand, a ``non-payable`` function will reject Quanta sent to it,
 so ``non-payable`` functions cannot be converted to ``payable`` functions.
 To clarify, rejecting zond is more restrictive than not rejecting zond.
 This means you can override a payable function with a non-payable but not the

@@ -1,6 +1,6 @@
 
 ======= viair_msize_without_optimizer/input.hyp:C =======
-ZVM assembly:
+QRVM assembly:
   mstore(0x40, 0x80)
   jumpi(tag_4, iszero(callvalue))
   tag_5

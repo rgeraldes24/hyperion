@@ -34,7 +34,7 @@
 #include <functional>
 #include <memory>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 class AssemblyItem; // forward
 }

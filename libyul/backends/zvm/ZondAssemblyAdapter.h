@@ -16,19 +16,19 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Adaptor between AbstractAssembly and libzvmasm.
+ * Adaptor between AbstractAssembly and libqrvmasm.
  */
 
 #pragma once
 
-#include <libyul/backends/zvm/AbstractAssembly.h>
+#include <libyul/backends/qrvm/AbstractAssembly.h>
 #include <libyul/AsmAnalysis.h>
 #include <liblangutil/SourceLocation.h>
 
 #include <functional>
 #include <limits>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 class Assembly;
 class AssemblyItem;
@@ -36,14 +36,14 @@ class AssemblyItem;
 
 namespace hyperion::yul
 {
-class ZondAssemblyAdapter: public AbstractAssembly
+class QRLAssemblyAdapter: public AbstractAssembly
 {
 public:
-	explicit ZondAssemblyAdapter(zvmasm::Assembly& _assembly);
+	explicit QRLAssemblyAdapter(qrvmasm::Assembly& _assembly);
 	void setSourceLocation(langutil::SourceLocation const& _location) override;
 	int stackHeight() const override;
 	void setStackHeight(int height) override;
-	void appendInstruction(zvmasm::Instruction _instruction) override;
+	void appendInstruction(qrvmasm::Instruction _instruction) override;
 	void appendConstant(u256 const& _constant) override;
 	void appendLabel(LabelID _labelId) override;
 	void appendLabelReference(LabelID _labelId) override;
@@ -67,14 +67,14 @@ public:
 
 	void markAsInvalid() override;
 
-	langutil::ZVMVersion zvmVersion() const override;
+	langutil::QRVMVersion qrvmVersion() const override;
 
 
 private:
-	static LabelID assemblyTagToIdentifier(zvmasm::AssemblyItem const& _tag);
-	void appendJumpInstruction(zvmasm::Instruction _instruction, JumpType _jumpType);
+	static LabelID assemblyTagToIdentifier(qrvmasm::AssemblyItem const& _tag);
+	void appendJumpInstruction(qrvmasm::Instruction _instruction, JumpType _jumpType);
 
-	zvmasm::Assembly& m_assembly;
+	qrvmasm::Assembly& m_assembly;
 	std::map<SubID, u256> m_dataHashBySubId;
 	size_t m_nextDataCounter = std::numeric_limits<size_t>::max() / 2;
 };

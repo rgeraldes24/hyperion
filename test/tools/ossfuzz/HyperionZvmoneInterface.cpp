@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 
-#include <test/tools/ossfuzz/HyperionZvmoneInterface.h>
+#include <test/tools/ossfuzz/HyperionQrvmoneInterface.h>
 
 #include <liblangutil/Exceptions.h>
 #include <liblangutil/SourceReferenceFormatter.h>
@@ -34,7 +34,7 @@ optional<CompilerOutput> HyperionCompilationFramework::compileContract()
 {
 	m_compiler.setSources(m_compilerInput.sourceCode);
 	m_compiler.setLibraries(m_compilerInput.libraryAddresses);
-	m_compiler.setZVMVersion(m_compilerInput.zvmVersion);
+	m_compiler.setQRVMVersion(m_compilerInput.qrvmVersion);
 	m_compiler.setOptimiserSettings(m_compilerInput.optimiserSettings);
 	m_compiler.setViaIR(m_compilerInput.viaIR);
 	if (!m_compiler.compile())
@@ -56,13 +56,13 @@ optional<CompilerOutput> HyperionCompilationFramework::compileContract()
 			contractName = m_compiler.lastContractName();
 		else
 			contractName = m_compilerInput.contractName;
-		zvmasm::LinkerObject obj = m_compiler.object(contractName);
+		qrvmasm::LinkerObject obj = m_compiler.object(contractName);
 		Json::Value methodIdentifiers = m_compiler.interfaceSymbols(contractName)["methods"];
 		return CompilerOutput{obj.bytecode, methodIdentifiers};
 	}
 }
 
-bool ZvmoneUtility::zeroWord(uint8_t const* _result, size_t _length)
+bool QrvmoneUtility::zeroWord(uint8_t const* _result, size_t _length)
 {
 	return _length == 32 &&
 		ranges::all_of(
@@ -70,10 +70,10 @@ bool ZvmoneUtility::zeroWord(uint8_t const* _result, size_t _length)
 			[](uint8_t _v) { return _v == 0; });
 }
 
-zvmc_message ZvmoneUtility::initializeMessage(bytes const& _input)
+qrvmc_message QrvmoneUtility::initializeMessage(bytes const& _input)
 {
 	// Zero initialize all message fields
-	zvmc_message msg = {};
+	qrvmc_message msg = {};
 	// Gas available (value of type int64_t) is set to its maximum
 	// value.
 	msg.gas = std::numeric_limits<int64_t>::max();
@@ -82,53 +82,53 @@ zvmc_message ZvmoneUtility::initializeMessage(bytes const& _input)
 	return msg;
 }
 
-zvmc::Result ZvmoneUtility::executeContract(
+qrvmc::Result QrvmoneUtility::executeContract(
 	bytes const& _functionHash,
-	zvmc_address _deployedAddress
+	qrvmc_address _deployedAddress
 )
 {
-	zvmc_message message = initializeMessage(_functionHash);
+	qrvmc_message message = initializeMessage(_functionHash);
 	message.recipient = _deployedAddress;
 	message.code_address = _deployedAddress;
-	message.kind = ZVMC_CALL;
-	return m_zvmHost.call(message);
+	message.kind = QRVMC_CALL;
+	return m_qrvmHost.call(message);
 }
 
-zvmc::Result ZvmoneUtility::deployContract(bytes const& _code)
+qrvmc::Result QrvmoneUtility::deployContract(bytes const& _code)
 {
-	zvmc_message message = initializeMessage(_code);
-	message.kind = ZVMC_CREATE;
-	return m_zvmHost.call(message);
+	qrvmc_message message = initializeMessage(_code);
+	message.kind = QRVMC_CREATE;
+	return m_qrvmHost.call(message);
 }
 
-zvmc::Result ZvmoneUtility::deployAndExecute(
+qrvmc::Result QrvmoneUtility::deployAndExecute(
 	bytes const& _byteCode,
 	string const& _hexEncodedInput
 )
 {
 	// Deploy contract and signal failure if deploy failed
-	zvmc::Result createResult = deployContract(_byteCode);
+	qrvmc::Result createResult = deployContract(_byteCode);
 	hypAssert(
-		createResult.status_code == ZVMC_SUCCESS,
-		"HyperionZvmoneInterface: Contract creation failed"
+		createResult.status_code == QRVMC_SUCCESS,
+		"HyperionQrvmoneInterface: Contract creation failed"
 	);
 
 	// Execute test function and signal failure if QRVM reverted or
 	// did not return expected output on successful execution.
-	zvmc::Result callResult = executeContract(
+	qrvmc::Result callResult = executeContract(
 		util::fromHex(_hexEncodedInput),
 		createResult.create_address
 	);
 
-	// We don't care about QRVM One failures other than ZVMC_REVERT
+	// We don't care about QRVM One failures other than QRVMC_REVERT
 	hypAssert(
-		callResult.status_code != ZVMC_REVERT,
-		"HyperionZvmoneInterface: QRVM One reverted"
+		callResult.status_code != QRVMC_REVERT,
+		"HyperionQrvmoneInterface: QRVM One reverted"
 	);
 	return callResult;
 }
 
-zvmc::Result ZvmoneUtility::compileDeployAndExecute(string _fuzzIsabelle)
+qrvmc::Result QrvmoneUtility::compileDeployAndExecute(string _fuzzIsabelle)
 {
 	map<string, h160> libraryAddressMap;
 	// Stage 1: Compile and deploy library if present.
@@ -139,12 +139,12 @@ zvmc::Result ZvmoneUtility::compileDeployAndExecute(string _fuzzIsabelle)
 		hypAssert(compilationOutput.has_value(), "Compiling library failed");
 		CompilerOutput cOutput = compilationOutput.value();
 		// Deploy contract and signal failure if deploy failed
-		zvmc::Result createResult = deployContract(cOutput.byteCode);
+		qrvmc::Result createResult = deployContract(cOutput.byteCode);
 		hypAssert(
-			createResult.status_code == ZVMC_SUCCESS,
-			"HyperionZvmoneInterface: Library deployment failed"
+			createResult.status_code == QRVMC_SUCCESS,
+			"HyperionQrvmoneInterface: Library deployment failed"
 		);
-		libraryAddressMap[m_libraryName] = ZVMHost::convertFromZVMC(createResult.create_address);
+		libraryAddressMap[m_libraryName] = QRVMHost::convertFromQRVMC(createResult.create_address);
 		m_compilationFramework.libraryAddresses(libraryAddressMap);
 	}
 
@@ -155,7 +155,7 @@ zvmc::Result ZvmoneUtility::compileDeployAndExecute(string _fuzzIsabelle)
 	hypAssert(cOutput.has_value(), "Compiling contract failed");
 	hypAssert(
 		!cOutput->byteCode.empty() && !cOutput->methodIdentifiersInContract.empty(),
-		"HyperionZvmoneInterface: Invalid compilation output."
+		"HyperionQrvmoneInterface: Invalid compilation output."
 	);
 
 	string methodName;
@@ -175,13 +175,13 @@ zvmc::Result ZvmoneUtility::compileDeployAndExecute(string _fuzzIsabelle)
 	);
 }
 
-optional<CompilerOutput> ZvmoneUtility::compileContract()
+optional<CompilerOutput> QrvmoneUtility::compileContract()
 {
 	try
 	{
 		return m_compilationFramework.compileContract();
 	}
-	catch (zvmasm::StackTooDeepException const&)
+	catch (qrvmasm::StackTooDeepException const&)
 	{
 		return {};
 	}

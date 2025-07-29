@@ -32,7 +32,7 @@
 #include <algorithm>
 #include <set>
 
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 using namespace std::string_literals;
 
 namespace hyperion::frontend::test
@@ -1008,7 +1008,7 @@ BOOST_AUTO_TEST_CASE(linking_yul_same_library_name_different_files)
 	expectLinkReferences(contractResult, {{"fileC", {"L"}}});
 }
 
-BOOST_AUTO_TEST_CASE(zvm_version)
+BOOST_AUTO_TEST_CASE(qrvm_version)
 {
 	auto inputForVersion = [](std::string const& _version)
 	{
@@ -1028,13 +1028,13 @@ BOOST_AUTO_TEST_CASE(zvm_version)
 		)";
 	};
 	Json::Value result;
-	result = compile(inputForVersion("\"zvmVersion\": \"shanghai\","));
-	BOOST_CHECK(result["contracts"]["fileA"]["A"]["metadata"].asString().find("\"zvmVersion\":\"shanghai\"") != std::string::npos);
+	result = compile(inputForVersion("\"qrvmVersion\": \"shanghai\","));
+	BOOST_CHECK(result["contracts"]["fileA"]["A"]["metadata"].asString().find("\"qrvmVersion\":\"shanghai\"") != std::string::npos);
 	// test default
 	result = compile(inputForVersion(""));
-	BOOST_CHECK(result["contracts"]["fileA"]["A"]["metadata"].asString().find("\"zvmVersion\":\"shanghai\"") != std::string::npos);
+	BOOST_CHECK(result["contracts"]["fileA"]["A"]["metadata"].asString().find("\"qrvmVersion\":\"shanghai\"") != std::string::npos);
 	// test invalid
-	result = compile(inputForVersion("\"zvmVersion\": \"invalid\","));
+	result = compile(inputForVersion("\"qrvmVersion\": \"invalid\","));
 	BOOST_CHECK(result["errors"][0]["message"].asString() == "Invalid QRVM version requested.");
 }
 

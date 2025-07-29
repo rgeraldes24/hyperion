@@ -25,12 +25,12 @@
 #include <test/libhyperion/HyperionExecutionFramework.h>
 
 #include <test/Common.h>
-#include <test/ZVMHost.h>
+#include <test/QRVMHost.h>
 
 #include <liblangutil/Exceptions.h>
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
-#include <libzvmasm/Assembly.h>
+#include <libqrvmasm/Assembly.h>
 
 #include <libhyputil/Keccak256.h>
 #include <libhyputil/ErrorCodes.h>
@@ -1103,7 +1103,7 @@ BOOST_AUTO_TEST_CASE(contracts_as_addresses)
 {
 	char const* sourceCode = R"(
 		contract helper {
-			receive() external payable { } // can receive zond
+			receive() external payable { } // can receive quanta
 		}
 		contract test {
 			helper h;
@@ -1699,7 +1699,7 @@ BOOST_AUTO_TEST_CASE(array_copy_storage_abi)
 //	ABI_CHECK(callContractFunction("f()"), encodeArgs(5));
 //}
 
-BOOST_AUTO_TEST_CASE(zvm_exceptions_in_constructor_out_of_baund)
+BOOST_AUTO_TEST_CASE(qrvm_exceptions_in_constructor_out_of_baund)
 {
 	char const* sourceCode = R"(
 		contract A {

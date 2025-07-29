@@ -16,13 +16,13 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 
-#include <libzvmasm/GasMeter.h>
+#include <libqrvmasm/GasMeter.h>
 
-#include <libzvmasm/KnownState.h>
+#include <libqrvmasm/KnownState.h>
 
 using namespace hyperion;
 using namespace hyperion::util;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
 GasMeter::GasConsumption& GasMeter::GasConsumption::operator+=(GasConsumption const& _other)
 {

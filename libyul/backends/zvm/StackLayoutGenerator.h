@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <libyul/backends/zvm/ControlFlowGraph.h>
+#include <libyul/backends/qrvm/ControlFlowGraph.h>
 
 #include <map>
 

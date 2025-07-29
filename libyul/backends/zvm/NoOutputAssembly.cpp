@@ -19,12 +19,12 @@
  * Assembly interface that ignores everything. Can be used as a backend for a compilation dry-run.
  */
 
-#include <libyul/backends/zvm/NoOutputAssembly.h>
+#include <libyul/backends/qrvm/NoOutputAssembly.h>
 
 #include <libyul/AST.h>
 #include <libyul/Exceptions.h>
 
-#include <libzvmasm/Instruction.h>
+#include <libqrvmasm/Instruction.h>
 
 #include <range/v3/view/iota.hpp>
 
@@ -34,24 +34,24 @@ using namespace hyperion::util;
 using namespace hyperion::langutil;
 
 
-void NoOutputAssembly::appendInstruction(zvmasm::Instruction _instr)
+void NoOutputAssembly::appendInstruction(qrvmasm::Instruction _instr)
 {
 	m_stackHeight += instructionInfo(_instr).ret - instructionInfo(_instr).args;
 }
 
 void NoOutputAssembly::appendConstant(u256 const&)
 {
-	appendInstruction(zvmasm::pushInstruction(1));
+	appendInstruction(qrvmasm::pushInstruction(1));
 }
 
 void NoOutputAssembly::appendLabel(LabelID)
 {
-	appendInstruction(zvmasm::Instruction::JUMPDEST);
+	appendInstruction(qrvmasm::Instruction::JUMPDEST);
 }
 
 void NoOutputAssembly::appendLabelReference(LabelID)
 {
-	appendInstruction(zvmasm::pushInstruction(1));
+	appendInstruction(qrvmasm::pushInstruction(1));
 }
 
 NoOutputAssembly::LabelID NoOutputAssembly::newLabelId()
@@ -76,7 +76,7 @@ void NoOutputAssembly::appendVerbatim(bytes, size_t _arguments, size_t _returnVa
 
 void NoOutputAssembly::appendJump(int _stackDiffAfter, JumpType)
 {
-	appendInstruction(zvmasm::Instruction::JUMP);
+	appendInstruction(qrvmasm::Instruction::JUMP);
 	m_stackHeight += _stackDiffAfter;
 }
 
@@ -89,12 +89,12 @@ void NoOutputAssembly::appendJumpTo(LabelID _labelId, int _stackDiffAfter, JumpT
 void NoOutputAssembly::appendJumpToIf(LabelID _labelId, JumpType)
 {
 	appendLabelReference(_labelId);
-	appendInstruction(zvmasm::Instruction::JUMPI);
+	appendInstruction(qrvmasm::Instruction::JUMPI);
 }
 
 void NoOutputAssembly::appendAssemblySize()
 {
-	appendInstruction(zvmasm::Instruction::PUSH1);
+	appendInstruction(qrvmasm::Instruction::PUSH1);
 }
 
 std::pair<std::shared_ptr<AbstractAssembly>, AbstractAssembly::SubID> NoOutputAssembly::createSubAssembly(bool, std::string)
@@ -105,12 +105,12 @@ std::pair<std::shared_ptr<AbstractAssembly>, AbstractAssembly::SubID> NoOutputAs
 
 void NoOutputAssembly::appendDataOffset(std::vector<AbstractAssembly::SubID> const&)
 {
-	appendInstruction(zvmasm::Instruction::PUSH1);
+	appendInstruction(qrvmasm::Instruction::PUSH1);
 }
 
 void NoOutputAssembly::appendDataSize(std::vector<AbstractAssembly::SubID> const&)
 {
-	appendInstruction(zvmasm::Instruction::PUSH1);
+	appendInstruction(qrvmasm::Instruction::PUSH1);
 }
 
 AbstractAssembly::SubID NoOutputAssembly::appendData(bytes const&)
@@ -129,8 +129,8 @@ void NoOutputAssembly::appendImmutableAssignment(std::string const&)
 	yulAssert(false, "setimmutable not implemented.");
 }
 
-NoOutputZVMDialect::NoOutputZVMDialect(ZVMDialect const& _copyFrom):
-	ZVMDialect(_copyFrom.zvmVersion(), _copyFrom.providesObjectAccess())
+NoOutputQRVMDialect::NoOutputQRVMDialect(QRVMDialect const& _copyFrom):
+	QRVMDialect(_copyFrom.qrvmVersion(), _copyFrom.providesObjectAccess())
 {
 	for (auto& fun: m_functions)
 	{
@@ -139,7 +139,7 @@ NoOutputZVMDialect::NoOutputZVMDialect(ZVMDialect const& _copyFrom):
 		{
 			for (size_t i: ranges::views::iota(0u, _call.arguments.size()))
 				if (!fun.second.literalArgument(i))
-					_assembly.appendInstruction(zvmasm::Instruction::POP);
+					_assembly.appendInstruction(qrvmasm::Instruction::POP);
 
 			for (size_t i = 0; i < returns; i++)
 				_assembly.appendConstant(u256(0));

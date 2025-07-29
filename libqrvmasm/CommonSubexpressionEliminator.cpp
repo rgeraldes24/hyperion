@@ -24,14 +24,14 @@
 
 #include <functional>
 #include <libhyputil/Keccak256.h>
-#include <libzvmasm/CommonSubexpressionEliminator.h>
-#include <libzvmasm/AssemblyItem.h>
+#include <libqrvmasm/CommonSubexpressionEliminator.h>
+#include <libqrvmasm/AssemblyItem.h>
 #include <libhyputil/StackTooDeepString.h>
 
 #include <range/v3/view/reverse.hpp>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 using namespace hyperion::langutil;
 
 std::vector<AssemblyItem> CommonSubexpressionEliminator::getOptimizedItems()

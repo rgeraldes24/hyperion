@@ -1,9 +1,9 @@
-// ZVMC: Zond Client-VM Connector API.
-// Copyright 2019 The ZVMC Authors.
+// QRVMC: QRL Client-VM Connector API.
+// Copyright 2019 The QRVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 #pragma once
 
-#include <zvmc/zvmc.hpp>
+#include <qrvmc/qrvmc.hpp>
 #include <algorithm>
 #include <cassert>
 #include <map>
@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace zvmc
+namespace qrvmc
 {
 /// The string of bytes.
 using bytes = std::basic_string<uint8_t>;
@@ -26,21 +26,21 @@ struct StorageValue
     bytes32 original;
 
     /// Is the storage key cold or warm.
-    zvmc_access_status access_status = ZVMC_ACCESS_COLD;
+    qrvmc_access_status access_status = QRVMC_ACCESS_COLD;
 
     /// Default constructor.
     StorageValue() noexcept = default;
 
     /// Constructor sets the current and original to the same value. Optional access status.
     StorageValue(const bytes32& _value,  // NOLINT(hicpp-explicit-conversions)
-                 zvmc_access_status _access_status = ZVMC_ACCESS_COLD) noexcept
+                 qrvmc_access_status _access_status = QRVMC_ACCESS_COLD) noexcept
       : current{_value}, original{_value}, access_status{_access_status}
     {}
 
     /// Constructor with original value and optional access status
     StorageValue(const bytes32& _value,
                  const bytes32& _original,
-                 zvmc_access_status _access_status = ZVMC_ACCESS_COLD) noexcept
+                 qrvmc_access_status _access_status = QRVMC_ACCESS_COLD) noexcept
       : current{_value}, original{_original}, access_status{_access_status}
     {}
 };
@@ -72,7 +72,7 @@ struct MockedAccount
     }
 };
 
-/// Mocked ZVMC Host implementation.
+/// Mocked QRVMC Host implementation.
 class MockedHost : public Host
 {
 public:
@@ -98,8 +98,8 @@ public:
     /// The set of all accounts in the Host, organized by their addresses.
     std::unordered_map<address, MockedAccount> accounts;
 
-    /// The ZVMC transaction context to be returned by get_tx_context().
-    zvmc_tx_context tx_context = {};
+    /// The QRVMC transaction context to be returned by get_tx_context().
+    qrvmc_tx_context tx_context = {};
 
     /// The block header hash value to be returned by get_block_hash().
     bytes32 block_hash = {};
@@ -118,7 +118,7 @@ public:
     static constexpr auto max_recorded_account_accesses = 200;
 
     /// The record of all call messages requested in the call() method.
-    std::vector<zvmc_message> recorded_calls;
+    std::vector<qrvmc_message> recorded_calls;
 
     /// The maximum number of entries in recorded_calls record.
     /// This is arbitrary value useful in fuzzing when we don't want the record to explode.
@@ -143,14 +143,14 @@ private:
     }
 
 public:
-    /// Returns true if an account exists (ZVMC Host method).
+    /// Returns true if an account exists (QRVMC Host method).
     bool account_exists(const address& addr) const noexcept override
     {
         record_account_access(addr);
         return accounts.count(addr) != 0;
     }
 
-    /// Get the account's storage value at the given key (ZVMC Host method).
+    /// Get the account's storage value at the given key (QRVMC Host method).
     bytes32 get_storage(const address& addr, const bytes32& key) const noexcept override
     {
         record_account_access(addr);
@@ -165,8 +165,8 @@ public:
         return {};
     }
 
-    /// Set the account's storage value (ZVMC Host method).
-    zvmc_storage_status set_storage(const address& addr,
+    /// Set the account's storage value (QRVMC Host method).
+    qrvmc_storage_status set_storage(const address& addr,
                                     const bytes32& key,
                                     const bytes32& value) noexcept override
     {
@@ -195,7 +195,7 @@ public:
             if (current == value)
             {
                 // "SLOAD_GAS is deducted"
-                return ZVMC_STORAGE_ASSIGNED;
+                return QRVMC_STORAGE_ASSIGNED;
             }
             // 3. "If current value does not equal new value"
             else
@@ -208,19 +208,19 @@ public:
                     if (is_zero(original))
                     {
                         // "SSTORE_SET_GAS is deducted"
-                        return ZVMC_STORAGE_ADDED;
+                        return QRVMC_STORAGE_ADDED;
                     }
                     // 3.1.2 "Otherwise"
                     else
                     {
                         // "SSTORE_RESET_GAS gas is deducted"
-                        auto st = ZVMC_STORAGE_MODIFIED;
+                        auto st = QRVMC_STORAGE_MODIFIED;
 
                         // "If new value is 0"
                         if (is_zero(value))
                         {
                             // "add SSTORE_CLEARS_SCHEDULE gas to refund counter"
-                            st = ZVMC_STORAGE_DELETED;
+                            st = QRVMC_STORAGE_DELETED;
                         }
 
                         return st;
@@ -287,20 +287,20 @@ public:
                     switch (triggered_clauses)
                     {
                     case RemoveClearsSchedule:
-                        return ZVMC_STORAGE_DELETED_ADDED;
+                        return QRVMC_STORAGE_DELETED_ADDED;
                     case AddClearsSchedule:
-                        return ZVMC_STORAGE_MODIFIED_DELETED;
+                        return QRVMC_STORAGE_MODIFIED_DELETED;
                     case RemoveClearsSchedule | RestoredByReset:
-                        return ZVMC_STORAGE_DELETED_RESTORED;
+                        return QRVMC_STORAGE_DELETED_RESTORED;
                     case RestoredBySet:
-                        return ZVMC_STORAGE_ADDED_DELETED;
+                        return QRVMC_STORAGE_ADDED_DELETED;
                     case RestoredByReset:
-                        return ZVMC_STORAGE_MODIFIED_RESTORED;
+                        return QRVMC_STORAGE_MODIFIED_RESTORED;
                     case None:
-                        return ZVMC_STORAGE_ASSIGNED;
+                        return QRVMC_STORAGE_ASSIGNED;
                     default:
                         assert(false);  // Other combinations are impossible.
-                        return zvmc_storage_status{};
+                        return qrvmc_storage_status{};
                     }
                 }
             }
@@ -310,7 +310,7 @@ public:
         return status;
     }
 
-    /// Get the account's balance (ZVMC Host method).
+    /// Get the account's balance (QRVMC Host method).
     uint256be get_balance(const address& addr) const noexcept override
     {
         record_account_access(addr);
@@ -321,7 +321,7 @@ public:
         return it->second.balance;
     }
 
-    /// Get the account's code size (ZVMC host method).
+    /// Get the account's code size (QRVMC host method).
     size_t get_code_size(const address& addr) const noexcept override
     {
         record_account_access(addr);
@@ -331,7 +331,7 @@ public:
         return it->second.code.size();
     }
 
-    /// Get the account's code hash (ZVMC host method).
+    /// Get the account's code hash (QRVMC host method).
     bytes32 get_code_hash(const address& addr) const noexcept override
     {
         record_account_access(addr);
@@ -341,7 +341,7 @@ public:
         return it->second.codehash;
     }
 
-    /// Copy the account's code to the given buffer (ZVMC host method).
+    /// Copy the account's code to the given buffer (QRVMC host method).
     size_t copy_code(const address& addr,
                      size_t code_offset,
                      uint8_t* buffer_data,
@@ -364,8 +364,8 @@ public:
         return n;
     }
 
-    /// Call/create other contract (ZVMC host method).
-    Result call(const zvmc_message& msg) noexcept override
+    /// Call/create other contract (QRVMC host method).
+    Result call(const qrvmc_message& msg) noexcept override
     {
         record_account_access(msg.recipient);
 
@@ -389,17 +389,17 @@ public:
         return Result{call_result};
     }
 
-    /// Get transaction context (ZVMC host method).
-    zvmc_tx_context get_tx_context() const noexcept override { return tx_context; }
+    /// Get transaction context (QRVMC host method).
+    qrvmc_tx_context get_tx_context() const noexcept override { return tx_context; }
 
-    /// Get the block header hash (ZVMC host method).
+    /// Get the block header hash (QRVMC host method).
     bytes32 get_block_hash(int64_t block_number) const noexcept override
     {
         recorded_blockhashes.emplace_back(block_number);
         return block_hash;
     }
 
-    /// Emit LOG (ZVMC host method).
+    /// Emit LOG (QRVMC host method).
     void emit_log(const address& addr,
                   const uint8_t* data,
                   size_t data_size,
@@ -413,9 +413,9 @@ public:
     ///
     /// This method is required by EIP-2929. It will record the account access in
     /// MockedHost::recorded_account_accesses and return previous access status.
-    /// This methods returns ::ZVMC_ACCESS_WARM for known addresses of precompiles.
-    /// The EIP-2929 specifies that zvmc_message::sender and zvmc_message::recipient are always
-    /// ::ZVMC_ACCESS_WARM. Therefore, you should init the MockedHost with:
+    /// This methods returns ::QRVMC_ACCESS_WARM for known addresses of precompiles.
+    /// The EIP-2929 specifies that qrvmc_message::sender and qrvmc_message::recipient are always
+    /// ::QRVMC_ACCESS_WARM. Therefore, you should init the MockedHost with:
     ///
     ///     mocked_host.access_account(msg.sender);
     ///     mocked_host.access_account(msg.recipient);
@@ -423,9 +423,9 @@ public:
     /// The same way you can mock transaction access list (EIP-2930) for account addresses.
     ///
     /// @param addr  The address of the accessed account.
-    /// @returns     The ::ZVMC_ACCESS_WARM if the account has been accessed before,
-    ///              the ::ZVMC_ACCESS_COLD otherwise.
-    zvmc_access_status access_account(const address& addr) noexcept override
+    /// @returns     The ::QRVMC_ACCESS_WARM if the account has been accessed before,
+    ///              the ::QRVMC_ACCESS_COLD otherwise.
+    qrvmc_access_status access_account(const address& addr) noexcept override
     {
         // Check if the address have been already accessed.
         const auto already_accessed =
@@ -437,9 +437,9 @@ public:
         // Accessing precompiled contracts is always warm.
         if (addr >= "Q0000000000000000000000000000000000000001"_address &&
             addr <= "Q0000000000000000000000000000000000000009"_address)
-            return ZVMC_ACCESS_WARM;
+            return QRVMC_ACCESS_WARM;
 
-        return already_accessed ? ZVMC_ACCESS_WARM : ZVMC_ACCESS_COLD;
+        return already_accessed ? QRVMC_ACCESS_WARM : QRVMC_ACCESS_COLD;
     }
 
     /// Access the account's storage value at the given key.
@@ -447,22 +447,22 @@ public:
     /// This method is required by EIP-2929. In records that the given account's
     /// storage key has been access and returns the previous access status.
     /// To mock storage access list (EIP-2930), you can pre-init account's storage
-    /// values with the ::ZVMC_ACCESS_WARM flag:
+    /// values with the ::QRVMC_ACCESS_WARM flag:
     ///
     ///     mocked_host.accounts[msg.recipient].storage[key] = {value,
-    ///     ZVMC_ACCESS_WARM};
+    ///     QRVMC_ACCESS_WARM};
     ///
     /// @param addr  The account address.
     /// @param key   The account's storage key.
-    /// @return      The ::ZVMC_ACCESS_WARM if the storage key has been accessed
+    /// @return      The ::QRVMC_ACCESS_WARM if the storage key has been accessed
     /// before,
-    ///              the ::ZVMC_ACCESS_COLD otherwise.
-    zvmc_access_status access_storage(const address& addr, const bytes32& key) noexcept override
+    ///              the ::QRVMC_ACCESS_COLD otherwise.
+    qrvmc_access_status access_storage(const address& addr, const bytes32& key) noexcept override
     {
         auto& value = accounts[addr].storage[key];
         const auto access_status = value.access_status;
-        value.access_status = ZVMC_ACCESS_WARM;
+        value.access_status = QRVMC_ACCESS_WARM;
         return access_status;
     }
 };
-}  // namespace zvmc
+}  // namespace qrvmc

@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include <libyul/backends/zvm/ZVMDialect.h>
-#include <libyul/backends/zvm/VariableReferenceCounter.h>
+#include <libyul/backends/qrvm/QRVMDialect.h>
+#include <libyul/backends/qrvm/VariableReferenceCounter.h>
 #include <libyul/optimiser/ASTWalker.h>
 #include <libyul/AST.h>
 #include <libyul/Scope.h>
@@ -78,7 +78,7 @@ public:
 		AbstractAssembly& _assembly,
 		AsmAnalysisInfo& _analysisInfo,
 		Block const& _block,
-		ZVMDialect const& _dialect,
+		QRVMDialect const& _dialect,
 		BuiltinContext& _builtinContext,
 		bool _allowStackOpt = false,
 		ExternalIdentifierAccess::CodeGenerator const& _identifierAccessCodeGen = {},
@@ -109,7 +109,7 @@ protected:
 		AsmAnalysisInfo& _analysisInfo,
 		Block const& _block,
 		bool _allowStackOpt,
-		ZVMDialect const& _dialect,
+		QRVMDialect const& _dialect,
 		BuiltinContext& _builtinContext,
 		ExternalIdentifierAccess::CodeGenerator _identifierAccessCodeGen,
 		UseNamedLabels _useNamedLabelsForFunctions,
@@ -194,7 +194,7 @@ private:
 	AbstractAssembly& m_assembly;
 	AsmAnalysisInfo& m_info;
 	Scope* m_scope = nullptr;
-	ZVMDialect const& m_dialect;
+	QRVMDialect const& m_dialect;
 	BuiltinContext& m_builtinContext;
 	bool const m_allowStackOpt = true;
 	UseNamedLabels const m_useNamedLabelsForFunctions = UseNamedLabels::Never;

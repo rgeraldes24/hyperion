@@ -23,14 +23,14 @@
 namespace hyperion::yul::test
 {
 
-class ZVMCodeTransformTest: public hyperion::frontend::test::ZVMVersionRestrictedTestCase
+class QRVMCodeTransformTest: public hyperion::frontend::test::QRVMVersionRestrictedTestCase
 {
 public:
 	static std::unique_ptr<TestCase> create(Config const& _config)
 	{
-		return std::make_unique<ZVMCodeTransformTest>(_config.filename);
+		return std::make_unique<QRVMCodeTransformTest>(_config.filename);
 	}
-	explicit ZVMCodeTransformTest(std::string const& _filename);
+	explicit QRVMCodeTransformTest(std::string const& _filename);
 	TestResult run(std::ostream& _stream, std::string const& _linePrefix = "", bool const _formatted = false) override;
 private:
 	bool m_stackOpt = false;

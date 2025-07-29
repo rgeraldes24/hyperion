@@ -20,14 +20,14 @@
  * @date 2015
  */
 
-#include <libzvmasm/PathGasMeter.h>
-#include <libzvmasm/KnownState.h>
-#include <libzvmasm/SemanticInformation.h>
+#include <libqrvmasm/PathGasMeter.h>
+#include <libqrvmasm/KnownState.h>
+#include <libqrvmasm/SemanticInformation.h>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
-PathGasMeter::PathGasMeter(AssemblyItems const& _items, langutil::ZVMVersion _qrvmVersion):
+PathGasMeter::PathGasMeter(AssemblyItems const& _items, langutil::QRVMVersion _qrvmVersion):
 	m_items(_items), m_qrvmVersion(_qrvmVersion)
 {
 	for (size_t i = 0; i < m_items.size(); ++i)

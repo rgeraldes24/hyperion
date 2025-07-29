@@ -28,7 +28,7 @@
 
 #include <libhyperion/interface/DebugSettings.h>
 
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
 #include <functional>
 #include <map>
@@ -55,7 +55,7 @@ class ABIFunctions
 {
 public:
 	explicit ABIFunctions(
-		langutil::ZVMVersion _qrvmVersion,
+		langutil::QRVMVersion _qrvmVersion,
 		RevertStrings _revertStrings,
 		MultiUseYulFunctionCollector& _functionCollector
 	):
@@ -277,7 +277,7 @@ private:
 	/// if m_revertStrings is debug.
 	std::string revertReasonIfDebugFunction(std::string const& _message = "");
 
-	langutil::ZVMVersion m_qrvmVersion;
+	langutil::QRVMVersion m_qrvmVersion;
 	RevertStrings const m_revertStrings;
 	MultiUseYulFunctionCollector& m_functionCollector;
 	YulUtilFunctions m_utils;

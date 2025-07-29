@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <libzvmasm/LinkerObject.h>
+#include <libqrvmasm/LinkerObject.h>
 
 #include <libhyputil/Common.h>
 #include <libhyputil/JSON.h>
@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class AbstractAssemblyStack
@@ -51,4 +51,4 @@ public:
 	virtual bool compilationSuccessful() const = 0;
 };
 
-} // namespace hyperion::zvmasm
+} // namespace hyperion::qrvmasm

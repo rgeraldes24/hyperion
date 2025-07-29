@@ -26,11 +26,11 @@
 #include <libhyputil/CommonData.h>
 #include <libhyputil/Numeric.h>
 
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
 #include <vector>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 enum class Instruction: uint8_t;
 }
@@ -38,7 +38,7 @@ enum class Instruction: uint8_t;
 namespace hyperion::yul
 {
 class YulString;
-struct BuiltinFunctionForZVM;
+struct BuiltinFunctionForQRVM;
 }
 
 namespace hyperion::yul::test
@@ -73,19 +73,19 @@ struct InterpreterState;
  * The main focus is that the generated execution trace is the same for equivalent executions
  * and likely to be different for non-equivalent executions.
  */
-class ZVMInstructionInterpreter
+class QRVMInstructionInterpreter
 {
 public:
-	explicit ZVMInstructionInterpreter(langutil::ZVMVersion _qrvmVersion, InterpreterState& _state, bool _disableMemWriteTrace):
+	explicit QRVMInstructionInterpreter(langutil::QRVMVersion _qrvmVersion, InterpreterState& _state, bool _disableMemWriteTrace):
 		m_qrvmVersion(_qrvmVersion),
 		m_state(_state),
 		m_disableMemoryWriteInstructions(_disableMemWriteTrace)
 	{}
 	/// Evaluate instruction
-	u256 eval(zvmasm::Instruction _instruction, std::vector<u256> const& _arguments);
+	u256 eval(qrvmasm::Instruction _instruction, std::vector<u256> const& _arguments);
 	/// Evaluate builtin function
 	u256 evalBuiltin(
-		BuiltinFunctionForZVM const& _fun,
+		BuiltinFunctionForQRVM const& _fun,
 		std::vector<Expression> const& _arguments,
 		std::vector<u256> const& _evaluatedArguments
 	);
@@ -112,7 +112,7 @@ private:
 	void writeMemoryWord(u256 const& _offset, u256 const& _value);
 
 	void logTrace(
-		zvmasm::Instruction _instruction,
+		qrvmasm::Instruction _instruction,
 		std::vector<u256> const& _arguments = {},
 		bytes const& _data = {}
 	);
@@ -144,7 +144,7 @@ private:
 		return m_disableMemoryWriteInstructions;
 	}
 
-	langutil::ZVMVersion m_qrvmVersion;
+	langutil::QRVMVersion m_qrvmVersion;
 	InterpreterState& m_state;
 	/// Flag to disable trace of instructions that write to memory.
 	bool m_disableMemoryWriteInstructions;

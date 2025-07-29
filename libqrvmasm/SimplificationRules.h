@@ -24,8 +24,8 @@
 
 #pragma once
 
-#include <libzvmasm/ExpressionClasses.h>
-#include <libzvmasm/SimplificationRule.h>
+#include <libqrvmasm/ExpressionClasses.h>
+#include <libqrvmasm/SimplificationRule.h>
 
 #include <libhyputil/CommonData.h>
 
@@ -37,7 +37,7 @@ namespace hyperion::langutil
 struct SourceLocation;
 }
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class Pattern;
@@ -90,7 +90,7 @@ public:
 	using Expression = ExpressionClasses::Expression;
 	using Id = ExpressionClasses::Id;
 
-	using Builtins = zvmasm::ZVMBuiltins<Pattern>;
+	using Builtins = qrvmasm::QRVMBuiltins<Pattern>;
 	static constexpr size_t WordSize = 256;
 	using Word = u256;
 

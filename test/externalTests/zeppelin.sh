@@ -48,14 +48,14 @@ function zeppelin_test
 
     local compile_only_presets=(
         #ir-no-optimize           # Compilation fails with "Contract initcode size is 49410 bytes and exceeds 49152 bytes."
-        ir-optimize-zvm-only      # FIXME: A few tests fail with "Transaction: ... exited with an error (status 0) after consuming all gas."
+        ir-optimize-qrvm-only      # FIXME: A few tests fail with "Transaction: ... exited with an error (status 0) after consuming all gas."
 )
     local settings_presets=(
         "${compile_only_presets[@]}"
-        ir-optimize-zvm+yul
+        ir-optimize-qrvm+yul
         legacy-no-optimize
-        legacy-optimize-zvm-only
-        legacy-optimize-zvm+yul
+        legacy-optimize-qrvm-only
+        legacy-optimize-qrvm+yul
     )
 
     [[ $SELECTED_PRESETS != "" ]] || SELECTED_PRESETS=$(circleci_select_steps_multiarg "${settings_presets[@]}")

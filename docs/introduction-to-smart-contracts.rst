@@ -359,7 +359,7 @@ Every account has a persistent key-value store mapping 256-bit words to 256-bit
 words called **storage**.
 
 Furthermore, every account has a **balance** in
-Zond (in "Planck" to be exact, ``1 zond`` is ``10**18 planck``) which can be modified by sending transactions that
+Zond (in "Planck" to be exact, ``1 quanta`` is ``10**18 planck``) which can be modified by sending transactions that
 include Zond.
 
 .. index:: ! transaction

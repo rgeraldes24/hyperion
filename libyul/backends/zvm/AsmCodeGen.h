@@ -16,16 +16,16 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Helper to compile Yul code using libzvmasm.
+ * Helper to compile Yul code using libqrvmasm.
  */
 
 #pragma once
 
-#include <libyul/backends/zvm/AbstractAssembly.h>
+#include <libyul/backends/qrvm/AbstractAssembly.h>
 #include <libyul/AsmAnalysis.h>
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 class Assembly;
 }
@@ -42,8 +42,8 @@ public:
 	static void assemble(
 		Block const& _parsedData,
 		AsmAnalysisInfo& _analysisInfo,
-		zvmasm::Assembly& _assembly,
-		langutil::ZVMVersion _qrvmVersion,
+		qrvmasm::Assembly& _assembly,
+		langutil::QRVMVersion _qrvmVersion,
 		ExternalIdentifierAccess::CodeGenerator _identifierAccess = {},
 		bool _useNamedLabelsForFunctions = false,
 		bool _optimizeStackAllocation = false

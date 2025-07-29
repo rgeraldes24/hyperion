@@ -20,12 +20,12 @@
  * Inlines small code snippets by replacing JUMP with a copy of the code jumped to.
  */
 
-#include <libzvmasm/Inliner.h>
+#include <libqrvmasm/Inliner.h>
 
-#include <libzvmasm/AssemblyItem.h>
-#include <libzvmasm/GasMeter.h>
-#include <libzvmasm/KnownState.h>
-#include <libzvmasm/SemanticInformation.h>
+#include <libqrvmasm/AssemblyItem.h>
+#include <libqrvmasm/GasMeter.h>
+#include <libqrvmasm/KnownState.h>
+#include <libqrvmasm/SemanticInformation.h>
 
 #include <libhyputil/CommonData.h>
 
@@ -39,14 +39,14 @@
 #include <limits>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
 
 namespace
 {
 /// @returns an estimation of the runtime gas cost of the AsssemblyItems in @a _itemRange.
 template<typename RangeType>
-u256 executionCost(RangeType const& _itemRange, langutil::ZVMVersion _qrvmVersion)
+u256 executionCost(RangeType const& _itemRange, langutil::QRVMVersion _qrvmVersion)
 {
 	GasMeter gasMeter{std::make_shared<KnownState>(), _qrvmVersion};
 	auto gasConsumption = ranges::accumulate(_itemRange | ranges::views::transform(

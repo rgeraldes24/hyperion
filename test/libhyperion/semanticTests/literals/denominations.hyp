@@ -1,5 +1,5 @@
 contract C {
-	uint constant x = 1 zond + 1 gplanck + 1 planck;
+	uint constant x = 1 quanta + 1 gplanck + 1 planck;
 
 	function f() public view returns(uint) { return x; }
 }

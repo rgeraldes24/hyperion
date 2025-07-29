@@ -1,6 +1,6 @@
 
-======= zvmasm_prevrandao/input.hyp:C =======
-ZVM assembly:
+======= qrvmasm_prevrandao/input.hyp:C =======
+QRVM assembly:
   sstore(0x00, prevrandao)
   stop
 stop

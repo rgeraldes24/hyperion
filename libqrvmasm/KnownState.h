@@ -47,8 +47,8 @@
 
 #include <libhyputil/CommonIO.h>
 #include <libhyputil/Exceptions.h>
-#include <libzvmasm/ExpressionClasses.h>
-#include <libzvmasm/SemanticInformation.h>
+#include <libqrvmasm/ExpressionClasses.h>
+#include <libqrvmasm/SemanticInformation.h>
 
 #include <limits>
 #include <utility>
@@ -64,7 +64,7 @@ namespace hyperion::langutil
 struct SourceLocation;
 }
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class AssemblyItem;

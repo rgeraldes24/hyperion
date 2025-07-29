@@ -16,17 +16,17 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Adaptor between AbstractAssembly and libzvmasm.
+ * Adaptor between AbstractAssembly and libqrvmasm.
  */
 
-#include <libyul/backends/zvm/ZondAssemblyAdapter.h>
+#include <libyul/backends/qrvm/QRLAssemblyAdapter.h>
 
-#include <libyul/backends/zvm/AbstractAssembly.h>
+#include <libyul/backends/qrvm/AbstractAssembly.h>
 #include <libyul/Exceptions.h>
 
-#include <libzvmasm/Assembly.h>
-#include <libzvmasm/AssemblyItem.h>
-#include <libzvmasm/Instruction.h>
+#include <libqrvmasm/Assembly.h>
+#include <libqrvmasm/AssemblyItem.h>
+#include <libqrvmasm/Instruction.h>
 
 #include <liblangutil/SourceLocation.h>
 
@@ -38,109 +38,109 @@ using namespace hyperion::yul;
 using namespace hyperion::util;
 using namespace hyperion::langutil;
 
-ZondAssemblyAdapter::ZondAssemblyAdapter(zvmasm::Assembly& _assembly):
+QRLAssemblyAdapter::QRLAssemblyAdapter(qrvmasm::Assembly& _assembly):
 	m_assembly(_assembly)
 {
 }
 
-void ZondAssemblyAdapter::setSourceLocation(SourceLocation const& _location)
+void QRLAssemblyAdapter::setSourceLocation(SourceLocation const& _location)
 {
 	m_assembly.setSourceLocation(_location);
 }
 
-int ZondAssemblyAdapter::stackHeight() const
+int QRLAssemblyAdapter::stackHeight() const
 {
 	return m_assembly.deposit();
 }
 
-void ZondAssemblyAdapter::setStackHeight(int height)
+void QRLAssemblyAdapter::setStackHeight(int height)
 {
 	m_assembly.setDeposit(height);
 }
 
-void ZondAssemblyAdapter::appendInstruction(zvmasm::Instruction _instruction)
+void QRLAssemblyAdapter::appendInstruction(qrvmasm::Instruction _instruction)
 {
 	m_assembly.append(_instruction);
 }
 
-void ZondAssemblyAdapter::appendConstant(u256 const& _constant)
+void QRLAssemblyAdapter::appendConstant(u256 const& _constant)
 {
 	m_assembly.append(_constant);
 }
 
-void ZondAssemblyAdapter::appendLabel(LabelID _labelId)
+void QRLAssemblyAdapter::appendLabel(LabelID _labelId)
 {
-	m_assembly.append(zvmasm::AssemblyItem(zvmasm::Tag, _labelId));
+	m_assembly.append(qrvmasm::AssemblyItem(qrvmasm::Tag, _labelId));
 }
 
-void ZondAssemblyAdapter::appendLabelReference(LabelID _labelId)
+void QRLAssemblyAdapter::appendLabelReference(LabelID _labelId)
 {
-	m_assembly.append(zvmasm::AssemblyItem(zvmasm::PushTag, _labelId));
+	m_assembly.append(qrvmasm::AssemblyItem(qrvmasm::PushTag, _labelId));
 }
 
-size_t ZondAssemblyAdapter::newLabelId()
+size_t QRLAssemblyAdapter::newLabelId()
 {
 	return assemblyTagToIdentifier(m_assembly.newTag());
 }
 
-size_t ZondAssemblyAdapter::namedLabel(std::string const& _name, size_t _params, size_t _returns, std::optional<size_t> _sourceID)
+size_t QRLAssemblyAdapter::namedLabel(std::string const& _name, size_t _params, size_t _returns, std::optional<size_t> _sourceID)
 {
 	return assemblyTagToIdentifier(m_assembly.namedTag(_name, _params, _returns, _sourceID));
 }
 
-void ZondAssemblyAdapter::appendLinkerSymbol(std::string const& _linkerSymbol)
+void QRLAssemblyAdapter::appendLinkerSymbol(std::string const& _linkerSymbol)
 {
 	m_assembly.appendLibraryAddress(_linkerSymbol);
 }
 
-void ZondAssemblyAdapter::appendVerbatim(bytes _data, size_t _arguments, size_t _returnVariables)
+void QRLAssemblyAdapter::appendVerbatim(bytes _data, size_t _arguments, size_t _returnVariables)
 {
 	m_assembly.appendVerbatim(std::move(_data), _arguments, _returnVariables);
 }
 
-void ZondAssemblyAdapter::appendJump(int _stackDiffAfter, JumpType _jumpType)
+void QRLAssemblyAdapter::appendJump(int _stackDiffAfter, JumpType _jumpType)
 {
-	appendJumpInstruction(zvmasm::Instruction::JUMP, _jumpType);
+	appendJumpInstruction(qrvmasm::Instruction::JUMP, _jumpType);
 	m_assembly.adjustDeposit(_stackDiffAfter);
 }
 
-void ZondAssemblyAdapter::appendJumpTo(LabelID _labelId, int _stackDiffAfter, JumpType _jumpType)
+void QRLAssemblyAdapter::appendJumpTo(LabelID _labelId, int _stackDiffAfter, JumpType _jumpType)
 {
 	appendLabelReference(_labelId);
 	appendJump(_stackDiffAfter, _jumpType);
 }
 
-void ZondAssemblyAdapter::appendJumpToIf(LabelID _labelId, JumpType _jumpType)
+void QRLAssemblyAdapter::appendJumpToIf(LabelID _labelId, JumpType _jumpType)
 {
 	appendLabelReference(_labelId);
-	appendJumpInstruction(zvmasm::Instruction::JUMPI, _jumpType);
+	appendJumpInstruction(qrvmasm::Instruction::JUMPI, _jumpType);
 }
 
-void ZondAssemblyAdapter::appendAssemblySize()
+void QRLAssemblyAdapter::appendAssemblySize()
 {
 	m_assembly.appendProgramSize();
 }
 
-std::pair<std::shared_ptr<AbstractAssembly>, AbstractAssembly::SubID> ZondAssemblyAdapter::createSubAssembly(bool _creation, std::string _name)
+std::pair<std::shared_ptr<AbstractAssembly>, AbstractAssembly::SubID> QRLAssemblyAdapter::createSubAssembly(bool _creation, std::string _name)
 {
-	std::shared_ptr<zvmasm::Assembly> assembly{std::make_shared<zvmasm::Assembly>(m_assembly.zvmVersion(), _creation, std::move(_name))};
+	std::shared_ptr<qrvmasm::Assembly> assembly{std::make_shared<qrvmasm::Assembly>(m_assembly.qrvmVersion(), _creation, std::move(_name))};
 	auto sub = m_assembly.newSub(assembly);
-	return {std::make_shared<ZondAssemblyAdapter>(*assembly), static_cast<size_t>(sub.data())};
+	return {std::make_shared<QRLAssemblyAdapter>(*assembly), static_cast<size_t>(sub.data())};
 }
 
-void ZondAssemblyAdapter::appendDataOffset(std::vector<AbstractAssembly::SubID> const& _subPath)
+void QRLAssemblyAdapter::appendDataOffset(std::vector<AbstractAssembly::SubID> const& _subPath)
 {
 	if (auto it = m_dataHashBySubId.find(_subPath[0]); it != m_dataHashBySubId.end())
 	{
 		yulAssert(_subPath.size() == 1, "");
-		m_assembly << zvmasm::AssemblyItem(zvmasm::PushData, it->second);
+		m_assembly << qrvmasm::AssemblyItem(qrvmasm::PushData, it->second);
 		return;
 	}
 
 	m_assembly.pushSubroutineOffset(m_assembly.encodeSubPath(_subPath));
 }
 
-void ZondAssemblyAdapter::appendDataSize(std::vector<AbstractAssembly::SubID> const& _subPath)
+void QRLAssemblyAdapter::appendDataSize(std::vector<AbstractAssembly::SubID> const& _subPath)
 {
 	if (auto it = m_dataHashBySubId.find(_subPath[0]); it != m_dataHashBySubId.end())
 	{
@@ -152,60 +152,60 @@ void ZondAssemblyAdapter::appendDataSize(std::vector<AbstractAssembly::SubID> co
 	m_assembly.pushSubroutineSize(m_assembly.encodeSubPath(_subPath));
 }
 
-AbstractAssembly::SubID ZondAssemblyAdapter::appendData(bytes const& _data)
+AbstractAssembly::SubID QRLAssemblyAdapter::appendData(bytes const& _data)
 {
-	zvmasm::AssemblyItem pushData = m_assembly.newData(_data);
+	qrvmasm::AssemblyItem pushData = m_assembly.newData(_data);
 	SubID subID = m_nextDataCounter++;
 	m_dataHashBySubId[subID] = pushData.data();
 	return subID;
 }
 
-void ZondAssemblyAdapter::appendToAuxiliaryData(bytes const& _data)
+void QRLAssemblyAdapter::appendToAuxiliaryData(bytes const& _data)
 {
 	m_assembly.appendToAuxiliaryData(_data);
 }
 
-void ZondAssemblyAdapter::appendImmutable(std::string const& _identifier)
+void QRLAssemblyAdapter::appendImmutable(std::string const& _identifier)
 {
 	m_assembly.appendImmutable(_identifier);
 }
 
-void ZondAssemblyAdapter::appendImmutableAssignment(std::string const& _identifier)
+void QRLAssemblyAdapter::appendImmutableAssignment(std::string const& _identifier)
 {
 	m_assembly.appendImmutableAssignment(_identifier);
 }
 
-void ZondAssemblyAdapter::markAsInvalid()
+void QRLAssemblyAdapter::markAsInvalid()
 {
 	m_assembly.markAsInvalid();
 }
 
-langutil::ZVMVersion ZondAssemblyAdapter::zvmVersion() const
+langutil::QRVMVersion QRLAssemblyAdapter::qrvmVersion() const
 {
-	return m_assembly.zvmVersion();
+	return m_assembly.qrvmVersion();
 }
 
-ZondAssemblyAdapter::LabelID ZondAssemblyAdapter::assemblyTagToIdentifier(zvmasm::AssemblyItem const& _tag)
+QRLAssemblyAdapter::LabelID QRLAssemblyAdapter::assemblyTagToIdentifier(qrvmasm::AssemblyItem const& _tag)
 {
 	u256 id = _tag.data();
 	yulAssert(id <= std::numeric_limits<LabelID>::max(), "Tag id too large.");
 	return LabelID(id);
 }
 
-void ZondAssemblyAdapter::appendJumpInstruction(zvmasm::Instruction _instruction, JumpType _jumpType)
+void QRLAssemblyAdapter::appendJumpInstruction(qrvmasm::Instruction _instruction, JumpType _jumpType)
 {
-	yulAssert(_instruction == zvmasm::Instruction::JUMP || _instruction == zvmasm::Instruction::JUMPI, "");
-	zvmasm::AssemblyItem jump(_instruction);
+	yulAssert(_instruction == qrvmasm::Instruction::JUMP || _instruction == qrvmasm::Instruction::JUMPI, "");
+	qrvmasm::AssemblyItem jump(_instruction);
 	switch (_jumpType)
 	{
 	case JumpType::Ordinary:
-		yulAssert(jump.getJumpType() == zvmasm::AssemblyItem::JumpType::Ordinary, "");
+		yulAssert(jump.getJumpType() == qrvmasm::AssemblyItem::JumpType::Ordinary, "");
 		break;
 	case JumpType::IntoFunction:
-		jump.setJumpType(zvmasm::AssemblyItem::JumpType::IntoFunction);
+		jump.setJumpType(qrvmasm::AssemblyItem::JumpType::IntoFunction);
 		break;
 	case JumpType::OutOfFunction:
-		jump.setJumpType(zvmasm::AssemblyItem::JumpType::OutOfFunction);
+		jump.setJumpType(qrvmasm::AssemblyItem::JumpType::OutOfFunction);
 		break;
 	}
 	m_assembly.append(std::move(jump));

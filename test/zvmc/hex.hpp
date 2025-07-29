@@ -1,15 +1,15 @@
-// ZVMC: Zond Client-VM Connector API.
-// Copyright 2021 The ZVMC Authors.
+// QRVMC: QRL Client-VM Connector API.
+// Copyright 2021 The QRVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 #pragma once
 
-#include <zvmc/filter_iterator.hpp>
+#include <qrvmc/filter_iterator.hpp>
 #include <cstdint>
 #include <optional>
 #include <string>
 #include <string_view>
 
-namespace zvmc
+namespace qrvmc
 {
 /// String of uint8_t chars.
 using bytes = std::basic_string<uint8_t>;
@@ -68,7 +68,7 @@ inline constexpr bool from_hex(InputIt begin, InputIt end, OutputIt out) noexcep
     for (auto it = begin; it != end; ++it, ++i)
     {
         const auto h = *it;
-        const int v = zvmc::internal::from_hex_digit(h);
+        const int v = qrvmc::internal::from_hex_digit(h);
         if (v < 0)
         {
             if (i == 1 && hi_nibble == 0 && h == 'x')  // 0x prefix
@@ -182,4 +182,4 @@ inline std::optional<bytes> from_spaced_hex(std::string_view hex) noexcept
 {
     return from_spaced_hex(hex.begin(), hex.end());
 }
-}  // namespace zvmc
+}  // namespace qrvmc

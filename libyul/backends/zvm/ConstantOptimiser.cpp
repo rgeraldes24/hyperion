@@ -19,10 +19,10 @@
  * Optimisation stage that replaces constants by expressions that compute them.
  */
 
-#include <libyul/backends/zvm/ConstantOptimiser.h>
+#include <libyul/backends/qrvm/ConstantOptimiser.h>
 
 #include <libyul/optimiser/ASTCopier.h>
-#include <libyul/backends/zvm/ZVMMetrics.h>
+#include <libyul/backends/qrvm/QRVMMetrics.h>
 #include <libyul/AST.h>
 #include <libyul/Utilities.h>
 
@@ -38,33 +38,33 @@ using Representation = ConstantOptimiser::Representation;
 
 namespace
 {
-struct MiniZVMInterpreter
+struct MiniQRVMInterpreter
 {
-	explicit MiniZVMInterpreter(ZVMDialect const& _dialect): m_dialect(_dialect) {}
+	explicit MiniQRVMInterpreter(QRVMDialect const& _dialect): m_dialect(_dialect) {}
 
 	u256 eval(Expression const& _expr)
 	{
 		return std::visit(*this, _expr);
 	}
 
-	u256 eval(zvmasm::Instruction _instr, std::vector<Expression> const& _arguments)
+	u256 eval(qrvmasm::Instruction _instr, std::vector<Expression> const& _arguments)
 	{
 		std::vector<u256> args;
 		for (auto const& arg: _arguments)
 			args.emplace_back(eval(arg));
 		switch (_instr)
 		{
-		case zvmasm::Instruction::ADD:
+		case qrvmasm::Instruction::ADD:
 			return args.at(0) + args.at(1);
-		case zvmasm::Instruction::SUB:
+		case qrvmasm::Instruction::SUB:
 			return args.at(0) - args.at(1);
-		case zvmasm::Instruction::MUL:
+		case qrvmasm::Instruction::MUL:
 			return args.at(0) * args.at(1);
-		case zvmasm::Instruction::EXP:
+		case qrvmasm::Instruction::EXP:
 			return exp256(args.at(0), args.at(1));
-		case zvmasm::Instruction::SHL:
+		case qrvmasm::Instruction::SHL:
 			return args.at(0) > 255 ? 0 : (args.at(1) << unsigned(args.at(0)));
-		case zvmasm::Instruction::NOT:
+		case qrvmasm::Instruction::NOT:
 			return ~args.at(0);
 		default:
 			yulAssert(false, "Invalid operation generated in constant optimizer.");
@@ -74,7 +74,7 @@ struct MiniZVMInterpreter
 
 	u256 operator()(FunctionCall const& _funCall)
 	{
-		BuiltinFunctionForZVM const* fun = m_dialect.builtin(_funCall.functionName.name);
+		BuiltinFunctionForQRVM const* fun = m_dialect.builtin(_funCall.functionName.name);
 		yulAssert(fun, "Expected builtin function.");
 		yulAssert(fun->instruction, "Expected QRVM instruction.");
 		return eval(*fun->instruction, _funCall.arguments);
@@ -85,7 +85,7 @@ struct MiniZVMInterpreter
 	}
 	u256 operator()(Identifier const&) { yulAssert(false, ""); }
 
-	ZVMDialect const& m_dialect;
+	QRVMDialect const& m_dialect;
 };
 }
 
@@ -165,7 +165,7 @@ Representation const& RepresentationFinder::findRepresentation(u256 const& _valu
 			m_maxSteps--;
 		routine = min(std::move(routine), std::move(newRoutine));
 	}
-	yulAssert(MiniZVMInterpreter{m_dialect}.eval(*routine.expression) == _value, "Invalid expression generated.");
+	yulAssert(MiniQRVMInterpreter{m_dialect}.eval(*routine.expression) == _value, "Invalid expression generated.");
 	return m_cache[_value] = std::move(routine);
 }
 

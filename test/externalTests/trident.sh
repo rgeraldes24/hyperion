@@ -55,11 +55,11 @@ function trident_test
     local settings_presets=(
         "${compile_only_presets[@]}"
         ir-no-optimize
-        ir-optimize-zvm-only
-        ir-optimize-zvm+yul        # Needs memory-safe inline assembly patch
+        ir-optimize-qrvm-only
+        ir-optimize-qrvm+yul        # Needs memory-safe inline assembly patch
         legacy-no-optimize
-        legacy-optimize-zvm-only
-        legacy-optimize-zvm+yul
+        legacy-optimize-qrvm-only
+        legacy-optimize-qrvm+yul
     )
 
     [[ $SELECTED_PRESETS != "" ]] || SELECTED_PRESETS=$(circleci_select_steps_multiarg "${settings_presets[@]}")

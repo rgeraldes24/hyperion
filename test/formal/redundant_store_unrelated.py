@@ -30,7 +30,7 @@ k = Int('k')
 diff = Int('diff')
 solver.add(diff == start2 - start1 + k * 2**n_bits)
 restrict(diff)
-# diff is the result of sub(start2, start1) in ZVM
+# diff is the result of sub(start2, start1) in QRVM
 
 # These are the conditions in the code.
 solver.add(diff >= length1)

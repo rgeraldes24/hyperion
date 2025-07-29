@@ -27,7 +27,7 @@
 #include <test/libhyperion/util/HyptestErrors.h>
 
 #include <libhyputil/CommonData.h>
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 #include <libsmtutil/SolverInterface.h>
 #include <libhyperion/interface/Version.h>
 
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(cli_mode_options)
 		expectedOptions.input.ignoreMissingFiles = true;
 		expectedOptions.output.dir = "/tmp/out";
 		expectedOptions.output.overwriteFiles = true;
-		expectedOptions.output.qrvmVersion= ZVMVersion::shanghai();
+		expectedOptions.output.qrvmVersion= QRVMVersion::shanghai();
 		expectedOptions.output.viaIR = true;
 		expectedOptions.output.revertStrings = RevertStrings::Strip;
 		expectedOptions.output.debugInfoSelection = DebugInfoSelection::fromString("location");
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(cli_mode_options)
 		};
 		expectedOptions.metadata.hash = CompilerStack::MetadataHash::Bzzr1;
 		expectedOptions.metadata.literalSources = true;
-		expectedOptions.optimizer.optimizeZvmasm = true;
+		expectedOptions.optimizer.optimizeQrvmasm = true;
 		expectedOptions.optimizer.optimizeYul = true;
 		expectedOptions.optimizer.expectedExecutionsPerDeployment = 1000;
 		expectedOptions.optimizer.yulSteps = "agf";
@@ -270,15 +270,15 @@ BOOST_AUTO_TEST_CASE(via_ir_options)
 BOOST_AUTO_TEST_CASE(assembly_mode_options)
 {
 	static vector<tuple<vector<string>, YulStack::Machine, YulStack::Language>> const allowedCombinations = {
-		{{"--machine=zvm", "--yul-dialect=zvm", "--assemble"}, YulStack::Machine::ZVM, YulStack::Language::StrictAssembly},
-		{{"--machine=zvm", "--yul-dialect=zvm", "--yul"}, YulStack::Machine::ZVM, YulStack::Language::StrictAssembly},
-		{{"--machine=zvm", "--yul-dialect=zvm", "--strict-assembly"}, YulStack::Machine::ZVM, YulStack::Language::StrictAssembly},
-		{{"--machine=zvm", "--assemble"}, YulStack::Machine::ZVM, YulStack::Language::Assembly},
-		{{"--machine=zvm", "--yul"}, YulStack::Machine::ZVM, YulStack::Language::Yul},
-		{{"--machine=zvm", "--strict-assembly"}, YulStack::Machine::ZVM, YulStack::Language::StrictAssembly},
-		{{"--assemble"}, YulStack::Machine::ZVM, YulStack::Language::Assembly},
-		{{"--yul"}, YulStack::Machine::ZVM, YulStack::Language::Yul},
-		{{"--strict-assembly"}, YulStack::Machine::ZVM, YulStack::Language::StrictAssembly},
+		{{"--machine=qrvm", "--yul-dialect=qrvm", "--assemble"}, YulStack::Machine::QRVM, YulStack::Language::StrictAssembly},
+		{{"--machine=qrvm", "--yul-dialect=qrvm", "--yul"}, YulStack::Machine::QRVM, YulStack::Language::StrictAssembly},
+		{{"--machine=qrvm", "--yul-dialect=qrvm", "--strict-assembly"}, YulStack::Machine::QRVM, YulStack::Language::StrictAssembly},
+		{{"--machine=qrvm", "--assemble"}, YulStack::Machine::QRVM, YulStack::Language::Assembly},
+		{{"--machine=qrvm", "--yul"}, YulStack::Machine::QRVM, YulStack::Language::Yul},
+		{{"--machine=qrvm", "--strict-assembly"}, YulStack::Machine::QRVM, YulStack::Language::StrictAssembly},
+		{{"--assemble"}, YulStack::Machine::QRVM, YulStack::Language::Assembly},
+		{{"--yul"}, YulStack::Machine::QRVM, YulStack::Language::Yul},
+		{{"--strict-assembly"}, YulStack::Machine::QRVM, YulStack::Language::StrictAssembly},
 	};
 
 	for (auto const& [assemblyOptions, expectedMachine, expectedLanguage]: allowedCombinations)
@@ -338,7 +338,7 @@ BOOST_AUTO_TEST_CASE(assembly_mode_options)
 		expectedOptions.input.allowedDirectories = {"/tmp", "/home", "project", "../contracts", "c", "/usr/lib"};
 		expectedOptions.input.ignoreMissingFiles = true;
 		expectedOptions.output.overwriteFiles = true;
-		expectedOptions.output.qrvmVersion= ZVMVersion::shanghai();
+		expectedOptions.output.qrvmVersion= QRVMVersion::shanghai();
 		expectedOptions.output.revertStrings = RevertStrings::Strip;
 		expectedOptions.output.debugInfoSelection = DebugInfoSelection::fromString("location");
 		expectedOptions.formatting.json = JsonFormat {JsonFormat::Pretty, 1};
@@ -356,7 +356,7 @@ BOOST_AUTO_TEST_CASE(assembly_mode_options)
 		expectedOptions.compiler.outputs.astCompactJson = true;
 		if (expectedLanguage == YulStack::Language::StrictAssembly)
 		{
-			expectedOptions.optimizer.optimizeZvmasm = true;
+			expectedOptions.optimizer.optimizeQrvmasm = true;
 			expectedOptions.optimizer.optimizeYul = true;
 			expectedOptions.optimizer.yulSteps = "agf";
 			expectedOptions.optimizer.expectedExecutionsPerDeployment = 1000;
@@ -461,15 +461,15 @@ BOOST_AUTO_TEST_CASE(optimizer_flags)
 	yulOnly.runYulOptimiser = true;
 	yulOnly.optimizeStackAllocation = true;
 
-	OptimiserSettings zvmasmOnly = OptimiserSettings::standard();
-	zvmasmOnly.runYulOptimiser = false;
+	OptimiserSettings qrvmasmOnly = OptimiserSettings::standard();
+	qrvmasmOnly.runYulOptimiser = false;
 
 	map<vector<string>, OptimiserSettings> settingsMap = {
 		{{}, OptimiserSettings::minimal()},
 		{{"--optimize"}, OptimiserSettings::standard()},
 		{{"--no-optimize-yul"}, OptimiserSettings::minimal()},
 		{{"--optimize-yul"}, yulOnly},
-		{{"--optimize", "--no-optimize-yul"}, zvmasmOnly},
+		{{"--optimize", "--no-optimize-yul"}, qrvmasmOnly},
 		{{"--optimize", "--optimize-yul"}, OptimiserSettings::standard()},
 	};
 

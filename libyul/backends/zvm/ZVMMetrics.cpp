@@ -19,15 +19,15 @@
 * Module providing metrics for the QRVM optimizer.
 */
 
-#include <libyul/backends/zvm/ZVMMetrics.h>
+#include <libyul/backends/qrvm/QRVMMetrics.h>
 
 #include <libyul/AST.h>
 #include <libyul/Exceptions.h>
 #include <libyul/Utilities.h>
-#include <libyul/backends/zvm/ZVMDialect.h>
+#include <libyul/backends/qrvm/QRVMDialect.h>
 
-#include <libzvmasm/Instruction.h>
-#include <libzvmasm/GasMeter.h>
+#include <libqrvmasm/Instruction.h>
+#include <libqrvmasm/GasMeter.h>
 
 #include <libhyputil/CommonData.h>
 
@@ -40,7 +40,7 @@ bigint GasMeter::costs(Expression const& _expression) const
 	return combineCosts(GasMeterVisitor::costs(_expression, m_dialect, m_isCreation));
 }
 
-bigint GasMeter::instructionCosts(zvmasm::Instruction _instruction) const
+bigint GasMeter::instructionCosts(qrvmasm::Instruction _instruction) const
 {
 	return combineCosts(GasMeterVisitor::instructionCosts(_instruction, m_dialect, m_isCreation));
 }
@@ -53,7 +53,7 @@ bigint GasMeter::combineCosts(std::pair<bigint, bigint> _costs) const
 
 std::pair<bigint, bigint> GasMeterVisitor::costs(
 	Expression const& _expression,
-	ZVMDialect const& _dialect,
+	QRVMDialect const& _dialect,
 	bool _isCreation
 )
 {
@@ -63,8 +63,8 @@ std::pair<bigint, bigint> GasMeterVisitor::costs(
 }
 
 std::pair<bigint, bigint> GasMeterVisitor::instructionCosts(
-	zvmasm::Instruction _instruction,
-	ZVMDialect const& _dialect,
+	qrvmasm::Instruction _instruction,
+	QRVMDialect const& _dialect,
 	bool _isCreation
 )
 {
@@ -76,7 +76,7 @@ std::pair<bigint, bigint> GasMeterVisitor::instructionCosts(
 void GasMeterVisitor::operator()(FunctionCall const& _funCall)
 {
 	ASTWalker::operator()(_funCall);
-	if (BuiltinFunctionForZVM const* f = m_dialect.builtin(_funCall.functionName.name))
+	if (BuiltinFunctionForQRVM const* f = m_dialect.builtin(_funCall.functionName.name))
 		if (f->instruction)
 		{
 			instructionCostsInternal(*f->instruction);
@@ -87,10 +87,10 @@ void GasMeterVisitor::operator()(FunctionCall const& _funCall)
 
 void GasMeterVisitor::operator()(Literal const& _lit)
 {
-	m_runGas += zvmasm::GasMeter::runGas(zvmasm::Instruction::PUSH1);
+	m_runGas += qrvmasm::GasMeter::runGas(qrvmasm::Instruction::PUSH1);
 	m_dataGas +=
 		singleByteDataGas() +
-		zvmasm::GasMeter::dataGas(
+		qrvmasm::GasMeter::dataGas(
 			toCompactBigEndian(valueOfLiteral(_lit), 1),
 			m_isCreation
 		);
@@ -98,26 +98,26 @@ void GasMeterVisitor::operator()(Literal const& _lit)
 
 void GasMeterVisitor::operator()(Identifier const&)
 {
-	m_runGas += zvmasm::GasMeter::runGas(zvmasm::Instruction::DUP1);
+	m_runGas += qrvmasm::GasMeter::runGas(qrvmasm::Instruction::DUP1);
 	m_dataGas += singleByteDataGas();
 }
 
 bigint GasMeterVisitor::singleByteDataGas() const
 {
 	if (m_isCreation)
-		return zvmasm::GasCosts::txDataNonZeroGas;
+		return qrvmasm::GasCosts::txDataNonZeroGas;
 	else
-		return zvmasm::GasCosts::createDataGas;
+		return qrvmasm::GasCosts::createDataGas;
 }
 
-void GasMeterVisitor::instructionCostsInternal(zvmasm::Instruction _instruction)
+void GasMeterVisitor::instructionCostsInternal(qrvmasm::Instruction _instruction)
 {
-	if (_instruction == zvmasm::Instruction::EXP)
-		m_runGas += zvmasm::GasCosts::expGas + zvmasm::GasCosts::expByteGas;
-	else if (_instruction == zvmasm::Instruction::KECCAK256)
+	if (_instruction == qrvmasm::Instruction::EXP)
+		m_runGas += qrvmasm::GasCosts::expGas + qrvmasm::GasCosts::expByteGas;
+	else if (_instruction == qrvmasm::Instruction::KECCAK256)
 		// Assumes that Keccak-256 is computed on a single word (rounded up).
-		m_runGas += zvmasm::GasCosts::keccak256Gas + zvmasm::GasCosts::keccak256WordGas;
+		m_runGas += qrvmasm::GasCosts::keccak256Gas + qrvmasm::GasCosts::keccak256WordGas;
 	else
-		m_runGas += zvmasm::GasMeter::runGas(_instruction);
+		m_runGas += qrvmasm::GasMeter::runGas(_instruction);
 	m_dataGas += singleByteDataGas();
 }

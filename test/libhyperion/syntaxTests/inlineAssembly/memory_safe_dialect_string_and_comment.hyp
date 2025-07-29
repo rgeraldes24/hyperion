@@ -1,6 +1,6 @@
 function f() pure {
     /// @hyperion memory-safe-assembly
-    assembly "zvmasm" ("memory-safe") {
+    assembly "qrvmasm" ("memory-safe") {
     }
 }
 // ----

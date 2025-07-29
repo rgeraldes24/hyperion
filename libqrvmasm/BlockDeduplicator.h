@@ -33,7 +33,7 @@
 #include <functional>
 #include <map>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class AssemblyItem;

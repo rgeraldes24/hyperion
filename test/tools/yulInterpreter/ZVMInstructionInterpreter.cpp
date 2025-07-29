@@ -19,15 +19,15 @@
  * Yul interpreter module that evaluates QRVM instructions.
  */
 
-#include <test/tools/yulInterpreter/ZVMInstructionInterpreter.h>
+#include <test/tools/yulInterpreter/QRVMInstructionInterpreter.h>
 
 #include <test/tools/yulInterpreter/Interpreter.h>
 
-#include <libyul/backends/zvm/ZVMDialect.h>
+#include <libyul/backends/qrvm/QRVMDialect.h>
 #include <libyul/AST.h>
 
-#include <libzvmasm/Instruction.h>
-#include <libzvmasm/SemanticInformation.h>
+#include <libqrvmasm/Instruction.h>
+#include <libqrvmasm/SemanticInformation.h>
 
 #include <libhyputil/Keccak256.h>
 #include <libhyputil/Numeric.h>
@@ -36,7 +36,7 @@
 
 using namespace std;
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 using namespace hyperion::yul;
 using namespace hyperion::yul::test;
 
@@ -90,13 +90,13 @@ void copyZeroExtended(
 
 using u512 = boost::multiprecision::number<boost::multiprecision::cpp_int_backend<512, 256, boost::multiprecision::unsigned_magnitude, boost::multiprecision::unchecked, void>>;
 
-u256 ZVMInstructionInterpreter::eval(
-	zvmasm::Instruction _instruction,
+u256 QRVMInstructionInterpreter::eval(
+	qrvmasm::Instruction _instruction,
 	vector<u256> const& _arguments
 )
 {
-	using namespace hyperion::zvmasm;
-	using zvmasm::Instruction;
+	using namespace hyperion::qrvmasm;
+	using qrvmasm::Instruction;
 
 	auto info = instructionInfo(_instruction);
 	yulAssert(static_cast<size_t>(info.args) == _arguments.size(), "");
@@ -449,8 +449,8 @@ u256 ZVMInstructionInterpreter::eval(
 	return 0;
 }
 
-u256 ZVMInstructionInterpreter::evalBuiltin(
-	BuiltinFunctionForZVM const& _fun,
+u256 QRVMInstructionInterpreter::evalBuiltin(
+	BuiltinFunctionForQRVM const& _fun,
 	vector<Expression> const& _arguments,
 	vector<u256> const& _evaluatedArguments
 )
@@ -499,7 +499,7 @@ u256 ZVMInstructionInterpreter::evalBuiltin(
 }
 
 
-bool ZVMInstructionInterpreter::accessMemory(u256 const& _offset, u256 const& _size)
+bool QRVMInstructionInterpreter::accessMemory(u256 const& _offset, u256 const& _size)
 {
 	if (_size == 0)
 		return true;
@@ -517,7 +517,7 @@ bool ZVMInstructionInterpreter::accessMemory(u256 const& _offset, u256 const& _s
 	return false;
 }
 
-bytes ZVMInstructionInterpreter::readMemory(u256 const& _offset, u256 const& _size)
+bytes QRVMInstructionInterpreter::readMemory(u256 const& _offset, u256 const& _size)
 {
 	yulAssert(_size <= s_maxRangeSize, "Too large read.");
 	bytes data(size_t(_size), uint8_t(0));
@@ -526,33 +526,33 @@ bytes ZVMInstructionInterpreter::readMemory(u256 const& _offset, u256 const& _si
 	return data;
 }
 
-u256 ZVMInstructionInterpreter::readMemoryWord(u256 const& _offset)
+u256 QRVMInstructionInterpreter::readMemoryWord(u256 const& _offset)
 {
 	return u256(h256(m_state.readMemory(_offset, 32)));
 }
 
-void ZVMInstructionInterpreter::writeMemoryWord(u256 const& _offset, u256 const& _value)
+void QRVMInstructionInterpreter::writeMemoryWord(u256 const& _offset, u256 const& _value)
 {
 	for (size_t i = 0; i < 32; i++)
 		m_state.memory[_offset + i] = uint8_t((_value >> (8 * (31 - i))) & 0xff);
 }
 
 
-void ZVMInstructionInterpreter::logTrace(
-	zvmasm::Instruction _instruction,
+void QRVMInstructionInterpreter::logTrace(
+	qrvmasm::Instruction _instruction,
 	std::vector<u256> const& _arguments,
 	bytes const& _data
 )
 {
 	logTrace(
-		zvmasm::instructionInfo(_instruction).name,
+		qrvmasm::instructionInfo(_instruction).name,
 		SemanticInformation::memory(_instruction) == SemanticInformation::Effect::Write,
 		_arguments,
 		_data
 	);
 }
 
-void ZVMInstructionInterpreter::logTrace(
+void QRVMInstructionInterpreter::logTrace(
 	std::string const& _pseudoInstruction,
 	bool _writesToMemory,
 	std::vector<u256> const& _arguments,
@@ -581,7 +581,7 @@ void ZVMInstructionInterpreter::logTrace(
 	}
 }
 
-std::pair<bool, size_t> ZVMInstructionInterpreter::isInputMemoryPtrModified(
+std::pair<bool, size_t> QRVMInstructionInterpreter::isInputMemoryPtrModified(
 	std::string const& _pseudoInstruction,
 	std::vector<u256> const& _arguments
 )

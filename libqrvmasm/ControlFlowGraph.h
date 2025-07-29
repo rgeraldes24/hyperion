@@ -26,13 +26,13 @@
 
 #include <libhyputil/Common.h>
 #include <libhyputil/Assertions.h>
-#include <libzvmasm/ExpressionClasses.h>
+#include <libqrvmasm/ExpressionClasses.h>
 
 #include <vector>
 #include <memory>
 #include <limits>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class KnownState;

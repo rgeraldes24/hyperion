@@ -130,7 +130,7 @@
                 {
                   "attributes":
                   {
-                    "zvmVersion": %QRVMVERSION%,
+                    "qrvmVersion": %QRVMVERSION%,
                     "externalReferences":
                     [
                       {

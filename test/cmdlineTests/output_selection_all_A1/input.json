@@ -9,7 +9,7 @@
   }
  },
  "settings": {
-  "zvmVersion": "shanghai",
+  "qrvmVersion": "shanghai",
   "outputSelection": {
    "*": {
     "A1": [

@@ -20,7 +20,7 @@
 
 #include <test/TestCaseReader.h>
 
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
 #include <boost/filesystem.hpp>
 
@@ -38,7 +38,7 @@ public:
 	struct Config
 	{
 		std::string filename;
-		langutil::ZVMVersion zvmVersion;
+		langutil::QRVMVersion qrvmVersion;
 		std::vector<boost::filesystem::path> vmPaths;
 		bool enforceGasCost = false;
 		u256 enforceGasCostMinValue;
@@ -109,10 +109,10 @@ protected:
 	bool m_shouldRun = true;
 };
 
-class ZVMVersionRestrictedTestCase: public TestCase
+class QRVMVersionRestrictedTestCase: public TestCase
 {
 protected:
-	ZVMVersionRestrictedTestCase(std::string const& _filename);
+	QRVMVersionRestrictedTestCase(std::string const& _filename);
 };
 
 }

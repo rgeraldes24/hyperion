@@ -22,12 +22,12 @@
 
 #pragma once
 
-#include <libzvmasm/Exceptions.h>
+#include <libqrvmasm/Exceptions.h>
 #include <libhyputil/Common.h>
 #include <libhyputil/Assertions.h>
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 /// Virtual machine bytecode instruction.

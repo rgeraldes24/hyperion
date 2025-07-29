@@ -1,7 +1,7 @@
 contract C
 {
 	function f(address a, address b) public view {
-		uint x = b.balance + 1000 zond;
+		uint x = b.balance + 1000 quanta;
 		assert(a.balance > b.balance);
 	}
 }

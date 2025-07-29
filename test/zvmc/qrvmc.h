@@ -1,15 +1,15 @@
 /**
- * ZVMC: Zond Client-VM Connector API
+ * QRVMC: QRL Client-VM Connector API
  *
  * @copyright
- * Copyright 2016 The ZVMC Authors.
+ * Copyright 2016 The QRVMC Authors.
  * Licensed under the Apache License, Version 2.0.
  *
- * @defgroup ZVMC ZVMC
+ * @defgroup QRVMC QRVMC
  * @{
  */
-#ifndef ZVMC_H
-#define ZVMC_H
+#ifndef QRVMC_H
+#define QRVMC_H
 
 #if defined(__clang__) || (defined(__GNUC__) && __GNUC__ >= 6)
 /**
@@ -18,9 +18,9 @@
  * Available for clang and GCC 6+ compilers. The older GCC compilers know
  * this attribute, but it cannot be applied to enum elements.
  */
-#define ZVMC_DEPRECATED __attribute__((deprecated))
+#define QRVMC_DEPRECATED __attribute__((deprecated))
 #else
-#define ZVMC_DEPRECATED
+#define QRVMC_DEPRECATED
 #endif
 
 
@@ -37,14 +37,14 @@ extern "C" {
 enum
 {
     /**
-     * The ZVMC ABI version number of the interface declared in this file.
+     * The QRVMC ABI version number of the interface declared in this file.
      *
-     * The ZVMC ABI version always equals the major version number of the ZVMC project.
+     * The QRVMC ABI version always equals the major version number of the QRVMC project.
      * The Host SHOULD check if the ABI versions match when dynamically loading VMs.
      *
      * @see @ref versioning
      */
-    ZVMC_ABI_VERSION = 10
+    QRVMC_ABI_VERSION = 10
 };
 
 
@@ -62,29 +62,29 @@ typedef struct qrvmc_bytes32
 /**
  * The alias for qrvmc_bytes32 to represent a big-endian 256-bit integer.
  */
-typedef struct qrvmc_bytes32 zvmc_uint256be;
+typedef struct qrvmc_bytes32 qrvmc_uint256be;
 
 /** Big-endian 160-bit hash suitable for keeping an Ethereum address. */
-typedef struct zvmc_address
+typedef struct qrvmc_address
 {
     /** The 20 bytes of the hash. */
     uint8_t bytes[20];
-} zvmc_address;
+} qrvmc_address;
 
 /** The kind of call-like instruction. */
-enum zvmc_call_kind
+enum qrvmc_call_kind
 {
-    ZVMC_CALL = 0,         /**< Request CALL. */
-    ZVMC_DELEGATECALL = 1, /**< Request DELEGATECALL.
+    QRVMC_CALL = 0,         /**< Request CALL. */
+    QRVMC_DELEGATECALL = 1, /**< Request DELEGATECALL.
                                 The value param ignored. */
-    ZVMC_CREATE = 3,       /**< Request CREATE. */
-    ZVMC_CREATE2 = 4       /**< Request CREATE2. */
+    QRVMC_CREATE = 3,       /**< Request CREATE. */
+    QRVMC_CREATE2 = 4       /**< Request CREATE2. */
 };
 
-/** The flags for ::zvmc_message. */
-enum zvmc_flags
+/** The flags for ::qrvmc_message. */
+enum qrvmc_flags
 {
-    ZVMC_STATIC = 1 /**< Static call mode. */
+    QRVMC_STATIC = 1 /**< Static call mode. */
 };
 
 /**
@@ -92,14 +92,14 @@ enum zvmc_flags
  *
  * Most of the fields are modelled by the section 8. Message Call of the Ethereum Yellow Paper.
  */
-struct zvmc_message
+struct qrvmc_message
 {
-    /** The kind of the call. For zero-depth calls ::ZVMC_CALL SHOULD be used. */
-    enum zvmc_call_kind kind;
+    /** The kind of the call. For zero-depth calls ::QRVMC_CALL SHOULD be used. */
+    enum qrvmc_call_kind kind;
 
     /**
      * Additional flags modifying the call execution behavior.
-     * In the current version the only valid values are ::ZVMC_STATIC or 0.
+     * In the current version the only valid values are ::QRVMC_STATIC or 0.
      */
     uint32_t flags;
 
@@ -121,24 +121,24 @@ struct zvmc_message
      * The recipient of the message.
      *
      * This is the address of the account which storage/balance/nonce is going to be modified
-     * by the message execution. In case of ::ZVMC_CALL, this is also the account where the
-     * message value zvmc_message::value is going to be transferred.
-     * For ::ZVMC_DELEGATECALL, this may be different from
-     * the zvmc_message::code_address.
+     * by the message execution. In case of ::QRVMC_CALL, this is also the account where the
+     * message value qrvmc_message::value is going to be transferred.
+     * For ::QRVMC_DELEGATECALL, this may be different from
+     * the qrvmc_message::code_address.
      *
      * Defined as `r` in the Yellow Paper.
      */
-    zvmc_address recipient;
+    qrvmc_address recipient;
 
     /**
      * The sender of the message.
      *
      * The address of the sender of a message call defined as `s` in the Yellow Paper.
      * This must be the message recipient of the message at the previous (lower) depth,
-     * except for the ::ZVMC_DELEGATECALL where recipient is the 2 levels above the present depth.
+     * except for the ::QRVMC_DELEGATECALL where recipient is the 2 levels above the present depth.
      * At the depth 0 this must be the transaction origin.
      */
-    zvmc_address sender;
+    qrvmc_address sender;
 
     /**
      * The message input data.
@@ -159,56 +159,56 @@ struct zvmc_message
     /**
      * The amount of Zond transferred with the message.
      *
-     * This is transferred value for ::ZVMC_CALL or apparent value for ::ZVMC_DELEGATECALL.
+     * This is transferred value for ::QRVMC_CALL or apparent value for ::QRVMC_DELEGATECALL.
      * Defined as `v` or `v~` in the Yellow Paper.
      */
-    zvmc_uint256be value;
+    qrvmc_uint256be value;
 
     /**
      * The optional value used in new contract address construction.
      *
-     * Needed only for a Host to calculate created address when kind is ::ZVMC_CREATE2.
-     * Ignored in zvmc_execute_fn().
+     * Needed only for a Host to calculate created address when kind is ::QRVMC_CREATE2.
+     * Ignored in qrvmc_execute_fn().
      */
     qrvmc_bytes32 create2_salt;
 
     /**
      * The address of the code to be executed.
      *
-     * For ::ZVMC_DELEGATECALL this may be different from
-     * the zvmc_message::recipient.
-     * Not required when invoking zvmc_execute_fn(), only when invoking zvmc_call_fn().
-     * Ignored if kind is ::ZVMC_CREATE or ::ZVMC_CREATE2.
+     * For ::QRVMC_DELEGATECALL this may be different from
+     * the qrvmc_message::recipient.
+     * Not required when invoking qrvmc_execute_fn(), only when invoking qrvmc_call_fn().
+     * Ignored if kind is ::QRVMC_CREATE or ::QRVMC_CREATE2.
      *
-     * In case of ::ZVMC_CAPABILITY_PRECOMPILES implementation, this fields should be inspected
+     * In case of ::QRVMC_CAPABILITY_PRECOMPILES implementation, this fields should be inspected
      * to identify the requested precompile.
      *
      * Defined as `c` in the Yellow Paper.
      */
-    zvmc_address code_address;
+    qrvmc_address code_address;
 };
 
 
 /** The transaction and block data for execution. */
-struct zvmc_tx_context
+struct qrvmc_tx_context
 {
-    zvmc_uint256be tx_gas_price;      /**< The transaction gas price. */
-    zvmc_address tx_origin;           /**< The transaction origin account. */
-    zvmc_address block_coinbase;      /**< The miner of the block. */
+    qrvmc_uint256be tx_gas_price;      /**< The transaction gas price. */
+    qrvmc_address tx_origin;           /**< The transaction origin account. */
+    qrvmc_address block_coinbase;      /**< The miner of the block. */
     int64_t block_number;             /**< The block number. */
     int64_t block_timestamp;          /**< The block timestamp. */
     int64_t block_gas_limit;          /**< The block gas limit. */
-    zvmc_uint256be block_prev_randao; /**< The block previous RANDAO (EIP-4399). */
-    zvmc_uint256be chain_id;          /**< The blockchain's ChainID. */
-    zvmc_uint256be block_base_fee;    /**< The block base fee per gas (EIP-1559, EIP-3198). */
+    qrvmc_uint256be block_prev_randao; /**< The block previous RANDAO (EIP-4399). */
+    qrvmc_uint256be chain_id;          /**< The blockchain's ChainID. */
+    qrvmc_uint256be block_base_fee;    /**< The block base fee per gas (EIP-1559, EIP-3198). */
 };
 
 /**
- * @struct zvmc_host_context
+ * @struct qrvmc_host_context
  * The opaque data type representing the Host execution context.
- * @see zvmc_execute_fn().
+ * @see qrvmc_execute_fn().
  */
-struct zvmc_host_context;
+struct qrvmc_host_context;
 
 /**
  * Get transaction context callback function.
@@ -219,7 +219,7 @@ struct zvmc_host_context;
  *  @param      context  The pointer to the Host execution context.
  *  @return              The transaction context.
  */
-typedef struct zvmc_tx_context (*zvmc_get_tx_context_fn)(struct zvmc_host_context* context);
+typedef struct qrvmc_tx_context (*qrvmc_get_tx_context_fn)(struct qrvmc_host_context* context);
 
 /**
  * Get block hash callback function.
@@ -233,35 +233,35 @@ typedef struct zvmc_tx_context (*zvmc_get_tx_context_fn)(struct zvmc_host_contex
  * @return         The block hash or null bytes
  *                 if the information about the block is not available.
  */
-typedef qrvmc_bytes32 (*zvmc_get_block_hash_fn)(struct zvmc_host_context* context, int64_t number);
+typedef qrvmc_bytes32 (*qrvmc_get_block_hash_fn)(struct qrvmc_host_context* context, int64_t number);
 
 /**
  * The execution status code.
  *
- * Successful execution is represented by ::ZVMC_SUCCESS having value 0.
+ * Successful execution is represented by ::QRVMC_SUCCESS having value 0.
  *
  * Positive values represent failures defined by VM specifications with generic
- * ::ZVMC_FAILURE code of value 1.
+ * ::QRVMC_FAILURE code of value 1.
  *
  * Status codes with negative values represent VM internal errors
  * not provided by QRVM specifications. These errors MUST not be passed back
  * to the caller. They MAY be handled by the Client in predefined manner
- * (see e.g. ::ZVMC_REJECTED), otherwise internal errors are not recoverable.
- * The generic representant of errors is ::ZVMC_INTERNAL_ERROR but
+ * (see e.g. ::QRVMC_REJECTED), otherwise internal errors are not recoverable.
+ * The generic representant of errors is ::QRVMC_INTERNAL_ERROR but
  * a QRVM implementation MAY return negative status codes that are not defined
- * in the ZVMC documentation.
+ * in the QRVMC documentation.
  *
  * @note
  * In case new status codes are needed, please create an issue or pull request
- * in the ZVMC repository (https://github.com/theQRL/zvmc).
+ * in the QRVMC repository (https://github.com/theQRL/qrvmc).
  */
-enum zvmc_status_code
+enum qrvmc_status_code
 {
     /** Execution finished with success. */
-    ZVMC_SUCCESS = 0,
+    QRVMC_SUCCESS = 0,
 
     /** Generic execution failure. */
-    ZVMC_FAILURE = 1,
+    QRVMC_FAILURE = 1,
 
     /**
      * Execution terminated with REVERT opcode.
@@ -269,10 +269,10 @@ enum zvmc_status_code
      * In this case the amount of gas left MAY be non-zero and additional output
      * data MAY be provided in ::qrvmc_result.
      */
-    ZVMC_REVERT = 2,
+    QRVMC_REVERT = 2,
 
     /** The execution has run out of gas. */
-    ZVMC_OUT_OF_GAS = 3,
+    QRVMC_OUT_OF_GAS = 3,
 
     /**
      * The designated INVALID instruction has been hit during execution.
@@ -282,71 +282,71 @@ enum zvmc_status_code
      * abortion coming from high-level languages. This status code is reported
      * in case this INVALID instruction has been encountered.
      */
-    ZVMC_INVALID_INSTRUCTION = 4,
+    QRVMC_INVALID_INSTRUCTION = 4,
 
     /** An undefined instruction has been encountered. */
-    ZVMC_UNDEFINED_INSTRUCTION = 5,
+    QRVMC_UNDEFINED_INSTRUCTION = 5,
 
     /**
      * The execution has attempted to put more items on the QRVM stack
      * than the specified limit.
      */
-    ZVMC_STACK_OVERFLOW = 6,
+    QRVMC_STACK_OVERFLOW = 6,
 
     /** Execution of an opcode has required more items on the QRVM stack. */
-    ZVMC_STACK_UNDERFLOW = 7,
+    QRVMC_STACK_UNDERFLOW = 7,
 
     /** Execution has violated the jump destination restrictions. */
-    ZVMC_BAD_JUMP_DESTINATION = 8,
+    QRVMC_BAD_JUMP_DESTINATION = 8,
 
     /**
      * Tried to read outside memory bounds.
      *
      * An example is RETURNDATACOPY reading past the available buffer.
      */
-    ZVMC_INVALID_MEMORY_ACCESS = 9,
+    QRVMC_INVALID_MEMORY_ACCESS = 9,
 
     /** Call depth has exceeded the limit (if any) */
-    ZVMC_CALL_DEPTH_EXCEEDED = 10,
+    QRVMC_CALL_DEPTH_EXCEEDED = 10,
 
     /** Tried to execute an operation which is restricted in static mode. */
-    ZVMC_STATIC_MODE_VIOLATION = 11,
+    QRVMC_STATIC_MODE_VIOLATION = 11,
 
     /**
      * A call to a precompiled or system contract has ended with a failure.
      *
      * An example: elliptic curve functions handed invalid EC points.
      */
-    ZVMC_PRECOMPILE_FAILURE = 12,
+    QRVMC_PRECOMPILE_FAILURE = 12,
 
     /**
      * Contract validation has failed (e.g. due to QRVM 1.5 jump validity,
      * Casper's purity checker or zwasm contract rules).
      */
-    ZVMC_CONTRACT_VALIDATION_FAILURE = 13,
+    QRVMC_CONTRACT_VALIDATION_FAILURE = 13,
 
     /**
      * An argument to a state accessing method has a value outside of the
      * accepted range of values.
      */
-    ZVMC_ARGUMENT_OUT_OF_RANGE = 14,
+    QRVMC_ARGUMENT_OUT_OF_RANGE = 14,
 
     /**
      * A WebAssembly `unreachable` instruction has been hit during execution.
      */
-    ZVMC_WASM_UNREACHABLE_INSTRUCTION = 15,
+    QRVMC_WASM_UNREACHABLE_INSTRUCTION = 15,
 
     /**
      * A WebAssembly trap has been hit during execution. This can be for many
      * reasons, including division by zero, validation errors, etc.
      */
-    ZVMC_WASM_TRAP = 16,
+    QRVMC_WASM_TRAP = 16,
 
     /** The caller does not have enough funds for value transfer. */
-    ZVMC_INSUFFICIENT_BALANCE = 17,
+    QRVMC_INSUFFICIENT_BALANCE = 17,
 
     /** QRVM implementation generic internal error. */
-    ZVMC_INTERNAL_ERROR = -1,
+    QRVMC_INTERNAL_ERROR = -1,
 
     /**
      * The execution of the given code and/or message has been rejected
@@ -354,15 +354,15 @@ enum zvmc_status_code
      *
      * This error SHOULD be used to signal that the QRVM is not able to or
      * willing to execute the given code type or message.
-     * If a QRVM returns the ::ZVMC_REJECTED status code,
+     * If a QRVM returns the ::QRVMC_REJECTED status code,
      * the Client MAY try to execute it in other QRVM implementation.
      * For example, the Client tries running a code in the QRVM 1.5. If the
      * code is not supported there, the execution falls back to the QRVM 1.0.
      */
-    ZVMC_REJECTED = -2,
+    QRVMC_REJECTED = -2,
 
     /** The VM failed to allocate the amount of memory needed for execution. */
-    ZVMC_OUT_OF_MEMORY = -3
+    QRVMC_OUT_OF_MEMORY = -3
 };
 
 /* Forward declaration. */
@@ -384,18 +384,18 @@ struct qrvmc_result;
  * struct. Think of this as the best possible C language approximation to
  * passing objects by reference.
  */
-typedef void (*zvmc_release_result_fn)(const struct qrvmc_result* result);
+typedef void (*qrvmc_release_result_fn)(const struct qrvmc_result* result);
 
 /** The QRVM code execution result. */
 struct qrvmc_result
 {
     /** The execution status code. */
-    enum zvmc_status_code status_code;
+    enum qrvmc_status_code status_code;
 
     /**
      * The amount of gas left after the execution.
      *
-     * If qrvmc_result::status_code is neither ::ZVMC_SUCCESS nor ::ZVMC_REVERT
+     * If qrvmc_result::status_code is neither ::QRVMC_SUCCESS nor ::QRVMC_REVERT
      * the value MUST be 0.
      */
     int64_t gas_left;
@@ -404,7 +404,7 @@ struct qrvmc_result
      * The refunded gas accumulated from this execution and its sub-calls.
      *
      * The transaction gas refund limit is not applied.
-     * If qrvmc_result::status_code is other than ::ZVMC_SUCCESS the value MUST be 0.
+     * If qrvmc_result::status_code is other than ::QRVMC_SUCCESS the value MUST be 0.
      */
     int64_t gas_refund;
 
@@ -412,7 +412,7 @@ struct qrvmc_result
      * The reference to output data.
      *
      * The output contains data coming from RETURN opcode (iff qrvmc_result::code
-     * field is ::ZVMC_SUCCESS) or from REVERT opcode.
+     * field is ::QRVMC_SUCCESS) or from REVERT opcode.
      *
      * The memory containing the output data is owned by QRVM and has to be
      * freed with qrvmc_result::release().
@@ -448,17 +448,17 @@ struct qrvmc_result
      * It works similarly to C++ virtual destructor. Attaching the release
      * function to the result itself allows VM composition.
      */
-    zvmc_release_result_fn release;
+    qrvmc_release_result_fn release;
 
     /**
      * The address of the possibly created contract.
      *
      * The create address may be provided even though the contract creation has failed
-     * (qrvmc_result::status_code is not ::ZVMC_SUCCESS). This is useful in situations
+     * (qrvmc_result::status_code is not ::QRVMC_SUCCESS). This is useful in situations
      * when the address is observable, e.g. access to it remains warm.
      * In all other cases the address MUST be null bytes.
      */
-    zvmc_address create_address;
+    qrvmc_address create_address;
 
     /**
      * Reserved data that MAY be used by a qrvmc_result object creator.
@@ -467,7 +467,7 @@ struct qrvmc_result
      * 24 bytes of memory called "optional data" within qrvmc_result struct
      * to be optionally used by the qrvmc_result object creator.
      *
-     * @see zvmc_result_optional_data, zvmc_get_optional_data().
+     * @see qrvmc_result_optional_data, qrvmc_get_optional_data().
      *
      * Also extends the size of the qrvmc_result to 64 bytes (full cache line).
      */
@@ -484,7 +484,7 @@ struct qrvmc_result
  * @param address  The address of the account the query is about.
  * @return         true if exists, false otherwise.
  */
-typedef bool (*zvmc_account_exists_fn)(struct zvmc_host_context* context,
+typedef bool (*qrvmc_account_exists_fn)(struct qrvmc_host_context* context,
                                        const qrvmc_address address);
 
 /**
@@ -498,7 +498,7 @@ typedef bool (*zvmc_account_exists_fn)(struct zvmc_host_context* context,
  * @return         The storage value at the given storage key or null bytes
  *                 if the account does not exist.
  */
-typedef qrvmc_bytes32 (*zvmc_get_storage_fn)(struct zvmc_host_context* context,
+typedef qrvmc_bytes32 (*qrvmc_get_storage_fn)(struct qrvmc_host_context* context,
                                             const qrvmc_address address,
                                             const qrvmc_bytes32* key);
 
@@ -524,7 +524,7 @@ typedef qrvmc_bytes32 (*zvmc_get_storage_fn)(struct zvmc_host_context* context,
  * - EIP-2200: https://eips.ethereum.org/EIPS/eip-2200,
  * - EIP-1283: https://eips.ethereum.org/EIPS/eip-1283.
  */
-enum zvmc_storage_status
+enum qrvmc_storage_status
 {
     /**
      * The new/same value is assigned to the storage item without affecting the cost structure.
@@ -540,63 +540,63 @@ enum zvmc_storage_status
      * This is "catch all remaining" status. I.e. if all other statuses are correctly matched
      * this status should be assigned to all remaining cases.
      */
-    ZVMC_STORAGE_ASSIGNED = 0,
+    QRVMC_STORAGE_ASSIGNED = 0,
 
     /**
      * A new storage item is added by changing
      * the current clean zero to a nonzero value.
      * 0 -> 0 -> Z
      */
-    ZVMC_STORAGE_ADDED = 1,
+    QRVMC_STORAGE_ADDED = 1,
 
     /**
      * A storage item is deleted by changing
      * the current clean nonzero to the zero value.
      * X -> X -> 0
      */
-    ZVMC_STORAGE_DELETED = 2,
+    QRVMC_STORAGE_DELETED = 2,
 
     /**
      * A storage item is modified by changing
      * the current clean nonzero to other nonzero value.
      * X -> X -> Z
      */
-    ZVMC_STORAGE_MODIFIED = 3,
+    QRVMC_STORAGE_MODIFIED = 3,
 
     /**
      * A storage item is added by changing
      * the current dirty zero to a nonzero value other than the original value.
      * X -> 0 -> Z
      */
-    ZVMC_STORAGE_DELETED_ADDED = 4,
+    QRVMC_STORAGE_DELETED_ADDED = 4,
 
     /**
      * A storage item is deleted by changing
      * the current dirty nonzero to the zero value and the original value is not zero.
      * X -> Y -> 0
      */
-    ZVMC_STORAGE_MODIFIED_DELETED = 5,
+    QRVMC_STORAGE_MODIFIED_DELETED = 5,
 
     /**
      * A storage item is added by changing
      * the current dirty zero to the original value.
      * X -> 0 -> X
      */
-    ZVMC_STORAGE_DELETED_RESTORED = 6,
+    QRVMC_STORAGE_DELETED_RESTORED = 6,
 
     /**
      * A storage item is deleted by changing
      * the current dirty nonzero to the original zero value.
      * 0 -> Y -> 0
      */
-    ZVMC_STORAGE_ADDED_DELETED = 7,
+    QRVMC_STORAGE_ADDED_DELETED = 7,
 
     /**
      * A storage item is modified by changing
      * the current dirty nonzero to the original nonzero value other than the current value.
      * X -> Y -> X
      */
-    ZVMC_STORAGE_MODIFIED_RESTORED = 8
+    QRVMC_STORAGE_MODIFIED_RESTORED = 8
 };
 
 
@@ -606,7 +606,7 @@ enum zvmc_storage_status
  * This callback function is used by a VM to update the given account storage entry.
  * The VM MUST make sure that the account exists. This requirement is only a formality because
  * VM implementations only modify storage of the account of the current execution context
- * (i.e. referenced by zvmc_message::recipient).
+ * (i.e. referenced by qrvmc_message::recipient).
  *
  * @param context  The pointer to the Host execution context.
  * @param address  The address of the account.
@@ -614,7 +614,7 @@ enum zvmc_storage_status
  * @param value    The value to be stored.
  * @return         The effect on the storage item.
  */
-typedef enum zvmc_storage_status (*zvmc_set_storage_fn)(struct zvmc_host_context* context,
+typedef enum qrvmc_storage_status (*qrvmc_set_storage_fn)(struct qrvmc_host_context* context,
                                                         const qrvmc_address address,
                                                         const qrvmc_bytes32* key,
                                                         const qrvmc_bytes32* value);
@@ -628,7 +628,7 @@ typedef enum zvmc_storage_status (*zvmc_set_storage_fn)(struct zvmc_host_context
  * @param address  The address of the account.
  * @return         The balance of the given account or 0 if the account does not exist.
  */
-typedef zvmc_uint256be (*zvmc_get_balance_fn)(struct zvmc_host_context* context,
+typedef qrvmc_uint256be (*qrvmc_get_balance_fn)(struct qrvmc_host_context* context,
                                               const qrvmc_address address);
 
 /**
@@ -641,7 +641,7 @@ typedef zvmc_uint256be (*zvmc_get_balance_fn)(struct zvmc_host_context* context,
  * @param address  The address of the account.
  * @return         The size of the code in the account or 0 if the account does not exist.
  */
-typedef size_t (*zvmc_get_code_size_fn)(struct zvmc_host_context* context,
+typedef size_t (*qrvmc_get_code_size_fn)(struct qrvmc_host_context* context,
                                         const qrvmc_address address);
 
 /**
@@ -655,7 +655,7 @@ typedef size_t (*zvmc_get_code_size_fn)(struct zvmc_host_context* context,
  * @param address  The address of the account.
  * @return         The hash of the code in the account or null bytes if the account does not exist.
  */
-typedef qrvmc_bytes32 (*zvmc_get_code_hash_fn)(struct zvmc_host_context* context,
+typedef qrvmc_bytes32 (*qrvmc_get_code_hash_fn)(struct qrvmc_host_context* context,
                                               const qrvmc_address address);
 
 /**
@@ -667,7 +667,7 @@ typedef qrvmc_bytes32 (*zvmc_get_code_hash_fn)(struct zvmc_host_context* context
  * to the provided memory buffer up to the size of the buffer or the size of
  * the code, whichever is smaller.
  *
- * @param context      The pointer to the Host execution context. See ::zvmc_host_context.
+ * @param context      The pointer to the Host execution context. See ::qrvmc_host_context.
  * @param address      The address of the account.
  * @param code_offset  The offset of the code to copy.
  * @param buffer_data  The pointer to the memory buffer allocated by the QRVM
@@ -675,7 +675,7 @@ typedef qrvmc_bytes32 (*zvmc_get_code_hash_fn)(struct zvmc_host_context* context
  * @param buffer_size  The size of the memory buffer.
  * @return             The number of bytes copied to the buffer by the Client.
  */
-typedef size_t (*zvmc_copy_code_fn)(struct zvmc_host_context* context,
+typedef size_t (*qrvmc_copy_code_fn)(struct qrvmc_host_context* context,
                                     const qrvmc_address address,
                                     size_t code_offset,
                                     uint8_t* buffer_data,
@@ -687,14 +687,14 @@ typedef size_t (*zvmc_copy_code_fn)(struct zvmc_host_context* context,
  * This callback function is used by a QRVM to inform about a LOG that happened
  * during a QRVM bytecode execution.
  *
- * @param context       The pointer to the Host execution context. See ::zvmc_host_context.
+ * @param context       The pointer to the Host execution context. See ::qrvmc_host_context.
  * @param address       The address of the contract that generated the log.
  * @param data          The pointer to unindexed data attached to the log.
  * @param data_size     The length of the data.
  * @param topics        The pointer to the array of topics attached to the log.
  * @param topics_count  The number of the topics. Valid values are between 0 and 4 inclusively.
  */
-typedef void (*zvmc_emit_log_fn)(struct zvmc_host_context* context,
+typedef void (*qrvmc_emit_log_fn)(struct qrvmc_host_context* context,
                                  const qrvmc_address address,
                                  const uint8_t* data,
                                  size_t data_size,
@@ -704,17 +704,17 @@ typedef void (*zvmc_emit_log_fn)(struct zvmc_host_context* context,
 /**
  * Access status per EIP-2929: Gas cost increases for state access opcodes.
  */
-enum zvmc_access_status
+enum qrvmc_access_status
 {
     /**
      * The entry hasn't been accessed before – it's the first access.
      */
-    ZVMC_ACCESS_COLD = 0,
+    QRVMC_ACCESS_COLD = 0,
 
     /**
      * The entry is already in accessed_addresses or accessed_storage_keys.
      */
-    ZVMC_ACCESS_WARM = 1
+    QRVMC_ACCESS_WARM = 1
 };
 
 /**
@@ -725,10 +725,10 @@ enum zvmc_access_status
  *
  * @param context  The Host execution context.
  * @param address  The address of the account.
- * @return         ZVMC_ACCESS_WARM if accessed_addresses already contained the address
- *                 or ZVMC_ACCESS_COLD otherwise.
+ * @return         QRVMC_ACCESS_WARM if accessed_addresses already contained the address
+ *                 or QRVMC_ACCESS_COLD otherwise.
  */
-typedef enum zvmc_access_status (*zvmc_access_account_fn)(struct zvmc_host_context* context,
+typedef enum qrvmc_access_status (*qrvmc_access_account_fn)(struct qrvmc_host_context* context,
                                                           const qrvmc_address address);
 
 /**
@@ -740,10 +740,10 @@ typedef enum zvmc_access_status (*zvmc_access_account_fn)(struct zvmc_host_conte
  * @param context  The Host execution context.
  * @param address  The address of the account.
  * @param key      The index of the account's storage entry.
- * @return         ZVMC_ACCESS_WARM if accessed_storage_keys already contained the key
- *                 or ZVMC_ACCESS_COLD otherwise.
+ * @return         QRVMC_ACCESS_WARM if accessed_storage_keys already contained the key
+ *                 or QRVMC_ACCESS_COLD otherwise.
  */
-typedef enum zvmc_access_status (*zvmc_access_storage_fn)(struct zvmc_host_context* context,
+typedef enum qrvmc_access_status (*qrvmc_access_storage_fn)(struct qrvmc_host_context* context,
                                                           const qrvmc_address address,
                                                           const qrvmc_bytes32* key);
 
@@ -754,8 +754,8 @@ typedef enum zvmc_access_status (*zvmc_access_storage_fn)(struct zvmc_host_conte
  * @param msg      The call parameters.
  * @return         The result of the call.
  */
-typedef struct qrvmc_result (*zvmc_call_fn)(struct zvmc_host_context* context,
-                                           const struct zvmc_message* msg);
+typedef struct qrvmc_result (*qrvmc_call_fn)(struct qrvmc_host_context* context,
+                                           const struct qrvmc_message* msg);
 
 /**
  * The Host interface.
@@ -765,67 +765,67 @@ typedef struct qrvmc_result (*zvmc_call_fn)(struct zvmc_host_context* context,
  * Host implementations SHOULD create constant singletons of this (similarly
  * to vtables) to lower the maintenance and memory management cost.
  */
-struct zvmc_host_interface
+struct qrvmc_host_interface
 {
     /** Check account existence callback function. */
-    zvmc_account_exists_fn account_exists;
+    qrvmc_account_exists_fn account_exists;
 
     /** Get storage callback function. */
-    zvmc_get_storage_fn get_storage;
+    qrvmc_get_storage_fn get_storage;
 
     /** Set storage callback function. */
-    zvmc_set_storage_fn set_storage;
+    qrvmc_set_storage_fn set_storage;
 
     /** Get balance callback function. */
-    zvmc_get_balance_fn get_balance;
+    qrvmc_get_balance_fn get_balance;
 
     /** Get code size callback function. */
-    zvmc_get_code_size_fn get_code_size;
+    qrvmc_get_code_size_fn get_code_size;
 
     /** Get code hash callback function. */
-    zvmc_get_code_hash_fn get_code_hash;
+    qrvmc_get_code_hash_fn get_code_hash;
 
     /** Copy code callback function. */
-    zvmc_copy_code_fn copy_code;
+    qrvmc_copy_code_fn copy_code;
 
     /** Call callback function. */
-    zvmc_call_fn call;
+    qrvmc_call_fn call;
 
     /** Get transaction context callback function. */
-    zvmc_get_tx_context_fn get_tx_context;
+    qrvmc_get_tx_context_fn get_tx_context;
 
     /** Get block hash callback function. */
-    zvmc_get_block_hash_fn get_block_hash;
+    qrvmc_get_block_hash_fn get_block_hash;
 
     /** Emit log callback function. */
-    zvmc_emit_log_fn emit_log;
+    qrvmc_emit_log_fn emit_log;
 
     /** Access account callback function. */
-    zvmc_access_account_fn access_account;
+    qrvmc_access_account_fn access_account;
 
     /** Access storage callback function. */
-    zvmc_access_storage_fn access_storage;
+    qrvmc_access_storage_fn access_storage;
 };
 
 
 /* Forward declaration. */
-struct zvmc_vm;
+struct qrvmc_vm;
 
 /**
  * Destroys the VM instance.
  *
  * @param vm  The VM instance to be destroyed.
  */
-typedef void (*zvmc_destroy_fn)(struct zvmc_vm* vm);
+typedef void (*qrvmc_destroy_fn)(struct qrvmc_vm* vm);
 
 /**
- * Possible outcomes of zvmc_set_option.
+ * Possible outcomes of qrvmc_set_option.
  */
-enum zvmc_set_option_result
+enum qrvmc_set_option_result
 {
-    ZVMC_SET_OPTION_SUCCESS = 0,
-    ZVMC_SET_OPTION_INVALID_NAME = 1,
-    ZVMC_SET_OPTION_INVALID_VALUE = 2
+    QRVMC_SET_OPTION_SUCCESS = 0,
+    QRVMC_SET_OPTION_INVALID_NAME = 1,
+    QRVMC_SET_OPTION_INVALID_VALUE = 2
 };
 
 /**
@@ -841,7 +841,7 @@ enum zvmc_set_option_result
  * @param value  The new option value. NULL-terminated string. Cannot be NULL.
  * @return       The outcome of the operation.
  */
-typedef enum zvmc_set_option_result (*zvmc_set_option_fn)(struct zvmc_vm* vm,
+typedef enum qrvmc_set_option_result (*qrvmc_set_option_fn)(struct qrvmc_vm* vm,
                                                           char const* name,
                                                           char const* value);
 
@@ -852,24 +852,24 @@ typedef enum zvmc_set_option_result (*zvmc_set_option_fn)(struct zvmc_vm* vm,
  * The revision of the QRVM specification based on the Ethereum
  * upgrade / hard fork codenames.
  */
-enum zvmc_revision
+enum qrvmc_revision
 {
     /**
      * The Shanghai revision.
      *
      * The one Zond launched with.
      */
-    ZVMC_SHANGHAI = 11,
+    QRVMC_SHANGHAI = 11,
 
     /** The maximum QRVM revision supported. */
-    ZVMC_MAX_REVISION = ZVMC_SHANGHAI,
+    QRVMC_MAX_REVISION = QRVMC_SHANGHAI,
 
     /**
      * The latest known QRVM revision with finalized specification.
      *
      * This is handy for QRVM tools to always use the latest revision available.
      */
-    ZVMC_LATEST_STABLE_REVISION = ZVMC_SHANGHAI
+    QRVMC_LATEST_STABLE_REVISION = QRVMC_SHANGHAI
 };
 
 
@@ -880,39 +880,39 @@ enum zvmc_revision
  *
  * @param vm         The VM instance. This argument MUST NOT be NULL.
  * @param host       The Host interface. This argument MUST NOT be NULL unless
- *                   the @p vm has the ::ZVMC_CAPABILITY_PRECOMPILES capability.
+ *                   the @p vm has the ::QRVMC_CAPABILITY_PRECOMPILES capability.
  * @param context    The opaque pointer to the Host execution context.
  *                   This argument MAY be NULL. The VM MUST pass the same
  *                   pointer to the methods of the @p host interface.
  *                   The VM MUST NOT dereference the pointer.
  * @param rev        The requested QRVM specification revision.
- * @param msg        The call parameters. See ::zvmc_message. This argument MUST NOT be NULL.
+ * @param msg        The call parameters. See ::qrvmc_message. This argument MUST NOT be NULL.
  * @param code       The reference to the code to be executed. This argument MAY be NULL.
  * @param code_size  The length of the code. If @p code is NULL this argument MUST be 0.
  * @return           The execution result.
  */
-typedef struct qrvmc_result (*zvmc_execute_fn)(struct zvmc_vm* vm,
-                                              const struct zvmc_host_interface* host,
-                                              struct zvmc_host_context* context,
-                                              enum zvmc_revision rev,
-                                              const struct zvmc_message* msg,
+typedef struct qrvmc_result (*qrvmc_execute_fn)(struct qrvmc_vm* vm,
+                                              const struct qrvmc_host_interface* host,
+                                              struct qrvmc_host_context* context,
+                                              enum qrvmc_revision rev,
+                                              const struct qrvmc_message* msg,
                                               uint8_t const* code,
                                               size_t code_size);
 
 /**
  * Possible capabilities of a VM.
  */
-enum zvmc_capabilities
+enum qrvmc_capabilities
 {
     /**
-     * The VM is capable of executing ZVM1 bytecode.
+     * The VM is capable of executing QRVM1 bytecode.
      */
-    ZVMC_CAPABILITY_ZVM1 = (1u << 0),
+    QRVMC_CAPABILITY_QRVM1 = (1u << 0),
 
     /**
      * The VM is capable of executing zwasm bytecode.
      */
-    ZVMC_CAPABILITY_ZWASM = (1u << 1),
+    QRVMC_CAPABILITY_ZWASM = (1u << 1),
 
     /**
      * The VM is capable of executing the precompiled contracts
@@ -924,26 +924,26 @@ enum zvmc_capabilities
      *
      * This capability is **experimental** and MAY be removed without notice.
      */
-    ZVMC_CAPABILITY_PRECOMPILES = (1u << 2)
+    QRVMC_CAPABILITY_PRECOMPILES = (1u << 2)
 };
 
 /**
- * Alias for unsigned integer representing a set of bit flags of ZVMC capabilities.
+ * Alias for unsigned integer representing a set of bit flags of QRVMC capabilities.
  *
- * @see zvmc_capabilities
+ * @see qrvmc_capabilities
  */
-typedef uint32_t zvmc_capabilities_flagset;
+typedef uint32_t qrvmc_capabilities_flagset;
 
 /**
  * Return the supported capabilities of the VM instance.
  *
  * This function MAY be invoked multiple times for a single VM instance,
- * and its value MAY be influenced by calls to zvmc_vm::set_option.
+ * and its value MAY be influenced by calls to qrvmc_vm::set_option.
  *
  * @param vm  The VM instance.
- * @return    The supported capabilities of the VM. @see zvmc_capabilities.
+ * @return    The supported capabilities of the VM. @see qrvmc_capabilities.
  */
-typedef zvmc_capabilities_flagset (*zvmc_get_capabilities_fn)(struct zvmc_vm* vm);
+typedef qrvmc_capabilities_flagset (*qrvmc_get_capabilities_fn)(struct qrvmc_vm* vm);
 
 
 /**
@@ -951,18 +951,18 @@ typedef zvmc_capabilities_flagset (*zvmc_get_capabilities_fn)(struct zvmc_vm* vm
  *
  * Defines the base struct of the VM implementation.
  */
-struct zvmc_vm
+struct qrvmc_vm
 {
     /**
-     * ZVMC ABI version implemented by the VM instance.
+     * QRVMC ABI version implemented by the VM instance.
      *
      * Can be used to detect ABI incompatibilities.
-     * The ZVMC ABI version represented by this file is in ::ZVMC_ABI_VERSION.
+     * The QRVMC ABI version represented by this file is in ::QRVMC_ABI_VERSION.
      */
     const int abi_version;
 
     /**
-     * The name of the ZVMC VM implementation.
+     * The name of the QRVMC VM implementation.
      *
      * It MUST be a NULL-terminated not empty string.
      * The content MUST be UTF-8 encoded (this implies ASCII encoding is also allowed).
@@ -970,7 +970,7 @@ struct zvmc_vm
     const char* name;
 
     /**
-     * The version of the ZVMC VM implementation, e.g. "1.2.3b4".
+     * The version of the QRVMC VM implementation, e.g. "1.2.3b4".
      *
      * It MUST be a NULL-terminated not empty string.
      * The content MUST be UTF-8 encoded (this implies ASCII encoding is also allowed).
@@ -982,14 +982,14 @@ struct zvmc_vm
      *
      * This is a mandatory method and MUST NOT be set to NULL.
      */
-    zvmc_destroy_fn destroy;
+    qrvmc_destroy_fn destroy;
 
     /**
      * Pointer to function executing a code by the VM instance.
      *
      * This is a mandatory method and MUST NOT be set to NULL.
      */
-    zvmc_execute_fn execute;
+    qrvmc_execute_fn execute;
 
     /**
      * A method returning capabilities supported by the VM instance.
@@ -1001,24 +1001,24 @@ struct zvmc_vm
      *
      * This is a mandatory method and MUST NOT be set to NULL.
      */
-    zvmc_get_capabilities_fn get_capabilities;
+    qrvmc_get_capabilities_fn get_capabilities;
 
     /**
      * Optional pointer to function modifying VM's options.
      *
      * If the VM does not support this feature the pointer can be NULL.
      */
-    zvmc_set_option_fn set_option;
+    qrvmc_set_option_fn set_option;
 };
 
 /* END Python CFFI declarations */
 
-#ifdef ZVMC_DOCUMENTATION
+#ifdef QRVMC_DOCUMENTATION
 /**
  * Example of a function creating an instance of an example QRVM implementation.
  *
  * Each QRVM implementation MUST provide a function returning a QRVM instance.
- * The function SHOULD be named `zvmc_create_<vm-name>(void)`. If the VM name contains hyphens
+ * The function SHOULD be named `qrvmc_create_<vm-name>(void)`. If the VM name contains hyphens
  * replaces them with underscores in the function names.
  *
  * @par Binaries naming convention
@@ -1029,7 +1029,7 @@ struct zvmc_vm
  *
  * @return  The VM instance or NULL indicating instance creation failure.
  */
-struct zvmc_vm* zvmc_create_example_vm(void);
+struct qrvmc_vm* qrvmc_create_example_vm(void);
 #endif
 
 #ifdef __cplusplus

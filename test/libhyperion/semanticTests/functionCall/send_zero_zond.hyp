@@ -1,5 +1,5 @@
-// Sending zero zond to a contract should still invoke the receive zond function
-// (it previously did not because the gas stipend was not provided by the ZVM)
+// Sending zero quanta to a contract should still invoke the receive quanta function
+// (it previously did not because the gas stipend was not provided by the QRVM)
 contract Receiver {
     receive() external payable {}
 }

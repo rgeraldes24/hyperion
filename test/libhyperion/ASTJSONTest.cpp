@@ -79,7 +79,7 @@ void replaceVersionWithTag(std::string& _input)
 {
 	boost::algorithm::replace_all(
 		_input,
-		"\"" + hyperion::test::CommonOptions::get().zvmVersion().name() + "\"",
+		"\"" + hyperion::test::CommonOptions::get().qrvmVersion().name() + "\"",
 		"%QRVMVERSION%"
 	);
 }
@@ -89,7 +89,7 @@ void replaceTagWithVersion(std::string& _input)
 	boost::algorithm::replace_all(
 		_input,
 		"%QRVMVERSION%",
-		"\"" + hyperion::test::CommonOptions::get().zvmVersion().name() + "\""
+		"\"" + hyperion::test::CommonOptions::get().qrvmVersion().name() + "\""
 	);
 }
 
@@ -182,7 +182,7 @@ void ASTJSONTest::validateTestConfiguration() const
 }
 
 ASTJSONTest::ASTJSONTest(std::string const& _filename):
-	ZVMVersionRestrictedTestCase(_filename)
+	QRVMVersionRestrictedTestCase(_filename)
 {
 	if (!boost::algorithm::ends_with(_filename, ".hyp"))
 		BOOST_THROW_EXCEPTION(std::runtime_error("Invalid test contract file name: \"" + _filename + "\"."));
@@ -210,7 +210,7 @@ TestCase::TestResult ASTJSONTest::run(std::ostream& _stream, std::string const& 
 	{
 		c.reset();
 		c.setSources(sources);
-		c.setZVMVersion(hyperion::test::CommonOptions::get().zvmVersion());
+		c.setQRVMVersion(hyperion::test::CommonOptions::get().qrvmVersion());
 
 		if (!c.parseAndAnalyze(variant.stopAfter))
 		{

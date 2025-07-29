@@ -32,16 +32,16 @@
 #include <vector>
 #include <libhyputil/CommonIO.h>
 #include <libhyputil/Exceptions.h>
-#include <libzvmasm/ExpressionClasses.h>
-#include <libzvmasm/SemanticInformation.h>
-#include <libzvmasm/KnownState.h>
+#include <libqrvmasm/ExpressionClasses.h>
+#include <libqrvmasm/SemanticInformation.h>
+#include <libqrvmasm/KnownState.h>
 
 namespace langutil
 {
 struct SourceLocation;
 }
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class AssemblyItem;

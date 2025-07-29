@@ -4,8 +4,8 @@ set(sources
 	Assembly.h
 	AssemblyItem.cpp
 	AssemblyItem.h
-	ZVMAssemblyStack.cpp
-	ZVMAssemblyStack.h
+	QRVMAssemblyStack.cpp
+	QRVMAssemblyStack.h
 	BlockDeduplicator.cpp
 	BlockDeduplicator.h
 	CommonSubexpressionEliminator.cpp
@@ -42,5 +42,5 @@ set(sources
 	SimplificationRules.h
 )
 
-add_library(zvmasm ${sources})
-target_link_libraries(zvmasm PUBLIC hyputil fmt::fmt-header-only)
+add_library(qrvmasm ${sources})
+target_link_libraries(qrvmasm PUBLIC hyputil fmt::fmt-header-only)

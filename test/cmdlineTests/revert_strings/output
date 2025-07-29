@@ -29,7 +29,7 @@ object "C_15" {
             mstore(pos, 33)
             pos := add(pos, 0x20)
 
-            mstore(add(pos, 0), "Zond sent to non-payable functio")
+            mstore(add(pos, 0), "Quanta sent to non-payable functio")
 
             mstore(add(pos, 32), "n")
 
@@ -89,7 +89,7 @@ object "C_15" {
                 mstore(pos, 33)
                 pos := add(pos, 0x20)
 
-                mstore(add(pos, 0), "Zond sent to non-payable functio")
+                mstore(add(pos, 0), "Quanta sent to non-payable functio")
 
                 mstore(add(pos, 32), "n")
 

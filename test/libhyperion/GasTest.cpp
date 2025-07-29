@@ -116,7 +116,7 @@ void GasTest::setupCompiler(CompilerStack& _compiler)
 
 	// Intentionally ignoring QRVM version specified on the command line.
 	// Gas expectations are only valid for the default version.
-	_compiler.setZVMVersion(ZVMVersion{});
+	_compiler.setQRVMVersion(QRVMVersion{});
 }
 
 TestCase::TestResult GasTest::run(std::ostream& _stream, std::string const& _linePrefix, bool _formatted)

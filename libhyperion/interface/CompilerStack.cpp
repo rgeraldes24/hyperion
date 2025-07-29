@@ -227,7 +227,7 @@ void CompilerStack::setViaIR(bool _viaIR)
 	m_viaIR = _viaIR;
 }
 
-void CompilerStack::setZVMVersion(langutil::ZVMVersion _version)
+void CompilerStack::setQRVMVersion(langutil::QRVMVersion _version)
 {
 	if (m_stackState >= ParsedAndImported)
 		hypThrow(CompilerError, "Must set QRVM version before parsing.");
@@ -309,7 +309,7 @@ void CompilerStack::reset(bool _keepSettings)
 		m_importRemapper.clear();
 		m_libraries.clear();
 		m_viaIR = false;
-		m_qrvmVersion = langutil::ZVMVersion();
+		m_qrvmVersion = langutil::QRVMVersion();
 		m_modelCheckerSettings = ModelCheckerSettings{};
 		m_generateIR = false;
 		m_revertStrings = RevertStrings::Default;
@@ -714,10 +714,10 @@ bool CompilerStack::compile(State _stopAfter)
 					{
 						if (m_viaIR || m_generateIR)
 							generateIR(*contract);
-						if (m_generateZvmBytecode)
+						if (m_generateQrvmBytecode)
 						{
 							if (m_viaIR)
-								generateZVMFromIR(*contract);
+								generateQRVMFromIR(*contract);
 							else
 							{
 								if (m_experimentalAnalysis)
@@ -795,22 +795,22 @@ std::string const CompilerStack::lastContractName(std::optional<std::string> con
 	return contractName;
 }
 
-zvmasm::AssemblyItems const* CompilerStack::assemblyItems(std::string const& _contractName) const
+qrvmasm::AssemblyItems const* CompilerStack::assemblyItems(std::string const& _contractName) const
 {
 	if (m_stackState != CompilationSuccessful)
 		hypThrow(CompilerError, "Compilation was not successful.");
 
 	Contract const& currentContract = contract(_contractName);
-	return currentContract.zvmAssembly ? &currentContract.zvmAssembly->items() : nullptr;
+	return currentContract.qrvmAssembly ? &currentContract.qrvmAssembly->items() : nullptr;
 }
 
-zvmasm::AssemblyItems const* CompilerStack::runtimeAssemblyItems(std::string const& _contractName) const
+qrvmasm::AssemblyItems const* CompilerStack::runtimeAssemblyItems(std::string const& _contractName) const
 {
 	if (m_stackState != CompilationSuccessful)
 		hypThrow(CompilerError, "Compilation was not successful.");
 
 	Contract const& currentContract = contract(_contractName);
-	return currentContract.zvmRuntimeAssembly ? &currentContract.zvmRuntimeAssembly->items() : nullptr;
+	return currentContract.qrvmRuntimeAssembly ? &currentContract.qrvmRuntimeAssembly->items() : nullptr;
 }
 
 Json::Value CompilerStack::generatedSources(std::string const& _contractName, bool _runtime) const
@@ -841,7 +841,7 @@ Json::Value CompilerStack::generatedSources(std::string const& _contractName, bo
 				ErrorList errors;
 				ErrorReporter errorReporter(errors);
 				CharStream charStream(source, sourceName);
-				yul::ZVMDialect const& dialect = yul::ZVMDialect::strictAssemblyForZVM(m_qrvmVersion);
+				yul::QRVMDialect const& dialect = yul::QRVMDialect::strictAssemblyForQRVM(m_qrvmVersion);
 				std::shared_ptr<yul::Block> parserResult = yul::Parser{errorReporter, dialect}.parse(charStream);
 				hypAssert(parserResult, "");
 				sources[0]["ast"] = yul::AsmJsonConverter{sourceIndex}(*parserResult);
@@ -864,7 +864,7 @@ std::string const* CompilerStack::sourceMapping(std::string const& _contractName
 	if (!c.sourceMapping)
 	{
 		if (auto items = assemblyItems(_contractName))
-			c.sourceMapping.emplace(zvmasm::AssemblyItem::computeSourceMapping(*items, sourceIndices()));
+			c.sourceMapping.emplace(qrvmasm::AssemblyItem::computeSourceMapping(*items, sourceIndices()));
 	}
 	return c.sourceMapping ? &*c.sourceMapping : nullptr;
 }
@@ -879,7 +879,7 @@ std::string const* CompilerStack::runtimeSourceMapping(std::string const& _contr
 	{
 		if (auto items = runtimeAssemblyItems(_contractName))
 			c.runtimeSourceMapping.emplace(
-				zvmasm::AssemblyItem::computeSourceMapping(*items, sourceIndices())
+				qrvmasm::AssemblyItem::computeSourceMapping(*items, sourceIndices())
 			);
 	}
 	return c.runtimeSourceMapping ? &*c.runtimeSourceMapping : nullptr;
@@ -941,7 +941,7 @@ Json::Value const& CompilerStack::yulIROptimizedAst(std::string const& _contract
 	return contract(_contractName).yulIROptimizedAst;
 }
 
-zvmasm::LinkerObject const& CompilerStack::object(std::string const& _contractName) const
+qrvmasm::LinkerObject const& CompilerStack::object(std::string const& _contractName) const
 {
 	if (m_stackState != CompilationSuccessful)
 		hypThrow(CompilerError, "Compilation was not successful.");
@@ -949,7 +949,7 @@ zvmasm::LinkerObject const& CompilerStack::object(std::string const& _contractNa
 	return contract(_contractName).object;
 }
 
-zvmasm::LinkerObject const& CompilerStack::runtimeObject(std::string const& _contractName) const
+qrvmasm::LinkerObject const& CompilerStack::runtimeObject(std::string const& _contractName) const
 {
 	if (m_stackState != CompilationSuccessful)
 		hypThrow(CompilerError, "Compilation was not successful.");
@@ -964,8 +964,8 @@ std::string CompilerStack::assemblyString(std::string const& _contractName, Stri
 		hypThrow(CompilerError, "Compilation was not successful.");
 
 	Contract const& currentContract = contract(_contractName);
-	if (currentContract.zvmAssembly)
-		return currentContract.zvmAssembly->assemblyString(m_debugInfoSelection, _sourceCodes);
+	if (currentContract.qrvmAssembly)
+		return currentContract.qrvmAssembly->assemblyString(m_debugInfoSelection, _sourceCodes);
 	else
 		return std::string();
 }
@@ -977,8 +977,8 @@ Json::Value CompilerStack::assemblyJSON(std::string const& _contractName) const
 		hypThrow(CompilerError, "Compilation was not successful.");
 
 	Contract const& currentContract = contract(_contractName);
-	if (currentContract.zvmAssembly)
-		return currentContract.zvmAssembly->assemblyJSON(sourceIndices());
+	if (currentContract.qrvmAssembly)
+		return currentContract.qrvmAssembly->assemblyJSON(sourceIndices());
 	else
 		return Json::Value();
 }
@@ -1343,35 +1343,35 @@ bool onlySafeExperimentalFeaturesActivated(std::set<ExperimentalFeature> const& 
 
 void CompilerStack::assembleYul(
 	ContractDefinition const& _contract,
-	std::shared_ptr<zvmasm::Assembly> _assembly,
-	std::shared_ptr<zvmasm::Assembly> _runtimeAssembly
+	std::shared_ptr<qrvmasm::Assembly> _assembly,
+	std::shared_ptr<qrvmasm::Assembly> _runtimeAssembly
 )
 {
 	hypAssert(m_stackState >= AnalysisSuccessful, "");
 
 	Contract& compiledContract = m_contracts.at(_contract.fullyQualifiedName());
 
-	compiledContract.zvmAssembly = _assembly;
-	hypAssert(compiledContract.zvmAssembly, "");
+	compiledContract.qrvmAssembly = _assembly;
+	hypAssert(compiledContract.qrvmAssembly, "");
 	try
 	{
 		// Assemble deployment (incl. runtime)  object.
-		compiledContract.object = compiledContract.zvmAssembly->assemble();
+		compiledContract.object = compiledContract.qrvmAssembly->assemble();
 	}
-	catch (zvmasm::AssemblyException const&)
+	catch (qrvmasm::AssemblyException const&)
 	{
 		hypAssert(false, "Assembly exception for bytecode");
 	}
 	hypAssert(compiledContract.object.immutableReferences.empty(), "Leftover immutables.");
 
-	compiledContract.zvmRuntimeAssembly = _runtimeAssembly;
-	hypAssert(compiledContract.zvmRuntimeAssembly, "");
+	compiledContract.qrvmRuntimeAssembly = _runtimeAssembly;
+	hypAssert(compiledContract.qrvmRuntimeAssembly, "");
 	try
 	{
 		// Assemble runtime object.
-		compiledContract.runtimeObject = compiledContract.zvmRuntimeAssembly->assemble();
+		compiledContract.runtimeObject = compiledContract.qrvmRuntimeAssembly->assemble();
 	}
-	catch (zvmasm::AssemblyException const&)
+	catch (qrvmasm::AssemblyException const&)
 	{
 		hypAssert(false, "Assembly exception for deployed bytecode");
 	}
@@ -1441,7 +1441,7 @@ void CompilerStack::compileContract(
 		// Run optimiser and compile the contract.
 		compiler->compileContract(_contract, _otherCompilers, cborEncodedMetadata);
 	}
-	catch(zvmasm::OptimizerException const&)
+	catch(qrvmasm::OptimizerException const&)
 	{
 		hypAssert(false, "Optimizer exception during compilation");
 	}
@@ -1515,7 +1515,7 @@ void CompilerStack::generateIR(ContractDefinition const& _contract)
 	compiledContract.yulIROptimizedAst = stack.astJson();
 }
 
-void CompilerStack::generateZVMFromIR(ContractDefinition const& _contract)
+void CompilerStack::generateQRVMFromIR(ContractDefinition const& _contract)
 {
 	hypAssert(m_stackState >= AnalysisSuccessful, "");
 
@@ -1541,8 +1541,8 @@ void CompilerStack::generateZVMFromIR(ContractDefinition const& _contract)
 
 	std::string deployedName = IRNames::deployedObject(_contract);
 	hypAssert(!deployedName.empty(), "");
-	tie(compiledContract.zvmAssembly, compiledContract.zvmRuntimeAssembly) = stack.assembleZVMWithDeployed(deployedName);
-	assembleYul(_contract, compiledContract.zvmAssembly, compiledContract.zvmRuntimeAssembly);
+	tie(compiledContract.qrvmAssembly, compiledContract.qrvmRuntimeAssembly) = stack.assembleQRVMWithDeployed(deployedName);
+	assembleYul(_contract, compiledContract.qrvmAssembly, compiledContract.qrvmRuntimeAssembly);
 }
 
 CompilerStack::Contract const& CompilerStack::contract(std::string const& _contractName) const
@@ -1692,7 +1692,7 @@ std::string CompilerStack::createMetadata(Contract const& _contract, bool _forIR
 
 	if (_forIR)
 		meta["settings"]["viaIR"] = _forIR;
-	meta["settings"]["zvmVersion"] = m_qrvmVersion.name();
+	meta["settings"]["qrvmVersion"] = m_qrvmVersion.name();
 	meta["settings"]["compilationTarget"][_contract.contract->sourceUnitName()] =
 		*_contract.contract->annotation().canonicalName;
 
@@ -1857,10 +1857,10 @@ Json::Value CompilerStack::gasEstimates(std::string const& _contractName) const
 	GasEstimator gasEstimator(m_qrvmVersion);
 	Json::Value output(Json::objectValue);
 
-	if (zvmasm::AssemblyItems const* items = assemblyItems(_contractName))
+	if (qrvmasm::AssemblyItems const* items = assemblyItems(_contractName))
 	{
 		Gas executionGas = gasEstimator.functionalEstimation(*items);
-		Gas codeDepositGas{zvmasm::GasMeter::dataGas(runtimeObject(_contractName).bytecode, false)};
+		Gas codeDepositGas{qrvmasm::GasMeter::dataGas(runtimeObject(_contractName).bytecode, false)};
 
 		Json::Value creation(Json::objectValue);
 		creation["codeDepositCost"] = gasToJson(codeDepositGas);
@@ -1871,7 +1871,7 @@ Json::Value CompilerStack::gasEstimates(std::string const& _contractName) const
 		output["creation"] = creation;
 	}
 
-	if (zvmasm::AssemblyItems const* items = runtimeAssemblyItems(_contractName))
+	if (qrvmasm::AssemblyItems const* items = runtimeAssemblyItems(_contractName))
 	{
 		/// External functions
 		ContractDefinition const& contract = contractDefinition(_contractName);

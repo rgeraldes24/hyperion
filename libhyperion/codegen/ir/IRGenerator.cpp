@@ -974,7 +974,7 @@ std::string IRGenerator::deployCode(ContractDefinition const& _contract)
 
 std::string IRGenerator::callValueCheck()
 {
-	return "if callvalue() { " + m_utils.revertReasonIfDebugFunction("Zond sent to non-payable function") + "() }";
+	return "if callvalue() { " + m_utils.revertReasonIfDebugFunction("Quanta sent to non-payable function") + "() }";
 }
 
 std::string IRGenerator::dispatchRoutine(ContractDefinition const& _contract)

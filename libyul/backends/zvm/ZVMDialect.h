@@ -23,9 +23,9 @@
 
 #include <libyul/Dialect.h>
 
-#include <libyul/backends/zvm/AbstractAssembly.h>
+#include <libyul/backends/qrvm/AbstractAssembly.h>
 #include <libyul/ASTForward.h>
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
 #include <map>
 #include <set>
@@ -48,9 +48,9 @@ struct BuiltinContext
 	std::map<YulString, AbstractAssembly::SubID> subIDs;
 };
 
-struct BuiltinFunctionForZVM: public BuiltinFunction
+struct BuiltinFunctionForQRVM: public BuiltinFunction
 {
-	std::optional<zvmasm::Instruction> instruction;
+	std::optional<qrvmasm::Instruction> instruction;
 	/// Function to generate code for the given function call and append it to the abstract
 	/// assembly. Expects all non-literal arguments of the call to be on stack in reverse order
 	/// (i.e. right-most argument pushed first).
@@ -64,48 +64,48 @@ struct BuiltinFunctionForZVM: public BuiltinFunction
  * The main difference is that the builtin functions take an AbstractAssembly for the
  * code generation.
  */
-struct ZVMDialect: public Dialect
+struct QRVMDialect: public Dialect
 {
 	/// Constructor, should only be used internally. Use the factory functions below.
-	ZVMDialect(langutil::ZVMVersion _qrvmVersion, bool _objectAccess);
+	QRVMDialect(langutil::QRVMVersion _qrvmVersion, bool _objectAccess);
 
 	/// @returns the builtin function of the given name or a nullptr if it is not a builtin function.
-	BuiltinFunctionForZVM const* builtin(YulString _name) const override;
+	BuiltinFunctionForQRVM const* builtin(YulString _name) const override;
 
 	/// @returns true if the identifier is reserved. This includes the builtins too.
 	bool reservedIdentifier(YulString _name) const override;
 
-	BuiltinFunctionForZVM const* discardFunction(YulString /*_type*/) const override { return builtin("pop"_yulstring); }
-	BuiltinFunctionForZVM const* equalityFunction(YulString /*_type*/) const override { return builtin("eq"_yulstring); }
-	BuiltinFunctionForZVM const* booleanNegationFunction() const override { return builtin("iszero"_yulstring); }
-	BuiltinFunctionForZVM const* memoryStoreFunction(YulString /*_type*/) const override { return builtin("mstore"_yulstring); }
-	BuiltinFunctionForZVM const* memoryLoadFunction(YulString /*_type*/) const override { return builtin("mload"_yulstring); }
-	BuiltinFunctionForZVM const* storageStoreFunction(YulString /*_type*/) const override { return builtin("sstore"_yulstring); }
-	BuiltinFunctionForZVM const* storageLoadFunction(YulString /*_type*/) const override { return builtin("sload"_yulstring); }
+	BuiltinFunctionForQRVM const* discardFunction(YulString /*_type*/) const override { return builtin("pop"_yulstring); }
+	BuiltinFunctionForQRVM const* equalityFunction(YulString /*_type*/) const override { return builtin("eq"_yulstring); }
+	BuiltinFunctionForQRVM const* booleanNegationFunction() const override { return builtin("iszero"_yulstring); }
+	BuiltinFunctionForQRVM const* memoryStoreFunction(YulString /*_type*/) const override { return builtin("mstore"_yulstring); }
+	BuiltinFunctionForQRVM const* memoryLoadFunction(YulString /*_type*/) const override { return builtin("mload"_yulstring); }
+	BuiltinFunctionForQRVM const* storageStoreFunction(YulString /*_type*/) const override { return builtin("sstore"_yulstring); }
+	BuiltinFunctionForQRVM const* storageLoadFunction(YulString /*_type*/) const override { return builtin("sload"_yulstring); }
 	YulString hashFunction(YulString /*_type*/) const override { return "keccak256"_yulstring; }
 
-	static ZVMDialect const& strictAssemblyForZVM(langutil::ZVMVersion _version);
-	static ZVMDialect const& strictAssemblyForZVMObjects(langutil::ZVMVersion _version);
+	static QRVMDialect const& strictAssemblyForQRVM(langutil::QRVMVersion _version);
+	static QRVMDialect const& strictAssemblyForQRVMObjects(langutil::QRVMVersion _version);
 
-	langutil::ZVMVersion zvmVersion() const { return m_qrvmVersion; }
+	langutil::QRVMVersion qrvmVersion() const { return m_qrvmVersion; }
 
 	bool providesObjectAccess() const { return m_objectAccess; }
 
-	static SideEffects sideEffectsOfInstruction(zvmasm::Instruction _instruction);
+	static SideEffects sideEffectsOfInstruction(qrvmasm::Instruction _instruction);
 
 protected:
-	BuiltinFunctionForZVM const* verbatimFunction(size_t _arguments, size_t _returnVariables) const;
+	BuiltinFunctionForQRVM const* verbatimFunction(size_t _arguments, size_t _returnVariables) const;
 
 	bool const m_objectAccess;
-	langutil::ZVMVersion const m_qrvmVersion;
-	std::map<YulString, BuiltinFunctionForZVM> m_functions;
-	std::map<std::pair<size_t, size_t>, std::shared_ptr<BuiltinFunctionForZVM const>> mutable m_verbatimFunctions;
+	langutil::QRVMVersion const m_qrvmVersion;
+	std::map<YulString, BuiltinFunctionForQRVM> m_functions;
+	std::map<std::pair<size_t, size_t>, std::shared_ptr<BuiltinFunctionForQRVM const>> mutable m_verbatimFunctions;
 	std::set<YulString> m_reserved;
 };
 
 /**
  * QRVM dialect with types u256 (default) and bool.
- * Difference to ZVMDialect:
+ * Difference to QRVMDialect:
  *  - All comparison functions return type bool
  *  - bitwise operations are called bitor, bitand, bitxor and bitnot
  *  - and, or, xor take bool and return bool
@@ -113,16 +113,16 @@ protected:
  *  - there are conversion functions bool_to_u256 and u256_to_bool.
  *  - there is popbool
  */
-struct ZVMDialectTyped: public ZVMDialect
+struct QRVMDialectTyped: public QRVMDialect
 {
 	/// Constructor, should only be used internally. Use the factory function below.
-	ZVMDialectTyped(langutil::ZVMVersion _qrvmVersion, bool _objectAccess);
+	QRVMDialectTyped(langutil::QRVMVersion _qrvmVersion, bool _objectAccess);
 
-	BuiltinFunctionForZVM const* discardFunction(YulString _type) const override;
-	BuiltinFunctionForZVM const* equalityFunction(YulString _type) const override;
-	BuiltinFunctionForZVM const* booleanNegationFunction() const override { return builtin("not"_yulstring); }
+	BuiltinFunctionForQRVM const* discardFunction(YulString _type) const override;
+	BuiltinFunctionForQRVM const* equalityFunction(YulString _type) const override;
+	BuiltinFunctionForQRVM const* booleanNegationFunction() const override { return builtin("not"_yulstring); }
 
-	static ZVMDialectTyped const& instance(langutil::ZVMVersion _version);
+	static QRVMDialectTyped const& instance(langutil::QRVMVersion _version);
 };
 
 }

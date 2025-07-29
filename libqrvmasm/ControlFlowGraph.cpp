@@ -22,17 +22,17 @@
  * Control flow analysis for the optimizer.
  */
 
-#include <libzvmasm/ControlFlowGraph.h>
+#include <libqrvmasm/ControlFlowGraph.h>
 #include <map>
 #include <memory>
 #include <algorithm>
-#include <libzvmasm/Exceptions.h>
-#include <libzvmasm/AssemblyItem.h>
-#include <libzvmasm/SemanticInformation.h>
-#include <libzvmasm/KnownState.h>
+#include <libqrvmasm/Exceptions.h>
+#include <libqrvmasm/AssemblyItem.h>
+#include <libqrvmasm/SemanticInformation.h>
+#include <libqrvmasm/KnownState.h>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
 BlockId::BlockId(u256 const& _id):
 	m_id(unsigned(_id))

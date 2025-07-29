@@ -19,9 +19,9 @@
  * QRVM versioning.
  */
 
-#include <liblangutil/ZVMVersion.h>
-#include <libzvmasm/Instruction.h>
+#include <liblangutil/QRVMVersion.h>
+#include <libqrvmasm/Instruction.h>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 using namespace hyperion::langutil;

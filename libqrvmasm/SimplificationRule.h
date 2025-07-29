@@ -21,11 +21,11 @@
 
 #pragma once
 
-#include <libzvmasm/Instruction.h>
+#include <libqrvmasm/Instruction.h>
 #include <libhyputil/CommonData.h>
 #include <functional>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 /**
@@ -52,7 +52,7 @@ struct SimplificationRule
 };
 
 template <typename Pattern>
-struct ZVMBuiltins
+struct QRVMBuiltins
 {
 	using InstrType = Instruction;
 

@@ -1,6 +1,6 @@
 # The Hyperion Contract-Oriented Programming Language
 
-Hyperion is a statically typed, contract-oriented, high-level language for implementing smart contracts on the Zond platform.
+Hyperion is a statically typed, contract-oriented, high-level language for implementing smart contracts on the QRL platform.
 
 For a good overview and starting point, please check out the official [Hyperion Language Portal](https://soliditylang.org).
 

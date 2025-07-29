@@ -277,7 +277,7 @@ public:
 	/// Pops slots from the stack such that its height is _toHeight.
 	/// Adds jump to _jumpTo.
 	/// Readjusts the stack offset to the original value.
-	void popAndJump(unsigned _toHeight, zvmasm::AssemblyItem const& _jumpTo);
+	void popAndJump(unsigned _toHeight, qrvmasm::AssemblyItem const& _jumpTo);
 
 	template <class T>
 	static unsigned sizeOnStack(std::vector<T> const& _variables);

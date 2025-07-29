@@ -24,12 +24,12 @@
 
 #pragma once
 
-#include <libzvmasm/Instruction.h>
+#include <libqrvmasm/Instruction.h>
 
 #include <optional>
 #include <vector>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class AssemblyItem;

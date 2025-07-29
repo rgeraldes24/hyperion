@@ -20,13 +20,13 @@
  * @date 2015
  */
 
-#include <libzvmasm/LinkerObject.h>
+#include <libqrvmasm/LinkerObject.h>
 #include <libhyputil/CommonData.h>
 #include <libhyputil/Keccak256.h>
 
 using namespace hyperion;
 using namespace hyperion::util;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
 void LinkerObject::append(LinkerObject const& _other)
 {

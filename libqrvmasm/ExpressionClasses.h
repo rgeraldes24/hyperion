@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <libzvmasm/AssemblyItem.h>
+#include <libqrvmasm/AssemblyItem.h>
 
 #include <libhyputil/Common.h>
 
@@ -37,7 +37,7 @@ namespace hyperion::langutil
 struct SourceLocation;
 }
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class Pattern;

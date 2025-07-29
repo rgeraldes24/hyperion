@@ -22,16 +22,16 @@
  * Unifies basic blocks that share content.
  */
 
-#include <libzvmasm/BlockDeduplicator.h>
+#include <libqrvmasm/BlockDeduplicator.h>
 
-#include <libzvmasm/AssemblyItem.h>
-#include <libzvmasm/SemanticInformation.h>
+#include <libqrvmasm/AssemblyItem.h>
+#include <libqrvmasm/SemanticInformation.h>
 
 #include <functional>
 #include <set>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
 
 bool BlockDeduplicator::deduplicate()

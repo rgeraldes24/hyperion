@@ -68,7 +68,7 @@
                         "src": "78:2:0",
                         "statements": []
                       },
-                      "zvmVersion": "shanghai",
+                      "qrvmVersion": "shanghai",
                       "externalReferences": [],
                       "id": 4,
                       "nodeType": "InlineAssembly",

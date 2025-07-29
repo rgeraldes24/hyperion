@@ -172,23 +172,23 @@ void ContractLevelChecker::checkReceiveFunction(ContractDefinition const& _contr
 		if (function->isReceive())
 		{
 			if (function->libraryFunction())
-				m_errorReporter.declarationError(4549_error, function->location(), "Libraries cannot have receive zond functions.");
+				m_errorReporter.declarationError(4549_error, function->location(), "Libraries cannot have receive quanta functions.");
 
 			if (function->stateMutability() != StateMutability::Payable)
 				m_errorReporter.declarationError(
 					7793_error,
 					function->location(),
-					"Receive zond function must be payable, but is \"" +
+					"Receive quanta function must be payable, but is \"" +
 					stateMutabilityToString(function->stateMutability()) +
 					"\"."
 				);
 			if (function->visibility() != Visibility::External)
-				m_errorReporter.declarationError(4095_error, function->location(), "Receive zond function must be defined as \"external\".");
+				m_errorReporter.declarationError(4095_error, function->location(), "Receive quanta function must be defined as \"external\".");
 
 			if (!function->returnParameters().empty())
-				m_errorReporter.fatalDeclarationError(6899_error, function->returnParameterList()->location(), "Receive zond function cannot return values.");
+				m_errorReporter.fatalDeclarationError(6899_error, function->returnParameterList()->location(), "Receive quanta function cannot return values.");
 			if (!function->parameters().empty())
-				m_errorReporter.fatalDeclarationError(6857_error, function->parameterList().location(), "Receive zond function cannot take parameters.");
+				m_errorReporter.fatalDeclarationError(6857_error, function->parameterList().location(), "Receive quanta function cannot take parameters.");
 		}
 	}
 }

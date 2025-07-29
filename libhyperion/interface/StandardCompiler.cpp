@@ -29,7 +29,7 @@
 #include <libyul/Exceptions.h>
 #include <libyul/optimiser/Suite.h>
 
-#include <libzvmasm/Disassemble.h>
+#include <libqrvmasm/Disassemble.h>
 
 #include <libsmtutil/Exceptions.h>
 
@@ -245,7 +245,7 @@ bool isArtifactRequested(Json::Value const& _outputSelection, std::string const&
 }
 
 /// @returns all artifact names of the QRVM object, either for creation or deploy time.
-std::vector<std::string> zvmObjectComponents(std::string const& _objectKind)
+std::vector<std::string> qrvmObjectComponents(std::string const& _objectKind)
 {
 	hypAssert(_objectKind == "bytecode" || _objectKind == "deployedBytecode", "");
 	std::vector<std::string> components{"", ".object", ".opcodes", ".sourceMap", ".functionDebugData", ".generatedSources", ".linkReferences"};
@@ -265,7 +265,7 @@ bool isBinaryRequested(Json::Value const& _outputSelection)
 		"*",
 		"ir", "irAst", "irOptimized", "irOptimizedAst",
 		"qrvm.gasEstimates", "qrvm.legacyAssembly", "qrvm.assembly"
-	} + zvmObjectComponents("bytecode") + zvmObjectComponents("deployedBytecode");
+	} + qrvmObjectComponents("bytecode") + qrvmObjectComponents("deployedBytecode");
 
 	for (auto const& fileRequests: _outputSelection)
 		for (auto const& requests: fileRequests)
@@ -276,19 +276,19 @@ bool isBinaryRequested(Json::Value const& _outputSelection)
 }
 
 /// @returns true if QRVM bytecode was requested, i.e. we have to run the old code generator.
-bool isZvmBytecodeRequested(Json::Value const& _outputSelection)
+bool isQrvmBytecodeRequested(Json::Value const& _outputSelection)
 {
 	if (!_outputSelection.isObject())
 		return false;
 
-	static std::vector<std::string> const outputsThatRequireZvmBinaries = std::vector<std::string>{
+	static std::vector<std::string> const outputsThatRequireQrvmBinaries = std::vector<std::string>{
 		"*",
 		"qrvm.gasEstimates", "qrvm.legacyAssembly", "qrvm.assembly"
-	} + zvmObjectComponents("bytecode") + zvmObjectComponents("deployedBytecode");
+	} + qrvmObjectComponents("bytecode") + qrvmObjectComponents("deployedBytecode");
 
 	for (auto const& fileRequests: _outputSelection)
 		for (auto const& requests: fileRequests)
-			for (auto const& output: outputsThatRequireZvmBinaries)
+			for (auto const& output: outputsThatRequireQrvmBinaries)
 				if (isArtifactRequested(requests, output, false))
 					return true;
 	return false;
@@ -365,8 +365,8 @@ Json::Value formatImmutableReferences(std::map<u256, std::pair<std::string, std:
 	return ret;
 }
 
-Json::Value collectZVMObject(
-	zvmasm::LinkerObject const& _object,
+Json::Value collectQRVMObject(
+	qrvmasm::LinkerObject const& _object,
 	std::string const* _sourceMap,
 	Json::Value _generatedSources,
 	bool _runtimeObject,
@@ -377,7 +377,7 @@ Json::Value collectZVMObject(
 	if (_artifactRequested("object"))
 		output["object"] = _object.toHex();
 	if (_artifactRequested("opcodes"))
-		output["opcodes"] = zvmasm::disassemble(_object.bytecode);
+		output["opcodes"] = qrvmasm::disassemble(_object.bytecode);
 	if (_artifactRequested("sourceMap"))
 		output["sourceMap"] = _sourceMap ? *_sourceMap : "";
 	if (_artifactRequested("functionDebugData"))
@@ -423,7 +423,7 @@ std::optional<Json::Value> checkAuxiliaryInputKeys(Json::Value const& _input)
 
 std::optional<Json::Value> checkSettingsKeys(Json::Value const& _input)
 {
-	static std::set<std::string> keys{"debug", "zvmVersion", "libraries", "metadata", "modelChecker", "optimizer", "outputSelection", "remappings", "stopAfter", "viaIR"};
+	static std::set<std::string> keys{"debug", "qrvmVersion", "libraries", "metadata", "modelChecker", "optimizer", "outputSelection", "remappings", "stopAfter", "viaIR"};
 	return checkKeys(_input, keys, "settings");
 }
 
@@ -790,11 +790,11 @@ std::variant<StandardCompiler::InputsAndSettings, Json::Value> StandardCompiler:
 		ret.viaIR = settings["viaIR"].asBool();
 	}
 
-	if (settings.isMember("zvmVersion"))
+	if (settings.isMember("qrvmVersion"))
 	{
-		if (!settings["zvmVersion"].isString())
+		if (!settings["qrvmVersion"].isString())
 			return formatFatalError(Error::Type::JSONError, "qrvmVersionmust be a string.");
-		std::optional<langutil::ZVMVersion> version = langutil::ZVMVersion::fromString(settings["zvmVersion"].asString());
+		std::optional<langutil::QRVMVersion> version = langutil::QRVMVersion::fromString(settings["qrvmVersion"].asString());
 		if (!version)
 			return formatFatalError(Error::Type::JSONError, "Invalid QRVM version requested.");
 		ret.qrvmVersion= *version;
@@ -1158,7 +1158,7 @@ Json::Value StandardCompiler::compileHyperion(StandardCompiler::InputsAndSetting
 	for (auto const& smtLib2Response: _inputsAndSettings.smtLib2Responses)
 		compilerStack.addSMTLib2Response(smtLib2Response.first, smtLib2Response.second);
 	compilerStack.setViaIR(_inputsAndSettings.viaIR);
-	compilerStack.setZVMVersion(_inputsAndSettings.zvmVersion);
+	compilerStack.setQRVMVersion(_inputsAndSettings.qrvmVersion);
 	compilerStack.setRemappings(std::move(_inputsAndSettings.remappings));
 	compilerStack.setOptimiserSettings(std::move(_inputsAndSettings.optimiserSettings));
 	compilerStack.setRevertStringBehaviour(_inputsAndSettings.revertStrings);
@@ -1171,7 +1171,7 @@ Json::Value StandardCompiler::compileHyperion(StandardCompiler::InputsAndSetting
 	compilerStack.setRequestedContractNames(requestedContractNames(_inputsAndSettings.outputSelection));
 	compilerStack.setModelCheckerSettings(_inputsAndSettings.modelCheckerSettings);
 
-	compilerStack.enableZvmBytecodeGeneration(isZvmBytecodeRequested(_inputsAndSettings.outputSelection));
+	compilerStack.enableQrvmBytecodeGeneration(isQrvmBytecodeRequested(_inputsAndSettings.outputSelection));
 	compilerStack.enableIRGeneration(isIRRequested(_inputsAndSettings.outputSelection));
 
 	Json::Value errors = std::move(_inputsAndSettings.errors);
@@ -1380,7 +1380,7 @@ Json::Value StandardCompiler::compileHyperion(StandardCompiler::InputsAndSetting
 		if (compilationSuccess && isArtifactRequested(_inputsAndSettings.outputSelection, file, name, "irOptimizedAst", wildcardMatchesExperimental))
 			contractData["irOptimizedAst"] = compilerStack.yulIROptimizedAst(contractName);
 
-		// ZVM
+		// QRVM
 		Json::Value qrvmData(Json::objectValue);
 		if (compilationSuccess && isArtifactRequested(_inputsAndSettings.outputSelection, file, name, "qrvm.assembly", wildcardMatchesExperimental))
 			qrvmData["assembly"] = compilerStack.assemblyString(contractName, sourceList);
@@ -1395,10 +1395,10 @@ Json::Value StandardCompiler::compileHyperion(StandardCompiler::InputsAndSetting
 			_inputsAndSettings.outputSelection,
 			file,
 			name,
-			zvmObjectComponents("bytecode"),
+			qrvmObjectComponents("bytecode"),
 			wildcardMatchesExperimental
 		))
-			zvmData["bytecode"] = collectZVMObject(
+			qrvmData["bytecode"] = collectQRVMObject(
 				compilerStack.object(contractName),
 				compilerStack.sourceMapping(contractName),
 				compilerStack.generatedSources(contractName),
@@ -1416,10 +1416,10 @@ Json::Value StandardCompiler::compileHyperion(StandardCompiler::InputsAndSetting
 			_inputsAndSettings.outputSelection,
 			file,
 			name,
-			zvmObjectComponents("deployedBytecode"),
+			qrvmObjectComponents("deployedBytecode"),
 			wildcardMatchesExperimental
 		))
-			zvmData["deployedBytecode"] = collectZVMObject(
+			qrvmData["deployedBytecode"] = collectQRVMObject(
 				compilerStack.runtimeObject(contractName),
 				compilerStack.runtimeSourceMapping(contractName),
 				compilerStack.generatedSources(contractName, true),
@@ -1433,8 +1433,8 @@ Json::Value StandardCompiler::compileHyperion(StandardCompiler::InputsAndSetting
 				); }
 			);
 
-		if (!zvmData.empty())
-			contractData["qrvm"] = zvmData;
+		if (!qrvmData.empty())
+			contractData["qrvm"] = qrvmData;
 
 		if (!contractData.empty())
 		{
@@ -1493,7 +1493,7 @@ Json::Value StandardCompiler::compileYul(InputsAndSettings _inputsAndSettings)
 	}
 
 	YulStack stack(
-		_inputsAndSettings.zvmVersion,
+		_inputsAndSettings.qrvmVersion,
 		YulStack::Language::StrictAssembly,
 		_inputsAndSettings.optimiserSettings,
 		_inputsAndSettings.debugInfoSelection.has_value() ?
@@ -1560,14 +1560,14 @@ Json::Value StandardCompiler::compileYul(InputsAndSettings _inputsAndSettings)
 			_inputsAndSettings.outputSelection,
 			sourceName,
 			contractName,
-			zvmObjectComponents(kind),
+			qrvmObjectComponents(kind),
 			wildcardMatchesExperimental
 		))
 		{
 			MachineAssemblyObject const& o = isDeployed ? deployedObject : object;
 			if (o.bytecode)
 				output["contracts"][sourceName][contractName]["qrvm"][kind] =
-					collectZVMObject(
+					collectQRVMObject(
 						*o.bytecode,
 						o.sourceMappings.get(),
 						Json::arrayValue,
@@ -1657,7 +1657,7 @@ std::string StandardCompiler::compile(std::string const& _input) noexcept
 }
 
 Json::Value StandardCompiler::formatFunctionDebugData(
-	std::map<std::string, zvmasm::LinkerObject::FunctionDebugData> const& _debugInfo
+	std::map<std::string, qrvmasm::LinkerObject::FunctionDebugData> const& _debugInfo
 )
 {
 	Json::Value ret(Json::objectValue);

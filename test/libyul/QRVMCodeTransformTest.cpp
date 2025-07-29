@@ -16,16 +16,16 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 
-#include <test/libyul/ZVMCodeTransformTest.h>
+#include <test/libyul/QRVMCodeTransformTest.h>
 #include <test/libyul/Common.h>
 
 #include <test/Common.h>
 
 #include <libyul/YulStack.h>
-#include <libyul/backends/zvm/ZondAssemblyAdapter.h>
-#include <libyul/backends/zvm/ZVMObjectCompiler.h>
+#include <libyul/backends/qrvm/QRLAssemblyAdapter.h>
+#include <libyul/backends/qrvm/QRVMObjectCompiler.h>
 
-#include <libzvmasm/Assembly.h>
+#include <libqrvmasm/Assembly.h>
 
 #include <liblangutil/SourceReferenceFormatter.h>
 
@@ -40,21 +40,21 @@ using namespace hyperion::frontend;
 using namespace hyperion::frontend::test;
 using namespace std;
 
-ZVMCodeTransformTest::ZVMCodeTransformTest(string const& _filename):
-	ZVMVersionRestrictedTestCase(_filename)
+QRVMCodeTransformTest::QRVMCodeTransformTest(string const& _filename):
+	QRVMVersionRestrictedTestCase(_filename)
 {
 	m_source = m_reader.source();
 	m_stackOpt = m_reader.boolSetting("stackOptimization", false);
 	m_expectation = m_reader.simpleExpectations();
 }
 
-TestCase::TestResult ZVMCodeTransformTest::run(ostream& _stream, string const& _linePrefix, bool const _formatted)
+TestCase::TestResult QRVMCodeTransformTest::run(ostream& _stream, string const& _linePrefix, bool const _formatted)
 {
 	hyperion::frontend::OptimiserSettings settings = hyperion::frontend::OptimiserSettings::none();
 	settings.runYulOptimiser = false;
 	settings.optimizeStackAllocation = m_stackOpt;
 	YulStack stack(
-		ZVMVersion{},
+		QRVMVersion{},
 		YulStack::Language::StrictAssembly,
 		settings,
 		DebugInfoSelection::All()
@@ -67,12 +67,12 @@ TestCase::TestResult ZVMCodeTransformTest::run(ostream& _stream, string const& _
 		return TestResult::FatalError;
 	}
 
-	zvmasm::Assembly assembly{hyperion::test::CommonOptions::get().zvmVersion(), false, {}};
-	ZondAssemblyAdapter adapter(assembly);
-	ZVMObjectCompiler::compile(
+	qrvmasm::Assembly assembly{hyperion::test::CommonOptions::get().qrvmVersion(), false, {}};
+	QRLAssemblyAdapter adapter(assembly);
+	QRVMObjectCompiler::compile(
 		*stack.parserResult(),
 		adapter,
-		ZVMDialect::strictAssemblyForZVMObjects(ZVMVersion{}),
+		QRVMDialect::strictAssemblyForQRVMObjects(QRVMVersion{}),
 		m_stackOpt
 	);
 

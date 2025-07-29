@@ -275,11 +275,11 @@ This behavior is also in line with the ``STATICCALL`` opcode.
 Special Functions
 =================
 
-.. index:: ! receive zond function, function;receive, ! receive
+.. index:: ! receive quanta function, function;receive, ! receive
 
-.. _receive-zond-function:
+.. _receive-quanta-function:
 
-Receive Zond Function
+Receive Quanta Function
 ----------------------
 
 A contract can have at most one ``receive`` function, declared using
@@ -291,9 +291,9 @@ It can be virtual, can override and can have modifiers.
 
 The receive function is executed on a
 call to the contract with empty calldata. This is the function that is executed
-on plain Zond transfers (e.g. via ``.send()`` or ``.transfer()``). If no such
+on plain quanta transfers (e.g. via ``.send()`` or ``.transfer()``). If no such
 function exists, but a payable :ref:`fallback function <fallback-function>`
-exists, the fallback function will be called on a plain Zond transfer. If
+exists, the fallback function will be called on a plain Quanta transfer. If
 neither a receive Zond nor a payable fallback function is present, the
 contract cannot receive Zond through a transaction that does not represent a payable function call and throws an
 exception.
@@ -337,7 +337,7 @@ Below you can see an example of a Sink contract that uses function ``receive``.
     // SPDX-License-Identifier: GPL-3.0
     pragma hyperion >=0.1.0;
 
-    // This contract keeps all Zond sent to it with no way
+    // This contract keeps all Quanta sent to it with no way
     // to get it back.
     contract Sink {
         event Received(address, uint);
@@ -379,7 +379,7 @@ operations as long as there is enough gas passed on to it.
 
 .. warning::
     A ``payable`` fallback function is also executed for
-    plain Zond transfers, if no :ref:`receive Zond function <receive-zond-function>`
+    plain Quanta transfers, if no :ref:`receive Zond function <receive-zond-function>`
     is present. It is recommended to always define a receive Zond
     function as well, if you define a payable fallback function
     to distinguish Zond transfers from interface confusions.
@@ -413,13 +413,13 @@ operations as long as there is enough gas passed on to it.
         uint x;
         uint y;
         // This function is called for all messages sent to
-        // this contract, except plain Zond transfers
+        // this contract, except plain Quanta transfers
         // (there is no other function except the receive function).
         // Any call with non-empty calldata to this contract will execute
-        // the fallback function (even if Zond is sent along with the call).
+        // the fallback function (even if Quanta is sent along with the call).
         fallback() external payable { x = 1; y = msg.value; }
 
-        // This function is called for plain Zond transfers, i.e.
+        // This function is called for plain Quanta transfers, i.e.
         // for every call with empty calldata.
         receive() external payable { x = 2; y = msg.value; }
     }
@@ -435,9 +435,9 @@ operations as long as there is enough gas passed on to it.
             // It has to be converted to the ``address payable`` type to even allow calling ``send`` on it.
             address payable testPayable = payable(address(test));
 
-            // If someone sends Zond to that contract,
+            // If someone sends Quanta to that contract,
             // the transfer will fail, i.e. this returns false here.
-            return testPayable.send(2 zond);
+            return testPayable.send(2 quanta);
         }
 
         function callTestPayable(TestPayable test) public returns (bool) {
@@ -448,12 +448,12 @@ operations as long as there is enough gas passed on to it.
             require(success);
             // results in test.x becoming == 1 and test.y becoming 1.
 
-            // If someone sends Zond to that contract, the receive function in TestPayable will be called.
+            // If someone sends Quanta to that contract, the receive function in TestPayable will be called.
             // Since that function writes to storage, it takes more gas than is available with a
             // simple ``send`` or ``transfer``. Because of that, we have to use a low-level call.
-            (success,) = address(test).call{value: 2 zond}("");
+            (success,) = address(test).call{value: 2 quanta}("");
             require(success);
-            // results in test.x becoming == 2 and test.y becoming 2 zond.
+            // results in test.x becoming == 2 and test.y becoming 2 quanta.
 
             return true;
         }

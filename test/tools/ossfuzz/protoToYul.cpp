@@ -92,12 +92,12 @@ string ProtoConverter::createAlphaNum(string const& _strBytes)
 	return tmp;
 }
 
-ZVMVersion ProtoConverter::zvmVersionMapping(Program_Version const& _ver)
+QRVMVersion ProtoConverter::qrvmVersionMapping(Program_Version const& _ver)
 {
 	switch (_ver)
 	{
 	case Program::SHANGHAI:
-		return ZVMVersion::shanghai();
+		return QRVMVersion::shanghai();
 	}
 }
 
@@ -1849,7 +1849,7 @@ void ProtoConverter::visit(Program const& _x)
 	m_inputSize = static_cast<unsigned>(_x.ByteSizeLong());
 
 	// Record QRVM Version
-	m_qrvmVersion = zvmVersionMapping(_x.ver());
+	m_qrvmVersion = qrvmVersionMapping(_x.ver());
 
 	// Program is either a Yul object or a block of
 	// statements.

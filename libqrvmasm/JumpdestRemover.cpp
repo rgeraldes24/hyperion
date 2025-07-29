@@ -20,15 +20,15 @@
  * Removes unused JUMPDESTs.
  */
 
-#include <libzvmasm/JumpdestRemover.h>
+#include <libqrvmasm/JumpdestRemover.h>
 
-#include <libzvmasm/AssemblyItem.h>
+#include <libqrvmasm/AssemblyItem.h>
 
 #include <limits>
 
 using namespace hyperion;
 using namespace hyperion::util;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 
 bool JumpdestRemover::optimise(std::set<size_t> const& _tagsReferencedFromOutside)
 {

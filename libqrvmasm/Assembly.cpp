@@ -20,16 +20,16 @@
  * @date 2014
  */
 
-#include <libzvmasm/Assembly.h>
+#include <libqrvmasm/Assembly.h>
 
-#include <libzvmasm/CommonSubexpressionEliminator.h>
-#include <libzvmasm/ControlFlowGraph.h>
-#include <libzvmasm/PeepholeOptimiser.h>
-#include <libzvmasm/Inliner.h>
-#include <libzvmasm/JumpdestRemover.h>
-#include <libzvmasm/BlockDeduplicator.h>
-#include <libzvmasm/ConstantOptimiser.h>
-#include <libzvmasm/GasMeter.h>
+#include <libqrvmasm/CommonSubexpressionEliminator.h>
+#include <libqrvmasm/ControlFlowGraph.h>
+#include <libqrvmasm/PeepholeOptimiser.h>
+#include <libqrvmasm/Inliner.h>
+#include <libqrvmasm/JumpdestRemover.h>
+#include <libqrvmasm/BlockDeduplicator.h>
+#include <libqrvmasm/ConstantOptimiser.h>
+#include <libqrvmasm/GasMeter.h>
 
 #include <liblangutil/CharStream.h>
 #include <liblangutil/Exceptions.h>
@@ -49,7 +49,7 @@
 #include <iterator>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 using namespace hyperion::langutil;
 using namespace hyperion::util;
 
@@ -531,7 +531,7 @@ std::pair<std::shared_ptr<Assembly>, std::vector<std::string>> Assembly::fromJSO
 			"Member 'sourceList' may only be present in the root JSON object."
 		);
 
-	auto result = std::make_shared<Assembly>(ZVMVersion{}, _level == 0 /* _creation */, "" /* _name */);
+	auto result = std::make_shared<Assembly>(QRVMVersion{}, _level == 0 /* _creation */, "" /* _name */);
 	std::vector<std::string> parsedSourceList;
 	if (_json.isMember("sourceList"))
 	{
@@ -726,7 +726,7 @@ std::map<u256, u256> const& Assembly::optimiseInternal(
 				_tagsReferencedFromOutside,
 				_settings.expectedExecutionsPerDeployment,
 				isCreation(),
-				_settings.zvmVersion
+				_settings.qrvmVersion
 			}.optimise();
 
 		if (_settings.runJumpdestRemover)
@@ -828,7 +828,7 @@ std::map<u256, u256> const& Assembly::optimiseInternal(
 		ConstantOptimisationMethod::optimiseConstants(
 			isCreation(),
 			isCreation() ? 1 : _settings.expectedExecutionsPerDeployment,
-			_settings.zvmVersion,
+			_settings.qrvmVersion,
 			*this
 		);
 
@@ -1162,10 +1162,10 @@ Assembly const* Assembly::subAssemblyById(size_t _subId) const
 	return currentAssembly;
 }
 
-Assembly::OptimiserSettings Assembly::OptimiserSettings::translateSettings(frontend::OptimiserSettings const& _settings, langutil::ZVMVersion const& _qrvmVersion)
+Assembly::OptimiserSettings Assembly::OptimiserSettings::translateSettings(frontend::OptimiserSettings const& _settings, langutil::QRVMVersion const& _qrvmVersion)
 {
 	// Constructing it this way so that we notice changes in the fields.
-	zvmasm::Assembly::OptimiserSettings asmSettings{false,  false, false, false, false, false, _qrvmVersion, 0};
+	qrvmasm::Assembly::OptimiserSettings asmSettings{false,  false, false, false, false, false, _qrvmVersion, 0};
 	asmSettings.runInliner = _settings.runInliner;
 	asmSettings.runJumpdestRemover = _settings.runJumpdestRemover;
 	asmSettings.runPeephole = _settings.runPeephole;

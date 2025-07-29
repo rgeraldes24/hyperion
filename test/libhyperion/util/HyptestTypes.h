@@ -54,8 +54,8 @@ namespace hyperion::frontend::test
 	T(Address, "address", 0)      \
 	T(Identifier, "identifier", 0)     \
 	/* type keywords */                \
-	K(Zond, "zond", 0)               \
-	K(Planck, "planck", 0)                   \
+	K(Quanta, "quanta", 0)             \
+	K(Planck, "planck", 0)             \
 	K(Hex, "hex", 0)                   \
 	K(Boolean, "boolean", 0)           \
 	/* special keywords */             \
@@ -252,7 +252,7 @@ struct FunctionCallArgs
 enum class FunctionValueUnit
 {
 	Planck,
-	Zond
+	Quanta
 };
 
 /// Holds value along with unit it was expressed in originally.

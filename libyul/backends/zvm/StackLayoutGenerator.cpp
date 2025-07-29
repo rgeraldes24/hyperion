@@ -19,11 +19,11 @@
  * Stack layout generator for Yul to QRVM code generation.
  */
 
-#include <libyul/backends/zvm/StackLayoutGenerator.h>
+#include <libyul/backends/qrvm/StackLayoutGenerator.h>
 
-#include <libyul/backends/zvm/StackHelpers.h>
+#include <libyul/backends/qrvm/StackHelpers.h>
 
-#include <libzvmasm/GasMeter.h>
+#include <libqrvmasm/GasMeter.h>
 
 #include <libhyputil/Algorithms.h>
 #include <libhyputil/cxx20.h>
@@ -748,18 +748,18 @@ void StackLayoutGenerator::fillInJunk(CFG::BasicBlock const& _block, CFG::Functi
 			if (_swapDepth > 16)
 				opGas += 1000;
 			else
-				opGas += zvmasm::GasMeter::runGas(zvmasm::swapInstruction(_swapDepth));
+				opGas += qrvmasm::GasMeter::runGas(qrvmasm::swapInstruction(_swapDepth));
 		};
 		auto dupOrPush = [&](StackSlot const& _slot)
 		{
 			if (canBeFreelyGenerated(_slot))
-				opGas += zvmasm::GasMeter::runGas(zvmasm::pushInstruction(32));
+				opGas += qrvmasm::GasMeter::runGas(qrvmasm::pushInstruction(32));
 			else
 			{
 				if (auto depth = util::findOffset(_source | ranges::views::reverse, _slot))
 				{
 					if (*depth < 16)
-						opGas += zvmasm::GasMeter::runGas(zvmasm::dupInstruction(static_cast<unsigned>(*depth + 1)));
+						opGas += qrvmasm::GasMeter::runGas(qrvmasm::dupInstruction(static_cast<unsigned>(*depth + 1)));
 					else
 						opGas += 1000;
 				}
@@ -771,11 +771,11 @@ void StackLayoutGenerator::fillInJunk(CFG::BasicBlock const& _block, CFG::Functi
 					yulAssert(util::contains(m_currentFunctionInfo->returnVariables, std::get<VariableSlot>(_slot)));
 					// Strictly speaking the cost of the PUSH0 depends on the targeted QRVM version, but the difference
 					// will not matter here.
-					opGas += zvmasm::GasMeter::runGas(zvmasm::pushInstruction(0));;
+					opGas += qrvmasm::GasMeter::runGas(qrvmasm::pushInstruction(0));;
 				}
 			}
 		};
-		auto pop = [&]() { opGas += zvmasm::GasMeter::runGas(zvmasm::Instruction::POP); };
+		auto pop = [&]() { opGas += qrvmasm::GasMeter::runGas(qrvmasm::Instruction::POP); };
 		createStackLayout(_source, _target, swap, dupOrPush, pop);
 		return opGas;
 	};

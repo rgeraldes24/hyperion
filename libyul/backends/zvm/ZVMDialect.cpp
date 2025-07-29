@@ -19,10 +19,10 @@
  * Yul dialects for QRVM.
  */
 
-#include <libyul/backends/zvm/ZVMDialect.h>
+#include <libyul/backends/qrvm/QRVMDialect.h>
 
-#include <libzvmasm/Instruction.h>
-#include <libzvmasm/SemanticInformation.h>
+#include <libqrvmasm/Instruction.h>
+#include <libqrvmasm/SemanticInformation.h>
 #include <liblangutil/Exceptions.h>
 #include <libhyputil/StringUtils.h>
 #include <libyul/AST.h>
@@ -31,7 +31,7 @@
 #include <libyul/Exceptions.h>
 #include <libyul/Object.h>
 #include <libyul/Utilities.h>
-#include <libyul/backends/zvm/AbstractAssembly.h>
+#include <libyul/backends/qrvm/AbstractAssembly.h>
 
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/tail.hpp>
@@ -46,21 +46,21 @@ using namespace hyperion::util;
 namespace
 {
 
-std::pair<YulString, BuiltinFunctionForZVM> createZVMFunction(
+std::pair<YulString, BuiltinFunctionForQRVM> createQRVMFunction(
 	std::string const& _name,
-	zvmasm::Instruction _instruction
+	qrvmasm::Instruction _instruction
 )
 {
-	zvmasm::InstructionInfo info = zvmasm::instructionInfo(_instruction);
-	BuiltinFunctionForZVM f;
+	qrvmasm::InstructionInfo info = qrvmasm::instructionInfo(_instruction);
+	BuiltinFunctionForQRVM f;
 	f.name = YulString{_name};
 	f.parameters.resize(static_cast<size_t>(info.args));
 	f.returns.resize(static_cast<size_t>(info.ret));
-	f.sideEffects = ZVMDialect::sideEffectsOfInstruction(_instruction);
-	if (zvmasm::SemanticInformation::terminatesControlFlow(_instruction))
+	f.sideEffects = QRVMDialect::sideEffectsOfInstruction(_instruction);
+	if (qrvmasm::SemanticInformation::terminatesControlFlow(_instruction))
 	{
 		f.controlFlowSideEffects.canContinue = false;
-		if (zvmasm::SemanticInformation::reverts(_instruction))
+		if (qrvmasm::SemanticInformation::reverts(_instruction))
 		{
 			f.controlFlowSideEffects.canTerminate = false;
 			f.controlFlowSideEffects.canRevert = true;
@@ -71,7 +71,7 @@ std::pair<YulString, BuiltinFunctionForZVM> createZVMFunction(
 			f.controlFlowSideEffects.canRevert = false;
 		}
 	}
-	f.isMSize = _instruction == zvmasm::Instruction::MSIZE;
+	f.isMSize = _instruction == qrvmasm::Instruction::MSIZE;
 	f.literalArguments.clear();
 	f.instruction = _instruction;
 	f.generateCode = [_instruction](
@@ -86,7 +86,7 @@ std::pair<YulString, BuiltinFunctionForZVM> createZVMFunction(
 	return {name, std::move(f)};
 }
 
-std::pair<YulString, BuiltinFunctionForZVM> createFunction(
+std::pair<YulString, BuiltinFunctionForQRVM> createFunction(
 	std::string _name,
 	size_t _params,
 	size_t _returns,
@@ -98,7 +98,7 @@ std::pair<YulString, BuiltinFunctionForZVM> createFunction(
 	yulAssert(_literalArguments.size() == _params || _literalArguments.empty(), "");
 
 	YulString name{std::move(_name)};
-	BuiltinFunctionForZVM f;
+	BuiltinFunctionForQRVM f;
 	f.name = name;
 	f.parameters.resize(_params);
 	f.returns.resize(_returns);
@@ -113,7 +113,7 @@ std::pair<YulString, BuiltinFunctionForZVM> createFunction(
 std::set<YulString> createReservedIdentifiers()
 {
 	std::set<YulString> reserved;
-	for (auto const& instr: zvmasm::c_instructions)
+	for (auto const& instr: qrvmasm::c_instructions)
 	{
 		std::string name = toLower(instr.first);
 		reserved.emplace(name);
@@ -129,23 +129,23 @@ std::set<YulString> createReservedIdentifiers()
 	return reserved;
 }
 
-std::map<YulString, BuiltinFunctionForZVM> createBuiltins(bool _objectAccess)
+std::map<YulString, BuiltinFunctionForQRVM> createBuiltins(bool _objectAccess)
 {
-	std::map<YulString, BuiltinFunctionForZVM> builtins;
-	for (auto const& instr: zvmasm::c_instructions)
+	std::map<YulString, BuiltinFunctionForQRVM> builtins;
+	for (auto const& instr: qrvmasm::c_instructions)
 	{
 		std::string name = toLower(instr.first);
 		auto const opcode = instr.second;
 
 		if (
-			!zvmasm::isDupInstruction(opcode) &&
-			!zvmasm::isSwapInstruction(opcode) &&
-			!zvmasm::isPushInstruction(opcode) &&
-			opcode != zvmasm::Instruction::JUMP &&
-			opcode != zvmasm::Instruction::JUMPI &&
-			opcode != zvmasm::Instruction::JUMPDEST
+			!qrvmasm::isDupInstruction(opcode) &&
+			!qrvmasm::isSwapInstruction(opcode) &&
+			!qrvmasm::isPushInstruction(opcode) &&
+			opcode != qrvmasm::Instruction::JUMP &&
+			opcode != qrvmasm::Instruction::JUMPI &&
+			opcode != qrvmasm::Instruction::JUMPDEST
 		)
-			builtins.emplace(createZVMFunction(name, opcode));
+			builtins.emplace(createQRVMFunction(name, opcode));
 	}
 
 	if (_objectAccess)
@@ -231,7 +231,7 @@ std::map<YulString, BuiltinFunctionForZVM> createBuiltins(bool _objectAccess)
 				AbstractAssembly& _assembly,
 				BuiltinContext&
 			) {
-				_assembly.appendInstruction(zvmasm::Instruction::CODECOPY);
+				_assembly.appendInstruction(qrvmasm::Instruction::CODECOPY);
 			}
 		));
 		builtins.emplace(createFunction(
@@ -278,7 +278,7 @@ std::regex const& verbatimPattern()
 }
 
 
-ZVMDialect::ZVMDialect(langutil::ZVMVersion _qrvmVersion, bool _objectAccess):
+QRVMDialect::QRVMDialect(langutil::QRVMVersion _qrvmVersion, bool _objectAccess):
 	m_objectAccess(_objectAccess),
 	m_qrvmVersion(_qrvmVersion),
 	m_functions(createBuiltins(_objectAccess)),
@@ -286,7 +286,7 @@ ZVMDialect::ZVMDialect(langutil::ZVMVersion _qrvmVersion, bool _objectAccess):
 {
 }
 
-BuiltinFunctionForZVM const* ZVMDialect::builtin(YulString _name) const
+BuiltinFunctionForQRVM const* QRVMDialect::builtin(YulString _name) const
 {
 	if (m_objectAccess)
 	{
@@ -301,7 +301,7 @@ BuiltinFunctionForZVM const* ZVMDialect::builtin(YulString _name) const
 		return nullptr;
 }
 
-bool ZVMDialect::reservedIdentifier(YulString _name) const
+bool QRVMDialect::reservedIdentifier(YulString _name) const
 {
 	if (m_objectAccess)
 		if (_name.str().substr(0, "verbatim"s.size()) == "verbatim")
@@ -309,50 +309,50 @@ bool ZVMDialect::reservedIdentifier(YulString _name) const
 	return m_reserved.count(_name) != 0;
 }
 
-ZVMDialect const& ZVMDialect::strictAssemblyForZVM(langutil::ZVMVersion _version)
+QRVMDialect const& QRVMDialect::strictAssemblyForQRVM(langutil::QRVMVersion _version)
 {
-	static std::map<langutil::ZVMVersion, std::unique_ptr<ZVMDialect const>> dialects;
+	static std::map<langutil::QRVMVersion, std::unique_ptr<QRVMDialect const>> dialects;
 	static YulStringRepository::ResetCallback callback{[&] { dialects.clear(); }};
 	if (!dialects[_version])
-		dialects[_version] = std::make_unique<ZVMDialect>(_version, false);
+		dialects[_version] = std::make_unique<QRVMDialect>(_version, false);
 	return *dialects[_version];
 }
 
-ZVMDialect const& ZVMDialect::strictAssemblyForZVMObjects(langutil::ZVMVersion _version)
+QRVMDialect const& QRVMDialect::strictAssemblyForQRVMObjects(langutil::QRVMVersion _version)
 {
-	static std::map<langutil::ZVMVersion, std::unique_ptr<ZVMDialect const>> dialects;
+	static std::map<langutil::QRVMVersion, std::unique_ptr<QRVMDialect const>> dialects;
 	static YulStringRepository::ResetCallback callback{[&] { dialects.clear(); }};
 	if (!dialects[_version])
-		dialects[_version] = std::make_unique<ZVMDialect>(_version, true);
+		dialects[_version] = std::make_unique<QRVMDialect>(_version, true);
 	return *dialects[_version];
 }
 
-SideEffects ZVMDialect::sideEffectsOfInstruction(zvmasm::Instruction _instruction)
+SideEffects QRVMDialect::sideEffectsOfInstruction(qrvmasm::Instruction _instruction)
 {
-	auto translate = [](zvmasm::SemanticInformation::Effect _e) -> SideEffects::Effect
+	auto translate = [](qrvmasm::SemanticInformation::Effect _e) -> SideEffects::Effect
 	{
 		return static_cast<SideEffects::Effect>(_e);
 	};
 
 	return SideEffects{
-		zvmasm::SemanticInformation::movable(_instruction),
-		zvmasm::SemanticInformation::movableApartFromEffects(_instruction),
-		zvmasm::SemanticInformation::canBeRemoved(_instruction),
-		zvmasm::SemanticInformation::canBeRemovedIfNoMSize(_instruction),
+		qrvmasm::SemanticInformation::movable(_instruction),
+		qrvmasm::SemanticInformation::movableApartFromEffects(_instruction),
+		qrvmasm::SemanticInformation::canBeRemoved(_instruction),
+		qrvmasm::SemanticInformation::canBeRemovedIfNoMSize(_instruction),
 		true, // cannotLoop
-		translate(zvmasm::SemanticInformation::otherState(_instruction)),
-		translate(zvmasm::SemanticInformation::storage(_instruction)),
-		translate(zvmasm::SemanticInformation::memory(_instruction)),
+		translate(qrvmasm::SemanticInformation::otherState(_instruction)),
+		translate(qrvmasm::SemanticInformation::storage(_instruction)),
+		translate(qrvmasm::SemanticInformation::memory(_instruction)),
 	};
 }
 
-BuiltinFunctionForZVM const* ZVMDialect::verbatimFunction(size_t _arguments, size_t _returnVariables) const
+BuiltinFunctionForQRVM const* QRVMDialect::verbatimFunction(size_t _arguments, size_t _returnVariables) const
 {
 	std::pair<size_t, size_t> key{_arguments, _returnVariables};
-	std::shared_ptr<BuiltinFunctionForZVM const>& function = m_verbatimFunctions[key];
+	std::shared_ptr<BuiltinFunctionForQRVM const>& function = m_verbatimFunctions[key];
 	if (!function)
 	{
-		BuiltinFunctionForZVM builtinFunction = createFunction(
+		BuiltinFunctionForQRVM builtinFunction = createFunction(
 			"verbatim_" + std::to_string(_arguments) + "i_" + std::to_string(_returnVariables) + "o",
 			1 + _arguments,
 			_returnVariables,
@@ -374,13 +374,13 @@ BuiltinFunctionForZVM const* ZVMDialect::verbatimFunction(size_t _arguments, siz
 			}
 		).second;
 		builtinFunction.isMSize = true;
-		function = std::make_shared<BuiltinFunctionForZVM const>(std::move(builtinFunction));
+		function = std::make_shared<BuiltinFunctionForQRVM const>(std::move(builtinFunction));
 	}
 	return function.get();
 }
 
-ZVMDialectTyped::ZVMDialectTyped(langutil::ZVMVersion _qrvmVersion, bool _objectAccess):
-	ZVMDialect(_qrvmVersion, _objectAccess)
+QRVMDialectTyped::QRVMDialectTyped(langutil::QRVMVersion _qrvmVersion, bool _objectAccess):
+	QRVMDialect(_qrvmVersion, _objectAccess)
 {
 	defaultType = "u256"_yulstring;
 	boolType = "bool"_yulstring;
@@ -440,18 +440,18 @@ ZVMDialectTyped::ZVMDialectTyped(langutil::ZVMVersion _qrvmVersion, bool _object
 		// TODO this should use a Panic.
 		// A value larger than 1 causes an invalid instruction.
 		_assembly.appendConstant(2);
-		_assembly.appendInstruction(zvmasm::Instruction::DUP2);
-		_assembly.appendInstruction(zvmasm::Instruction::LT);
+		_assembly.appendInstruction(qrvmasm::Instruction::DUP2);
+		_assembly.appendInstruction(qrvmasm::Instruction::LT);
 		AbstractAssembly::LabelID inRange = _assembly.newLabelId();
 		_assembly.appendJumpToIf(inRange);
-		_assembly.appendInstruction(zvmasm::Instruction::INVALID);
+		_assembly.appendInstruction(qrvmasm::Instruction::INVALID);
 		_assembly.appendLabel(inRange);
 	}));
 	m_functions["u256_to_bool"_yulstring].parameters = {"u256"_yulstring};
 	m_functions["u256_to_bool"_yulstring].returns = {"bool"_yulstring};
 }
 
-BuiltinFunctionForZVM const* ZVMDialectTyped::discardFunction(YulString _type) const
+BuiltinFunctionForQRVM const* QRVMDialectTyped::discardFunction(YulString _type) const
 {
 	if (_type == "bool"_yulstring)
 		return builtin("popbool"_yulstring);
@@ -462,7 +462,7 @@ BuiltinFunctionForZVM const* ZVMDialectTyped::discardFunction(YulString _type) c
 	}
 }
 
-BuiltinFunctionForZVM const* ZVMDialectTyped::equalityFunction(YulString _type) const
+BuiltinFunctionForQRVM const* QRVMDialectTyped::equalityFunction(YulString _type) const
 {
 	if (_type == "bool"_yulstring)
 		return nullptr;
@@ -473,11 +473,11 @@ BuiltinFunctionForZVM const* ZVMDialectTyped::equalityFunction(YulString _type) 
 	}
 }
 
-ZVMDialectTyped const& ZVMDialectTyped::instance(langutil::ZVMVersion _version)
+QRVMDialectTyped const& QRVMDialectTyped::instance(langutil::QRVMVersion _version)
 {
-	static std::map<langutil::ZVMVersion, std::unique_ptr<ZVMDialectTyped const>> dialects;
+	static std::map<langutil::QRVMVersion, std::unique_ptr<QRVMDialectTyped const>> dialects;
 	static YulStringRepository::ResetCallback callback{[&] { dialects.clear(); }};
 	if (!dialects[_version])
-		dialects[_version] = std::make_unique<ZVMDialectTyped>(_version, true);
+		dialects[_version] = std::make_unique<QRVMDialectTyped>(_version, true);
 	return *dialects[_version];
 }

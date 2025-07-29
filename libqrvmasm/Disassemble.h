@@ -21,12 +21,12 @@
 #include <libhyputil/Common.h>
 #include <libhyputil/Numeric.h>
 
-#include <libzvmasm/Instruction.h>
+#include <libqrvmasm/Instruction.h>
 
 #include <functional>
 #include <string>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 /// Iterate through QRVM code and call a function on each instruction.

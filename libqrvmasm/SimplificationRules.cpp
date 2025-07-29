@@ -22,18 +22,18 @@
  * Container for equivalence classes of expressions for use in common subexpression elimination.
  */
 
-#include <libzvmasm/SimplificationRules.h>
+#include <libqrvmasm/SimplificationRules.h>
 
-#include <libzvmasm/ExpressionClasses.h>
-#include <libzvmasm/Assembly.h>
-#include <libzvmasm/RuleList.h>
+#include <libqrvmasm/ExpressionClasses.h>
+#include <libqrvmasm/Assembly.h>
+#include <libqrvmasm/RuleList.h>
 #include <libhyputil/Assertions.h>
 
 #include <utility>
 #include <functional>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 using namespace hyperion::langutil;
 
 SimplificationRule<Pattern> const* Rules::findFirstMatch(

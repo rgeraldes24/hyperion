@@ -23,21 +23,21 @@
 #pragma once
 
 
-#include <libzvmasm/Instruction.h>
-#include <libzvmasm/SimplificationRule.h>
+#include <libqrvmasm/Instruction.h>
+#include <libqrvmasm/SimplificationRule.h>
 
 #include <libhyputil/CommonData.h>
 
 #include <boost/multiprecision/detail/min_max.hpp>
 
 #include <libyul/Dialect.h>
-#include <libyul/backends/zvm/ZVMDialect.h>
-#include <liblangutil/ZVMVersion.h>
+#include <libyul/backends/qrvm/QRVMDialect.h>
+#include <liblangutil/QRVMVersion.h>
 
 #include <vector>
 #include <functional>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 template <class S> S divWorkaround(S const& _a, S const& _b)
@@ -288,7 +288,7 @@ std::vector<SimplificationRule<Pattern>> simplificationRuleListPart5(
 
 	std::vector<SimplificationRule<Pattern>> rules;
 
-	// The libzvmasm optimizer does not support rules resulting in opcodes with more than two arguments.
+	// The libqrvmasm optimizer does not support rules resulting in opcodes with more than two arguments.
 	if (_forYulOptimizer)
 	{
 		// Replace MOD(MUL(X, Y), A) with MULMOD(X, Y, A) iff A=2**N
@@ -733,7 +733,7 @@ std::vector<SimplificationRule<Pattern>> simplificationRuleListPart8(
 }
 
 template<class Pattern>
-std::vector<SimplificationRule<Pattern>> zvmRuleList(
+std::vector<SimplificationRule<Pattern>> qrvmRuleList(
 	Pattern A,
 	Pattern,
 	Pattern,
@@ -798,7 +798,7 @@ std::vector<SimplificationRule<Pattern>> zvmRuleList(
 /// arbitrary operations.
 template <class Pattern>
 std::vector<SimplificationRule<Pattern>> simplificationRuleList(
-	std::optional<langutil::ZVMVersion> _qrvmVersion,
+	std::optional<langutil::QRVMVersion> _qrvmVersion,
 	Pattern A,
 	Pattern B,
 	Pattern C,
@@ -828,7 +828,7 @@ std::vector<SimplificationRule<Pattern>> simplificationRuleList(
 	rules += simplificationRuleListPart8(A, B, C, W, X);
 
 	if (_qrvmVersion.has_value())
-		rules += zvmRuleList(A, B, C, W, X, Y, Z);
+		rules += qrvmRuleList(A, B, C, W, X, Y, Z);
 
 	return rules;
 }

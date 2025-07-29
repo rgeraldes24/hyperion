@@ -2,4 +2,4 @@ contract C {
     receive(uint256) external payable {}
 }
 // ----
-// DeclarationError 6857: (24-33): Receive zond function cannot take parameters.
+// DeclarationError 6857: (24-33): Receive quanta function cannot take parameters.

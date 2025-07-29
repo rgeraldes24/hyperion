@@ -22,16 +22,16 @@
 
 #pragma once
 
-#include <libzvmasm/Exceptions.h>
+#include <libqrvmasm/Exceptions.h>
 
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
 #include <libhyputil/Numeric.h>
 #include <libhyputil/Assertions.h>
 
 #include <vector>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 
 class AssemblyItem;
@@ -50,7 +50,7 @@ public:
 	static unsigned optimiseConstants(
 		bool _isCreation,
 		size_t _runs,
-		langutil::ZVMVersion _qrvmVersion,
+		langutil::QRVMVersion _qrvmVersion,
 		Assembly& _assembly
 	);
 
@@ -62,7 +62,7 @@ protected:
 		bool isCreation; ///< Whether this is called during contract creation or runtime.
 		size_t runs; ///< Estimated number of calls per opcode oven the lifetime of the contract.
 		size_t multiplicity; ///< Number of times the constant appears in the code.
-		langutil::ZVMVersion zvmVersion; ///< Version of the ZVM
+		langutil::QRVMVersion qrvmVersion; ///< Version of the QRVM
 	};
 
 	explicit ConstantOptimisationMethod(Params const& _params, u256 const& _value):

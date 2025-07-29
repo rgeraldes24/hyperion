@@ -24,9 +24,9 @@ and the extraBalance accounts.
 abstract contract ManagedAccountInterface {
     // The only address with permission to withdraw from this account
     address public owner;
-    // If true, only the owner of the account can receive zond from it
+    // If true, only the owner of the account can receive quanta from it
     bool public payOwnerOnly;
-    // The sum of zond (in planck) which has been sent to this contract
+    // The sum of quanta (in planck) which has been sent to this contract
     uint public accumulatedInput;
 
     /// @notice Sends `_amount` of planck to _recipient

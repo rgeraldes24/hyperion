@@ -16,9 +16,9 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 
-#include <libzvmasm/AssemblyItem.h>
+#include <libqrvmasm/AssemblyItem.h>
 
-#include <libzvmasm/Assembly.h>
+#include <libqrvmasm/Assembly.h>
 
 #include <libhyputil/CommonData.h>
 #include <libhyputil/CommonIO.h>
@@ -32,7 +32,7 @@
 
 using namespace std::literals;
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 using namespace hyperion::langutil;
 
 static_assert(sizeof(size_t) <= 8, "size_t must be at most 64-bits wide");
@@ -336,7 +336,7 @@ std::string AssemblyItem::toAssemblyText(Assembly const& _assembly) const
 }
 
 // Note: This method is exclusively used for debugging.
-std::ostream& hyperion::zvmasm::operator<<(std::ostream& _out, AssemblyItem const& _item)
+std::ostream& hyperion::qrvmasm::operator<<(std::ostream& _out, AssemblyItem const& _item)
 {
 	switch (_item.type())
 	{
@@ -444,9 +444,9 @@ std::string AssemblyItem::computeSourceMapping(
 			static_cast<int>(_sourceIndicesMap.at(*location.sourceName)) :
 			-1;
 		char jump = '-';
-		if (item.getJumpType() == zvmasm::AssemblyItem::JumpType::IntoFunction)
+		if (item.getJumpType() == qrvmasm::AssemblyItem::JumpType::IntoFunction)
 			jump = 'i';
-		else if (item.getJumpType() == zvmasm::AssemblyItem::JumpType::OutOfFunction)
+		else if (item.getJumpType() == qrvmasm::AssemblyItem::JumpType::OutOfFunction)
 			jump = 'o';
 		int modifierDepth = static_cast<int>(item.m_modifierDepth);
 

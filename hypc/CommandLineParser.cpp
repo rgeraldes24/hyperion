@@ -1024,7 +1024,7 @@ void CommandLineParser::processArgs()
 
 	if (m_options.input.mode == InputMode::QRVMAssemblerJSON)
 	{
-		static std::set<std::string> const supportedByZvmAsmJsonImport{
+		static std::set<std::string> const supportedByQrvmAsmJsonImport{
 			g_strImportQrvmAssemblerJson,
 			CompilerOutputs::componentName(&CompilerOutputs::asm_),
 			CompilerOutputs::componentName(&CompilerOutputs::binary),
@@ -1040,7 +1040,7 @@ void CommandLineParser::processArgs()
 		};
 
 		for (auto const& [optionName, optionValue]: m_args)
-			if (!optionValue.defaulted() && !supportedByZvmAsmJsonImport.count(optionName))
+			if (!optionValue.defaulted() && !supportedByQrvmAsmJsonImport.count(optionName))
 				hypThrow(
 					CommandLineValidationError,
 					fmt::format(
@@ -1179,12 +1179,12 @@ void CommandLineParser::processArgs()
 	if (m_options.input.mode == InputMode::Linker)
 		return;
 
-	if (m_args.count(g_strZVMVersion))
+	if (m_args.count(g_strQRVMVersion))
 	{
-		std::string versionOptionStr = m_args[g_strZVMVersion].as<std::string>();
-		std::optional<langutil::ZVMVersion> versionOption = langutil::ZVMVersion::fromString(versionOptionStr);
+		std::string versionOptionStr = m_args[g_strQRVMVersion].as<std::string>();
+		std::optional<langutil::QRVMVersion> versionOption = langutil::QRVMVersion::fromString(versionOptionStr);
 		if (!versionOption)
-			hypThrow(CommandLineValidationError, "Invalid option for --" + g_strZVMVersion + ": " + versionOptionStr);
+			hypThrow(CommandLineValidationError, "Invalid option for --" + g_strQRVMVersion + ": " + versionOptionStr);
 		m_options.output.qrvmVersion= *versionOption;
 	}
 
@@ -1194,7 +1194,7 @@ void CommandLineParser::processArgs()
 			"Options --" + g_strOptimizeYul + " and --" + g_strNoOptimizeYul + " cannot be used together."
 		);
 
-	m_options.optimizer.optimizeZvmasm = (m_args.count(g_strOptimize) > 0);
+	m_options.optimizer.optimizeQrvmasm = (m_args.count(g_strOptimize) > 0);
 	m_options.optimizer.optimizeYul = (
 		(m_args.count(g_strOptimize) > 0 && m_args.count(g_strNoOptimizeYul) == 0) ||
 		m_args.count(g_strOptimizeYul) > 0
@@ -1248,21 +1248,21 @@ void CommandLineParser::processArgs()
 		if (m_args.count(g_strMachine))
 		{
 			std::string machine = m_args[g_strMachine].as<std::string>();
-			if (machine == g_strZVM)
-				m_options.assembly.targetMachine = Machine::ZVM;
+			if (machine == g_strQRVM)
+				m_options.assembly.targetMachine = Machine::QRVM;
 			else
 				hypThrow(CommandLineValidationError, "Invalid option for --" + g_strMachine + ": " + machine);
 		}
 		if (m_args.count(g_strYulDialect))
 		{
 			std::string dialect = m_args[g_strYulDialect].as<std::string>();
-			if (dialect == g_strZVM)
+			if (dialect == g_strQRVM)
 				m_options.assembly.inputLanguage = Input::StrictAssembly;
 			else
 				hypThrow(CommandLineValidationError, "Invalid option for --" + g_strYulDialect + ": " + dialect);
 		}
 		if (
-				(m_options.optimizer.optimizeZvmasm || m_options.optimizer.optimizeYul) &&
+				(m_options.optimizer.optimizeQrvmasm || m_options.optimizer.optimizeYul) &&
 				m_options.assembly.inputLanguage != Input::StrictAssembly
 			)
 			hypThrow(

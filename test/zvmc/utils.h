@@ -1,5 +1,5 @@
-// ZVMC: Zond Client-VM Connector API.
-// Copyright 2018 The ZVMC Authors.
+// QRVMC: QRL Client-VM Connector API.
+// Copyright 2018 The QRVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 
 #pragma once
@@ -13,23 +13,23 @@
  */
 
 /**
- * @def ZVMC_EXPORT
+ * @def QRVMC_EXPORT
  * Marks a function to be exported from a shared library.
  */
 #if defined _MSC_VER || defined __MINGW32__
-#define ZVMC_EXPORT __declspec(dllexport)
+#define QRVMC_EXPORT __declspec(dllexport)
 #else
-#define ZVMC_EXPORT __attribute__((visibility("default")))
+#define QRVMC_EXPORT __attribute__((visibility("default")))
 #endif
 
 /**
- * @def ZVMC_NOEXCEPT
+ * @def QRVMC_NOEXCEPT
  * Safe way of marking a function with `noexcept` C++ specifier.
  */
 #ifdef __cplusplus
-#define ZVMC_NOEXCEPT noexcept
+#define QRVMC_NOEXCEPT noexcept
 #else
-#define ZVMC_NOEXCEPT
+#define QRVMC_NOEXCEPT
 #endif
 
 /** @} */

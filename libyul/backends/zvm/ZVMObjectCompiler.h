@@ -28,26 +28,26 @@ namespace hyperion::yul
 {
 struct Object;
 class AbstractAssembly;
-struct ZVMDialect;
+struct QRVMDialect;
 
-class ZVMObjectCompiler
+class QRVMObjectCompiler
 {
 public:
 	static void compile(
 		Object& _object,
 		AbstractAssembly& _assembly,
-		ZVMDialect const& _dialect,
+		QRVMDialect const& _dialect,
 		bool _optimize
 	);
 private:
-	ZVMObjectCompiler(AbstractAssembly& _assembly, ZVMDialect const& _dialect):
+	QRVMObjectCompiler(AbstractAssembly& _assembly, QRVMDialect const& _dialect):
 		m_assembly(_assembly), m_dialect(_dialect)
 	{}
 
 	void run(Object& _object, bool _optimize);
 
 	AbstractAssembly& m_assembly;
-	ZVMDialect const& m_dialect;
+	QRVMDialect const& m_dialect;
 };
 
 }

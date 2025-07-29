@@ -101,8 +101,8 @@ you can use state machine-like constructs inside a contract.
         }
 
         /// Confirm the purchase as buyer.
-        /// Transaction has to include `2 * value` zond.
-        /// The zond will be locked until confirmReceived
+        /// Transaction has to include `2 * value` quanta.
+        /// The quanta will be locked until confirmReceived
         /// is called.
         function confirmPurchase()
             external
@@ -116,7 +116,7 @@ you can use state machine-like constructs inside a contract.
         }
 
         /// Confirm that you (the buyer) received the item.
-        /// This will release the locked zond.
+        /// This will release the locked quanta.
         function confirmReceived()
             external
             onlyBuyer

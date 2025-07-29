@@ -21,11 +21,11 @@
 
 #pragma once
 
-#include <libyul/backends/zvm/AbstractAssembly.h>
+#include <libyul/backends/qrvm/AbstractAssembly.h>
 
-#include <libyul/backends/zvm/ZVMDialect.h>
+#include <libyul/backends/qrvm/QRVMDialect.h>
 
-#include <libzvmasm/LinkerObject.h>
+#include <libqrvmasm/LinkerObject.h>
 
 #include <map>
 
@@ -45,13 +45,13 @@ namespace hyperion::yul
 class NoOutputAssembly: public AbstractAssembly
 {
 public:
-	explicit NoOutputAssembly(langutil::ZVMVersion _qrvmVersion): m_qrvmVersion(_qrvmVersion) { }
+	explicit NoOutputAssembly(langutil::QRVMVersion _qrvmVersion): m_qrvmVersion(_qrvmVersion) { }
 	~NoOutputAssembly() override = default;
 
 	void setSourceLocation(langutil::SourceLocation const&) override {}
 	int stackHeight() const override { return m_stackHeight; }
 	void setStackHeight(int height) override { m_stackHeight = height; }
-	void appendInstruction(zvmasm::Instruction _instruction) override;
+	void appendInstruction(qrvmasm::Instruction _instruction) override;
 	void appendConstant(u256 const& _constant) override;
 	void appendLabel(LabelID _labelId) override;
 	void appendLabelReference(LabelID _labelId) override;
@@ -77,20 +77,20 @@ public:
 
 	void markAsInvalid() override {}
 
-	langutil::ZVMVersion zvmVersion() const override { return m_qrvmVersion; }
+	langutil::QRVMVersion qrvmVersion() const override { return m_qrvmVersion; }
 
 private:
 	int m_stackHeight = 0;
-	langutil::ZVMVersion m_qrvmVersion;
+	langutil::QRVMVersion m_qrvmVersion;
 };
 
 
 /**
  * QRVM dialect that does not generate any code.
  */
-struct NoOutputZVMDialect: public ZVMDialect
+struct NoOutputQRVMDialect: public QRVMDialect
 {
-	explicit NoOutputZVMDialect(ZVMDialect const& _copyFrom);
+	explicit NoOutputQRVMDialect(QRVMDialect const& _copyFrom);
 };
 
 

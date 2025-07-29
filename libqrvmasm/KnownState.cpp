@@ -22,14 +22,14 @@
  * Contains knowledge about the state of the virtual machine at a specific instruction.
  */
 
-#include <libzvmasm/KnownState.h>
-#include <libzvmasm/AssemblyItem.h>
+#include <libqrvmasm/KnownState.h>
+#include <libqrvmasm/AssemblyItem.h>
 #include <libhyputil/Keccak256.h>
 
 #include <functional>
 
 using namespace hyperion;
-using namespace hyperion::zvmasm;
+using namespace hyperion::qrvmasm;
 using namespace hyperion::langutil;
 
 std::ostream& KnownState::stream(std::ostream& _out) const
@@ -129,7 +129,7 @@ KnownState::StoreOperation KnownState::feedItem(AssemblyItem const& _item, bool 
 	else
 	{
 		Instruction instruction = _item.instruction();
-		// The latest ZVMVersion is used here, since the InstructionInfo is assumed to be
+		// The latest QRVMVersion is used here, since the InstructionInfo is assumed to be
 		// the same across all QRVM versions except for the instruction name.
 		InstructionInfo info = instructionInfo(instruction);
 		if (SemanticInformation::isDupInstruction(_item))

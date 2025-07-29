@@ -25,7 +25,7 @@
 #include <cstddef>
 #include <set>
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 class AssemblyItem;
 using AssemblyItems = std::vector<AssemblyItem>;

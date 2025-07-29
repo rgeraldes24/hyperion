@@ -19,11 +19,11 @@
  * Compiler that transforms Yul Objects to QRVM bytecode objects.
  */
 
-#include <libyul/backends/zvm/ZVMObjectCompiler.h>
+#include <libyul/backends/qrvm/QRVMObjectCompiler.h>
 
-#include <libyul/backends/zvm/ZVMCodeTransform.h>
-#include <libyul/backends/zvm/ZVMDialect.h>
-#include <libyul/backends/zvm/OptimizedZVMCodeTransform.h>
+#include <libyul/backends/qrvm/QRVMCodeTransform.h>
+#include <libyul/backends/qrvm/QRVMDialect.h>
+#include <libyul/backends/qrvm/OptimizedQRVMCodeTransform.h>
 
 #include <libyul/optimiser/FunctionCallFinder.h>
 
@@ -34,18 +34,18 @@
 
 using namespace hyperion::yul;
 
-void ZVMObjectCompiler::compile(
+void QRVMObjectCompiler::compile(
 	Object& _object,
 	AbstractAssembly& _assembly,
-	ZVMDialect const& _dialect,
+	QRVMDialect const& _dialect,
 	bool _optimize
 )
 {
-	ZVMObjectCompiler compiler(_assembly, _dialect);
+	QRVMObjectCompiler compiler(_assembly, _dialect);
 	compiler.run(_object, _optimize);
 }
 
-void ZVMObjectCompiler::run(Object& _object, bool _optimize)
+void QRVMObjectCompiler::run(Object& _object, bool _optimize)
 {
 	BuiltinContext context;
 	context.currentObject = &_object;
@@ -74,13 +74,13 @@ void ZVMObjectCompiler::run(Object& _object, bool _optimize)
 	yulAssert(_object.code, "No code.");
 	if (_optimize)
 	{
-		auto stackErrors = OptimizedZVMCodeTransform::run(
+		auto stackErrors = OptimizedQRVMCodeTransform::run(
 			m_assembly,
 			*_object.analysisInfo,
 			*_object.code,
 			m_dialect,
 			context,
-			OptimizedZVMCodeTransform::UseNamedLabels::ForFirstFunctionOfEachName
+			OptimizedQRVMCodeTransform::UseNamedLabels::ForFirstFunctionOfEachName
 		);
 		if (!stackErrors.empty())
 		{

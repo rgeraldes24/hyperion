@@ -177,11 +177,11 @@ abstract contract DAOInterface {
     receive() virtual external payable;
 
 
-    /// @dev This function is used to send zond back
+    /// @dev This function is used to send quanta back
     /// to the DAO, it can also be used to receive payments that should not be
     /// counted as rewards (donations, grants, etc.)
-    /// @return Whether the DAO received the zond successfully
-    function receiveZond() public virtual returns (bool);
+    /// @return Whether the DAO received the quanta successfully
+    function receiveQuanta() public virtual returns (bool);
 
     /// @notice `msg.sender` creates a proposal to send `_amount` Planck to
     /// `_recipient` with the transaction data `_transactionData`. If
@@ -393,11 +393,11 @@ contract DAO is DAOInterface, Token, TokenCreation {
         if (block.timestamp < closingTime + creationGracePeriod && msg.sender != address(extraBalance))
             createTokenProxy(payable(msg.sender));
         else
-            receiveZond();
+            receiveQuanta();
     }
 
 
-    function receiveZond() public override returns (bool) {
+    function receiveQuanta() public override returns (bool) {
         return true;
     }
 
@@ -740,7 +740,7 @@ contract DAO is DAOInterface, Token, TokenCreation {
     }
 
 
-    function withdrawRewardFor(address payable _account) noZond internal
+    function withdrawRewardFor(address payable _account) noQuanta internal
 override returns (bool _success) {
         if ((balanceOf(_account) * rewardAccount.accumulatedInput()) / totalSupply < paidOut[_account])
             revert();

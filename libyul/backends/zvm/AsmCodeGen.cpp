@@ -16,13 +16,13 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * Helper to compile Yul code using libzvmasm.
+ * Helper to compile Yul code using libqrvmasm.
  */
 
-#include <libyul/backends/zvm/AsmCodeGen.h>
+#include <libyul/backends/qrvm/AsmCodeGen.h>
 
-#include <libyul/backends/zvm/ZondAssemblyAdapter.h>
-#include <libyul/backends/zvm/ZVMCodeTransform.h>
+#include <libyul/backends/qrvm/QRLAssemblyAdapter.h>
+#include <libyul/backends/qrvm/QRVMCodeTransform.h>
 #include <libyul/AST.h>
 #include <libyul/AsmAnalysisInfo.h>
 
@@ -36,20 +36,20 @@ using namespace hyperion::langutil;
 void CodeGenerator::assemble(
 	Block const& _parsedData,
 	AsmAnalysisInfo& _analysisInfo,
-	zvmasm::Assembly& _assembly,
-	langutil::ZVMVersion _qrvmVersion,
+	qrvmasm::Assembly& _assembly,
+	langutil::QRVMVersion _qrvmVersion,
 	ExternalIdentifierAccess::CodeGenerator _identifierAccessCodeGen,
 	bool _useNamedLabelsForFunctions,
 	bool _optimizeStackAllocation
 )
 {
-	ZondAssemblyAdapter assemblyAdapter(_assembly);
+	QRLAssemblyAdapter assemblyAdapter(_assembly);
 	BuiltinContext builtinContext;
 	CodeTransform transform(
 		assemblyAdapter,
 		_analysisInfo,
 		_parsedData,
-		ZVMDialect::strictAssemblyForZVM(_qrvmVersion),
+		QRVMDialect::strictAssemblyForQRVM(_qrvmVersion),
 		builtinContext,
 		_optimizeStackAllocation,
 		_identifierAccessCodeGen,

@@ -22,8 +22,8 @@
 #pragma once
 
 #include <libyul/AST.h>
-#include <libyul/backends/zvm/ZVMDialect.h>
-#include <libyul/backends/zvm/ControlFlowGraph.h>
+#include <libyul/backends/qrvm/QRVMDialect.h>
+#include <libyul/backends/qrvm/ControlFlowGraph.h>
 #include <libyul/Exceptions.h>
 #include <libyul/Scope.h>
 
@@ -40,7 +40,7 @@ namespace hyperion::yul
 struct AsmAnalysisInfo;
 struct StackLayout;
 
-class OptimizedZVMCodeTransform
+class OptimizedQRVMCodeTransform
 {
 public:
 	/// Use named labels for functions 1) Yes and check that the names are unique
@@ -51,7 +51,7 @@ public:
 		AbstractAssembly& _assembly,
 		AsmAnalysisInfo& _analysisInfo,
 		Block const& _block,
-		ZVMDialect const& _dialect,
+		QRVMDialect const& _dialect,
 		BuiltinContext& _builtinContext,
 		UseNamedLabels _useNamedLabelsForFunctions
 	);
@@ -63,7 +63,7 @@ public:
 	/// Generate code for the assignment @a _assignment. Only public for using with std::visit.
 	void operator()(CFG::Assignment const& _assignment);
 private:
-	OptimizedZVMCodeTransform(
+	OptimizedQRVMCodeTransform(
 		AbstractAssembly& _assembly,
 		BuiltinContext& _builtinContext,
 		UseNamedLabels _useNamedLabelsForFunctions,

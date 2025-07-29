@@ -22,15 +22,15 @@ set -e
 
 # Requires $REPO_ROOT to be defined and "${REPO_ROOT}/scripts/common.sh" to be included before.
 
-CURRENT_ZVM_VERSION=shanghai
+CURRENT_QRVM_VERSION=shanghai
 
 AVAILABLE_PRESETS=(
     legacy-no-optimize
     ir-no-optimize
-    legacy-optimize-zvm-only
-    ir-optimize-zvm-only
-    legacy-optimize-zvm+yul
-    ir-optimize-zvm+yul
+    legacy-optimize-qrvm-only
+    ir-optimize-qrvm-only
+    legacy-optimize-qrvm+yul
+    ir-optimize-qrvm+yul
 )
 
 function print_presets_or_exit
@@ -197,7 +197,7 @@ function force_truffle_compiler_settings
     local binary_type="$2"
     local hypc_path="$3"
     local preset="$4"
-    local zvm_version="${5:-"$CURRENT_ZVM_VERSION"}"
+    local qrvm_version="${5:-"$CURRENT_QRVM_VERSION"}"
     local extra_settings="$6"
     local extra_optimizer_settings="$7"
 
@@ -211,14 +211,14 @@ function force_truffle_compiler_settings
     echo "Binary type: $binary_type"
     echo "Compiler path: $hypc_path"
     echo "Settings preset: ${preset}"
-    echo "Settings: $(settings_from_preset "$preset" "$zvm_version" "$extra_settings" "$extra_optimizer_settings")"
-    echo "ZVM version: $zvm_version"
+    echo "Settings: $(settings_from_preset "$preset" "$qrvm_version" "$extra_settings" "$extra_optimizer_settings")"
+    echo "QRVM version: $qrvm_version"
     echo "Compiler version: ${HYPCVERSION_SHORT}"
     echo "Compiler version (full): ${HYPCVERSION}"
     echo "-------------------------------------"
 
     local compiler_settings gas_reporter_settings
-    compiler_settings=$(truffle_compiler_settings "$hypc_path" "$preset" "$zvm_version" "$extra_settings" "$extra_optimizer_settings")
+    compiler_settings=$(truffle_compiler_settings "$hypc_path" "$preset" "$qrvm_version" "$extra_settings" "$extra_optimizer_settings")
     gas_reporter_settings=$(zond_gas_reporter_settings "$preset")
 
     {
@@ -307,7 +307,7 @@ function force_hardhat_compiler_settings
     local config_file="$1"
     local preset="$2"
     local config_var_name="$3"
-    local zvm_version="${4:-"$CURRENT_ZVM_VERSION"}"
+    local qrvm_version="${4:-"$CURRENT_QRVM_VERSION"}"
     local extra_settings="$5"
     local extra_optimizer_settings="$6"
 
@@ -315,14 +315,14 @@ function force_hardhat_compiler_settings
     echo "-------------------------------------"
     echo "Config file: ${config_file}"
     echo "Settings preset: ${preset}"
-    echo "Settings: $(settings_from_preset "$preset" "$zvm_version" "$extra_settings" "$extra_optimizer_settings")"
-    echo "ZVM version: ${zvm_version}"
+    echo "Settings: $(settings_from_preset "$preset" "$qrvm_version" "$extra_settings" "$extra_optimizer_settings")"
+    echo "QRVM version: ${qrvm_version}"
     echo "Compiler version: ${HYPCVERSION_SHORT}"
     echo "Compiler version (full): ${HYPCVERSION}"
     echo "-------------------------------------"
 
     local compiler_settings gas_reporter_settings
-    compiler_settings=$(hardhat_compiler_settings "$HYPCVERSION_SHORT" "$preset" "$zvm_version" "$extra_settings" "$extra_optimizer_settings")
+    compiler_settings=$(hardhat_compiler_settings "$HYPCVERSION_SHORT" "$preset" "$qrvm_version" "$extra_settings" "$extra_optimizer_settings")
     gas_reporter_settings=$(zond_gas_reporter_settings "$preset")
     if [[ $config_file == *\.js ]]; then
         [[ $config_var_name == "" ]] || assertFail
@@ -374,7 +374,7 @@ function hardhat_clean
 function settings_from_preset
 {
     local preset="$1"
-    local zvm_version="$2"
+    local qrvm_version="$2"
     local extra_settings="$3"
     local extra_optimizer_settings="$4"
 
@@ -385,12 +385,12 @@ function settings_from_preset
 
     case "$preset" in
         # NOTE: Remember to update `parallelism` of `t_ems_ext` job in CI config if you add/remove presets
-        legacy-no-optimize)       echo "{${extra_settings}zvmVersion: '${zvm_version}', viaIR: false, optimizer: {${extra_optimizer_settings}enabled: false}}" ;;
-        ir-no-optimize)           echo "{${extra_settings}zvmVersion: '${zvm_version}', viaIR: true,  optimizer: {${extra_optimizer_settings}enabled: false}}" ;;
-        legacy-optimize-zvm-only) echo "{${extra_settings}zvmVersion: '${zvm_version}', viaIR: false, optimizer: {${extra_optimizer_settings}enabled: true, details: {yul: false}}}" ;;
-        ir-optimize-zvm-only)     echo "{${extra_settings}zvmVersion: '${zvm_version}', viaIR: true,  optimizer: {${extra_optimizer_settings}enabled: true, details: {yul: false}}}" ;;
-        legacy-optimize-zvm+yul)  echo "{${extra_settings}zvmVersion: '${zvm_version}', viaIR: false, optimizer: {${extra_optimizer_settings}enabled: true, details: {yul: true}}}" ;;
-        ir-optimize-zvm+yul)      echo "{${extra_settings}zvmVersion: '${zvm_version}', viaIR: true,  optimizer: {${extra_optimizer_settings}enabled: true, details: {yul: true}}}" ;;
+        legacy-no-optimize)       echo "{${extra_settings}qrvmVersion: '${qrvm_version}', viaIR: false, optimizer: {${extra_optimizer_settings}enabled: false}}" ;;
+        ir-no-optimize)           echo "{${extra_settings}qrvmVersion: '${qrvm_version}', viaIR: true,  optimizer: {${extra_optimizer_settings}enabled: false}}" ;;
+        legacy-optimize-qrvm-only) echo "{${extra_settings}qrvmVersion: '${qrvm_version}', viaIR: false, optimizer: {${extra_optimizer_settings}enabled: true, details: {yul: false}}}" ;;
+        ir-optimize-qrvm-only)     echo "{${extra_settings}qrvmVersion: '${qrvm_version}', viaIR: true,  optimizer: {${extra_optimizer_settings}enabled: true, details: {yul: false}}}" ;;
+        legacy-optimize-qrvm+yul)  echo "{${extra_settings}qrvmVersion: '${qrvm_version}', viaIR: false, optimizer: {${extra_optimizer_settings}enabled: true, details: {yul: true}}}" ;;
+        ir-optimize-qrvm+yul)      echo "{${extra_settings}qrvmVersion: '${qrvm_version}', viaIR: true,  optimizer: {${extra_optimizer_settings}enabled: true, details: {yul: true}}}" ;;
         *)
             fail "Unknown settings preset: '${preset}'."
             ;;
@@ -426,14 +426,14 @@ function truffle_compiler_settings
 {
     local hypc_path="$1"
     local preset="$2"
-    local zvm_version="$3"
+    local qrvm_version="$3"
     local extra_settings="$4"
     local extra_optimizer_settings="$5"
 
     echo "{"
     echo "    hypc: {"
     echo "        version: \"${hypc_path}\","
-    echo "        settings: $(settings_from_preset "$preset" "$zvm_version" "$extra_settings" "$extra_optimizer_settings")"
+    echo "        settings: $(settings_from_preset "$preset" "$qrvm_version" "$extra_settings" "$extra_optimizer_settings")"
     echo "    }"
     echo "}"
 }
@@ -477,13 +477,13 @@ function hardhat_hypc_build_subtask {
 function hardhat_compiler_settings {
     local hypc_version="$1"
     local preset="$2"
-    local zvm_version="$3"
+    local qrvm_version="$3"
     local extra_settings="$4"
     local extra_optimizer_settings="$5"
 
     echo "{"
     echo "    version: '${hypc_version}',"
-    echo "    settings: $(settings_from_preset "$preset" "$zvm_version" "$extra_settings" "$extra_optimizer_settings")"
+    echo "    settings: $(settings_from_preset "$preset" "$qrvm_version" "$extra_settings" "$extra_optimizer_settings")"
     echo "}"
 }
 
@@ -522,7 +522,7 @@ function truffle_run_test
     local extra_optimizer_settings="$9"
 
     truffle_clean
-    force_truffle_compiler_settings "$config_file" "$binary_type" "$hypc_path" "$preset" "$CURRENT_ZVM_VERSION" "$extra_settings" "$extra_optimizer_settings"
+    force_truffle_compiler_settings "$config_file" "$binary_type" "$hypc_path" "$preset" "$CURRENT_QRVM_VERSION" "$extra_settings" "$extra_optimizer_settings"
     compile_and_run_test compile_fn test_fn truffle_verify_compiler_version "$preset" "$compile_only_presets"
 }
 
@@ -538,7 +538,7 @@ function hardhat_run_test
     local extra_optimizer_settings="$8"
 
     hardhat_clean
-    force_hardhat_compiler_settings "$config_file" "$preset" "$config_var_name" "$CURRENT_ZVM_VERSION" "$extra_settings" "$extra_optimizer_settings"
+    force_hardhat_compiler_settings "$config_file" "$preset" "$config_var_name" "$CURRENT_QRVM_VERSION" "$extra_settings" "$extra_optimizer_settings"
     compile_and_run_test compile_fn test_fn hardhat_verify_compiler_version "$preset" "$compile_only_presets"
 }
 

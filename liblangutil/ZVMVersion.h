@@ -28,9 +28,9 @@
 #include <boost/operators.hpp>
 
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
-/// Virtual machine bytecode instruction. Forward declared from libzvmasm/Instruction.h
+/// Virtual machine bytecode instruction. Forward declared from libqrvmasm/Instruction.h
 enum class Instruction: uint8_t;
 }
 
@@ -41,16 +41,16 @@ namespace hyperion::langutil
  * A version specifier of the QRVM we want to compile to.
  * Defaults to the latest version deployed on Ethereum Mainnet at the time of compiler release.
  */
-class ZVMVersion:
-	boost::less_than_comparable<ZVMVersion>,
-	boost::equality_comparable<ZVMVersion>
+class QRVMVersion:
+	boost::less_than_comparable<QRVMVersion>,
+	boost::equality_comparable<QRVMVersion>
 {
 public:
-	ZVMVersion() = default;
+	QRVMVersion() = default;
 
-	static ZVMVersion shanghai() { return {Version::Shanghai}; }
+	static QRVMVersion shanghai() { return {Version::Shanghai}; }
 
-	static std::optional<ZVMVersion> fromString(std::string const& _version)
+	static std::optional<QRVMVersion> fromString(std::string const& _version)
 	{
 		for (auto const& v: {shanghai()})
 			if (_version == v.name())
@@ -58,8 +58,8 @@ public:
 		return std::nullopt;
 	}
 
-	bool operator==(ZVMVersion const& _other) const { return m_version == _other.m_version; }
-	bool operator<(ZVMVersion const& _other) const { return m_version < _other.m_version; }
+	bool operator==(QRVMVersion const& _other) const { return m_version == _other.m_version; }
+	bool operator<(QRVMVersion const& _other) const { return m_version < _other.m_version; }
 
 	std::string name() const
 	{
@@ -73,7 +73,7 @@ public:
 private:
 	enum class Version { Shanghai };
 
-	ZVMVersion(Version _version): m_version(_version) {}
+	QRVMVersion(Version _version): m_version(_version) {}
 
 	Version m_version = Version::Shanghai;
 };

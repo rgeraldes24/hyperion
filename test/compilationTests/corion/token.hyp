@@ -53,7 +53,7 @@ contract token is safeMath, module, announcementTypes {
         /*
             Installation function
 
-            When _icoAddr is defined, 0.2 zond has to be attached  as many times  as many genesis addresses are given
+            When _icoAddr is defined, 0.2 quanta has to be attached  as many times  as many genesis addresses are given
 
             @forReplace                 This address will be replaced with the old one or not.
             @moduleHandler              Modulhandler's address
@@ -74,11 +74,11 @@ contract token is safeMath, module, announcementTypes {
         if ( ! forReplace ) {
             require( db.replaceOwner(address(this)) );
             assert( genesisAddr.length == genesisValue.length );
-            require( address(this).balance >= genesisAddr.length * 0.2 zond );
+            require( address(this).balance >= genesisAddr.length * 0.2 quanta );
             for ( uint256 a=0 ; a<genesisAddr.length ; a++ ) {
                 genesis[genesisAddr[a]] = true;
                 require( db.increase(genesisAddr[a], genesisValue[a]) );
-                if ( ! genesisAddr[a].send(0.2 zond) ) {}
+                if ( ! genesisAddr[a].send(0.2 quanta) ) {}
                 emit Mint(genesisAddr[a], genesisValue[a]);
             }
         }

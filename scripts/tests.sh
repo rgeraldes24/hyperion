@@ -101,13 +101,13 @@ else
 fi
 
 
-ZVM_VERSIONS="shanghai"
+QRVM_VERSIONS="shanghai"
 
 # And then run the Hyperion unit-tests in the matrix combination of optimizer / no optimizer
 # and shanghai VM
 for optimize in "" "--optimize"
 do
-    for vm in $ZVM_VERSIONS
+    for vm in $QRVM_VERSIONS
     do
         FORCE_ABIV1_RUNS="no yes"
         for abiv1 in $FORCE_ABIV1_RUNS

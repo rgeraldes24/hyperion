@@ -28,7 +28,7 @@
 #include <libhyputil/Common.h>
 #include <libhyputil/CommonData.h>
 #include <libhyputil/Numeric.h>
-#include <liblangutil/ZVMVersion.h>
+#include <liblangutil/QRVMVersion.h>
 
 #include <functional>
 #include <memory>
@@ -39,7 +39,7 @@ namespace hyperion::langutil
 struct SourceLocation;
 }
 
-namespace hyperion::zvmasm
+namespace hyperion::qrvmasm
 {
 enum class Instruction: uint8_t;
 }
@@ -49,7 +49,7 @@ namespace hyperion::yul
 struct Identifier;
 
 ///
-/// Assembly class that abstracts both the libzvmasm assembly and the new Yul assembly.
+/// Assembly class that abstracts both the libqrvmasm assembly and the new Yul assembly.
 ///
 class AbstractAssembly
 {
@@ -67,7 +67,7 @@ public:
 	virtual int stackHeight() const = 0;
 	virtual void setStackHeight(int height) = 0;
 	/// Append a QRVM instruction.
-	virtual void appendInstruction(zvmasm::Instruction _instruction) = 0;
+	virtual void appendInstruction(qrvmasm::Instruction _instruction) = 0;
 	/// Append a constant.
 	virtual void appendConstant(u256 const& _constant) = 0;
 	/// Append a label.
@@ -119,7 +119,7 @@ public:
 	virtual void markAsInvalid() = 0;
 
 	/// @returns the QRVM version the assembly targets.
-	virtual langutil::ZVMVersion zvmVersion() const = 0;
+	virtual langutil::QRVMVersion qrvmVersion() const = 0;
 };
 
 enum class IdentifierContext { LValue, RValue, VariableDeclaration, NonExternal };

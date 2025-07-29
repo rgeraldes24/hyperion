@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <test/ZVMHost.h>
+#include <test/QRVMHost.h>
 
 #include <libhyperion/interface/CompilerStack.h>
 
@@ -26,7 +26,7 @@
 
 #include <libhyputil/Keccak256.h>
 
-#include <zvmone/zvmone.h>
+#include <qrvmone/qrvmone.h>
 
 namespace hyperion::test::fuzzer
 {
@@ -41,7 +41,7 @@ struct CompilerOutput
 struct CompilerInput
 {
 	CompilerInput(
-		langutil::ZVMVersion _qrvmVersion,
+		langutil::QRVMVersion _qrvmVersion,
 		StringMap const& _sourceCode,
 		std::string const& _contractName,
 		frontend::OptimiserSettings _optimiserSettings,
@@ -49,7 +49,7 @@ struct CompilerInput
 		bool _debugFailure = false,
 		bool _viaIR = false
 	):
-		zvmVersion(_qrvmVersion),
+		qrvmVersion(_qrvmVersion),
 		sourceCode(_sourceCode),
 		contractName(_contractName),
 		optimiserSettings(_optimiserSettings),
@@ -58,7 +58,7 @@ struct CompilerInput
 		viaIR(_viaIR)
 	{}
 	/// QRVM target version
-	langutil::ZVMVersion zvmVersion;
+	langutil::QRVMVersion qrvmVersion;
 	/// Source code to be compiled
 	StringMap const& sourceCode;
 	/// Contract name without a colon prefix
@@ -102,17 +102,17 @@ private:
 	CompilerInput m_compilerInput;
 };
 
-class ZvmoneUtility
+class QrvmoneUtility
 {
 public:
-	ZvmoneUtility(
-		hyperion::test::ZVMHost& _zvmHost,
+	QrvmoneUtility(
+		hyperion::test::QRVMHost& _qrvmHost,
 		CompilerInput _compilerInput,
 		std::string const& _contractName,
 		std::string const& _libraryName,
 		std::string const& _methodName
 	):
-		m_zvmHost(_zvmHost),
+		m_qrvmHost(_qrvmHost),
 		m_compilationFramework(_compilerInput),
 		m_contractName(_contractName),
 		m_libraryName(_libraryName),
@@ -122,33 +122,33 @@ public:
 	/// and executing test configuration.
 	/// @param _isabelleData contains encoding data to be passed to the
 	/// isabelle test entry point.
-	zvmc::Result compileDeployAndExecute(std::string _isabelleData = {});
+	qrvmc::Result compileDeployAndExecute(std::string _isabelleData = {});
 	/// Compares the contents of the memory address pointed to
 	/// by `_result` of `_length` bytes to u256 zero.
 	/// @returns true if `_result` is zero, false
 	/// otherwise.
 	static bool zeroWord(uint8_t const* _result, size_t _length);
-	/// @returns an zvmc_message with all of its fields zero
+	/// @returns an qrvmc_message with all of its fields zero
 	/// initialized except gas and input fields.
 	/// The gas field is set to the maximum permissible value so that we
 	/// don't run into out of gas errors. The input field is copied from
 	/// @param _input.
-	static zvmc_message initializeMessage(bytes const& _input);
+	static qrvmc_message initializeMessage(bytes const& _input);
 private:
 	/// @returns the result of the execution of the function whose
 	/// keccak256 hash is @param _functionHash that is deployed at
 	/// @param _deployedAddress in @param _hostContext.
-	zvmc::Result executeContract(
+	qrvmc::Result executeContract(
 		bytes const& _functionHash,
-		zvmc_address _deployedAddress
+		qrvmc_address _deployedAddress
 	);
 	/// @returns the result of deployment of @param _code on @param _hostContext.
-	zvmc::Result deployContract(bytes const& _code);
+	qrvmc::Result deployContract(bytes const& _code);
 	/// Deploys and executes QRVM byte code in @param _byteCode on
 	/// QRVM Host referenced by @param _hostContext. Input passed
 	/// to execution context is @param _hexEncodedInput.
 	/// @returns result returning by @param _hostContext.
-	zvmc::Result deployAndExecute(
+	qrvmc::Result deployAndExecute(
 		bytes const& _byteCode,
 		std::string const& _hexEncodedInput
 	);
@@ -160,7 +160,7 @@ private:
 	std::optional<CompilerOutput> compileContract();
 
 	/// QRVM Host implementation
-	hyperion::test::ZVMHost& m_zvmHost;
+	hyperion::test::QRVMHost& m_qrvmHost;
 	/// Hyperion compilation framework
 	HyperionCompilationFramework m_compilationFramework;
 	/// Contract name

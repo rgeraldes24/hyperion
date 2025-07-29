@@ -4,7 +4,7 @@
 Units and Globally Available Variables
 **************************************
 
-.. index:: ! planck, ! gplanck, ! zond, ! denomination;zond
+.. index:: ! planck, ! gplanck, ! quanta, ! denomination;zond
 
 Zond Units
 ===========
@@ -16,7 +16,7 @@ A literal number can take a suffix of ``planck``, ``gplanck`` or ``zond`` to spe
 
     assert(1 planck == 1);
     assert(1 gplanck == 1e9);
-    assert(1 zond == 1e18);
+    assert(1 quanta == 1e18);
 
 The only effect of the subdenomination suffix is a multiplication by a power of ten.
 

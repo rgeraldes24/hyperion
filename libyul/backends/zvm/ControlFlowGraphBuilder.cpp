@@ -19,7 +19,7 @@
  * Transformation of a Yul AST into a control flow graph.
  */
 
-#include <libyul/backends/zvm/ControlFlowGraphBuilder.h>
+#include <libyul/backends/qrvm/ControlFlowGraphBuilder.h>
 #include <libyul/AST.h>
 #include <libyul/Exceptions.h>
 #include <libyul/Utilities.h>
