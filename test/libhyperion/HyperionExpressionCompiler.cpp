@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE(int_literal)
 	BOOST_CHECK_EQUAL_COLLECTIONS(code.begin(), code.end(), expectation.begin(), expectation.end());
 }
 
-BOOST_AUTO_TEST_CASE(int_with_planck_zond_subdenomination)
+BOOST_AUTO_TEST_CASE(int_with_planck_qrl_subdenomination)
 {
 	char const* sourceCode = R"(
 		contract test {
@@ -243,12 +243,12 @@ BOOST_AUTO_TEST_CASE(int_with_planck_zond_subdenomination)
 	BOOST_CHECK_EQUAL_COLLECTIONS(code.begin(), code.end(), expectation.begin(), expectation.end());
 }
 
-BOOST_AUTO_TEST_CASE(int_with_gplanck_zond_subdenomination)
+BOOST_AUTO_TEST_CASE(int_with_shor_qrl_subdenomination)
 {
 	char const* sourceCode = R"(
 		contract test {
 			function f() public {
-				uint x = 1 gplanck;
+				uint x = 1 shor;
 			}
 		}
 	)";
@@ -258,7 +258,7 @@ BOOST_AUTO_TEST_CASE(int_with_gplanck_zond_subdenomination)
 	BOOST_CHECK_EQUAL_COLLECTIONS(code.begin(), code.end(), expectation.begin(), expectation.end());
 }
 
-BOOST_AUTO_TEST_CASE(int_with_quanta_quanta_subdenomination)
+BOOST_AUTO_TEST_CASE(int_with_quanta_qrl_subdenomination)
 {
 	char const* sourceCode = R"(
 		contract test {

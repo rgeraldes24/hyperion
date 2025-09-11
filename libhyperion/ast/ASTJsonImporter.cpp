@@ -1200,10 +1200,10 @@ Literal::SubDenomination ASTJsonImporter::subdenomination(Json::Value const& _no
 
 	if (subDenStr == "planck")
 		return Literal::SubDenomination::Planck;
-	else if (subDenStr == "gplanck")
-		return Literal::SubDenomination::Gplanck;
-	else if (subDenStr == "zond")
-		return Literal::SubDenomination::Zond;
+	else if (subDenStr == "shor")
+		return Literal::SubDenomination::Shor;
+	else if (subDenStr == "quanta")
+		return Literal::SubDenomination::Quanta;
 	else if (subDenStr == "seconds")
 		return Literal::SubDenomination::Second;
 	else if (subDenStr == "minutes")

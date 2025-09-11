@@ -195,8 +195,8 @@ namespace hyperion::langutil
 	\
 	/* Zond subdenominations */                                       \
 	K(SubPlanck, "planck", 0)                                                \
-	K(SubGplanck, "gplanck", 0)                                              \
-	K(SubZond, "zond", 0)                                            \
+	K(SubShor, "shor", 0)                                              \
+	K(SubQuanta, "quanta", 0)                                            \
 	K(SubSecond, "seconds", 0)                                         \
 	K(SubMinute, "minutes", 0)                                         \
 	K(SubHour, "hours", 0)                                             \

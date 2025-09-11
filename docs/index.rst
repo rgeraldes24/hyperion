@@ -41,7 +41,7 @@ If you are new to the concept of smart contracts, we recommend you to get starte
 
 * :ref:`A simple example smart contract <simple-smart-contract>` written in Hyperion.
 * :ref:`Blockchain Basics <blockchain-basics>`.
-* :ref:`The Quantum Resistant Virtual Machine <the-zond-virtual-machine>`.
+* :ref:`The Quantum Resistant Virtual Machine <the-quantum-resistant-virtual-machine>`.
 
 **2. Get to Know Hyperion**
 
@@ -69,12 +69,12 @@ simply choose your preferred option and follow the steps outlined on the :ref:`i
 
 **4. Learn More**
 
-If you want to learn more about building decentralized applications on Zond,
-the `Zond Developer Resources <https://theqrl.org/en/developers/>`_ can help you with further general documentation around Zond,
+If you want to learn more about building decentralized applications on QRL,
+the `QRL Developer Resources <https://theqrl.org/en/developers/>`_ can help you with further general documentation around QRL,
 and a wide selection of tutorials, tools, and development frameworks.
 
 If you have any questions, you can try searching for answers or asking on the
-`Zond StackExchange <https://zond.stackexchange.com/>`_,
+`QRL StackExchange <https://qrl.stackexchange.com/>`_,
 or our `Gitter channel <https://gitter.im/theQRL/hyperion>`_.
 
 .. _translations:

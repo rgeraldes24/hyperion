@@ -4,18 +4,18 @@
 Units and Globally Available Variables
 **************************************
 
-.. index:: ! planck, ! gplanck, ! quanta, ! denomination;zond
+.. index:: ! planck, ! shor, ! quanta, ! denomination;qrl
 
-Zond Units
+QRL Units
 ===========
 
-A literal number can take a suffix of ``planck``, ``gplanck`` or ``zond`` to specify a subdenomination of Zond, where Zond numbers without a postfix are assumed to be Planck.
+A literal number can take a suffix of ``planck``, ``shor`` or ``quanta`` to specify a subdenomination of QRL, where QRL numbers without a postfix are assumed to be Planck.
 
 .. code-block:: hyperion
     :force:
 
     assert(1 planck == 1);
-    assert(1 gplanck == 1e9);
+    assert(1 shor == 1e9);
     assert(1 quanta == 1e18);
 
 The only effect of the subdenomination suffix is a multiplication by a power of ten.

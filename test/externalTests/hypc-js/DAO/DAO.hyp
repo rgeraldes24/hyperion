@@ -593,7 +593,7 @@ contract DAO is DAOInterface, Token, TokenCreation {
 
             _success = true;
 
-            // only create reward tokens when zond is not sent to the DAO itself and
+            // only create reward tokens when quanta is not sent to the DAO itself and
             // related addresses. Proxy addresses should be forbidden by the curator.
             if (p.recipient != address(this) && p.recipient != address(rewardAccount)
                 && p.recipient != address(DAOrewardAccount)
@@ -659,7 +659,7 @@ contract DAO is DAOInterface, Token, TokenCreation {
             p.proposalPassed = true;
         }
 
-        // Move zond and assign new Tokens
+        // Move quanta and assign new Tokens
         uint fundsToBeMoved =
             (balances[msg.sender] * p.splitData[0].splitBalance) /
             p.splitData[0].totalSupply;
@@ -696,7 +696,7 @@ contract DAO is DAOInterface, Token, TokenCreation {
 
     function newContract(address payable _newContract) public override {
         if (msg.sender != address(this) || !allowedRecipients[_newContract]) return;
-        // move all zond
+        // move all quanta
         (bool success,) = _newContract.call{value: address(this).balance}("");
         if (!success) {
             revert();

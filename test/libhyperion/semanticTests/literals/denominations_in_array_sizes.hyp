@@ -1,6 +1,6 @@
 contract C {
     uint[2 planck] a;
-    uint[2 gplanck] b;
+    uint[2 shor] b;
     uint[2 quanta] c;
     uint[2 seconds] d;
     uint[2 minutes] e;

@@ -48,8 +48,8 @@ namespace hyperion::test
 {
 using rational = boost::rational<bigint>;
 
-// The quanta and gplanck denominations; here for ease of use where needed within code.
-static u256 const gplanck = u256(1) << 9;
+// The quanta and shor denominations; here for ease of use where needed within code.
+static u256 const shor = u256(1) << 9;
 static u256 const quanta = u256(1) << 18;
 class ExecutionFramework
 {

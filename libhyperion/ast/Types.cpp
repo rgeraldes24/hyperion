@@ -978,10 +978,10 @@ std::tuple<bool, rational> RationalNumberType::isValidLiteral(Literal const& _li
 		case Literal::SubDenomination::Planck:
 		case Literal::SubDenomination::Second:
 			break;
-		case Literal::SubDenomination::Gplanck:
+		case Literal::SubDenomination::Shor:
 			value *= bigint("1000000000");
 			break;
-		case Literal::SubDenomination::Zond:
+		case Literal::SubDenomination::Quanta:
 			value *= bigint("1000000000000000000");
 			break;
 		case Literal::SubDenomination::Minute:

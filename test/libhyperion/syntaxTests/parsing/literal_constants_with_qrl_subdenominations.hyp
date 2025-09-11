@@ -3,7 +3,7 @@ contract C {
     {
          a = 1 planck;
          b = 2 quanta;
-         c = 3 gplanck;
+         c = 3 shor;
     }
     uint256 a;
     uint256 b;

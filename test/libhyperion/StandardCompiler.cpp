@@ -780,7 +780,7 @@ BOOST_AUTO_TEST_CASE(libraries_invalid_hex)
 		"settings": {
 			"libraries": {
 				"library.hyp": {
-					"L": "Z4200000000000000000000000000000000000xx1"
+					"L": "Q4200000000000000000000000000000000000xx1"
 				}
 			}
 		},
@@ -792,7 +792,7 @@ BOOST_AUTO_TEST_CASE(libraries_invalid_hex)
 	}
 	)";
 	Json::Value result = compile(input);
-	BOOST_CHECK(containsError(result, "JSONError", "Invalid library address (\"Z4200000000000000000000000000000000000xx1\") supplied."));
+	BOOST_CHECK(containsError(result, "JSONError", "Invalid library address (\"Q4200000000000000000000000000000000000xx1\") supplied."));
 }
 
 BOOST_AUTO_TEST_CASE(libraries_invalid_length)
@@ -803,8 +803,8 @@ BOOST_AUTO_TEST_CASE(libraries_invalid_length)
 		"settings": {
 			"libraries": {
 				"library.hyp": {
-					"L1": "Z42",
-					"L2": "Z4200000000000000000000000000000000000001ff"
+					"L1": "Q42",
+					"L2": "Q4200000000000000000000000000000000000001ff"
 				}
 			}
 		},

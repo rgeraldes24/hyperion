@@ -116,7 +116,7 @@ version using the following commands:
 
 .. code-block:: bash
 
-    sudo add-apt-repository ppa:theqrl/zond
+    sudo add-apt-repository ppa:theqrl/qrl
     sudo apt-get update
     sudo apt-get install hypc
 

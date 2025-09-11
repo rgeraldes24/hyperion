@@ -141,14 +141,14 @@ This may not apply to ``view`` functions that are only executed to read data fro
 Still, such functions may be called by other contracts as part of on-chain operations and stall those.
 Please be explicit about such cases in the documentation of your contracts.
 
-Sending and Receiving Zond
+Sending and Receiving Quanta
 ===========================
 
-- Neither contracts nor "external accounts" are currently able to prevent someone from sending them Zond.
-  Contracts can react on and reject a regular transfer, but there are ways to move Zond without creating a message call.
+- Neither contracts nor "external accounts" are currently able to prevent someone from sending them Quanta.
+  Contracts can react on and reject a regular transfer, but there are ways to move Quanta without creating a message call.
   One way is to simply "mine to" the contract address.
 
-- If a contract receives Zond (without a function being called), either the :ref:`receive Zond <receive-zond-function>`
+- If a contract receives Quanta (without a function being called), either the :ref:`receive Quanta <receive-quanta-function>`
   or the :ref:`fallback <fallback-function>` function is executed.
   If it does not have a ``receive`` nor a ``fallback`` function, the Zond will be rejected (by throwing an exception).
   During the execution of one of these functions, the contract can only rely on the "gas stipend" it is passed (2300 gas)
@@ -166,16 +166,16 @@ Sending and Receiving Zond
 
 - Use the most precise units to represent the Planck amount as possible, as you lose any that is rounded due to a lack of precision.
 
-- If you want to send Zond using ``address.transfer``, there are certain details to be aware of:
+- If you want to send Quanta using ``address.transfer``, there are certain details to be aware of:
 
   1. If the recipient is a contract, it causes its receive or fallback function
      to be executed which can, in turn, call back the sending contract.
-  2. Sending Zond can fail due to the call depth going above 1024. Since the
+  2. Sending Quanta can fail due to the call depth going above 1024. Since the
      caller is in total control of the call depth, they can force the
      transfer to fail; take this possibility into account or use ``send`` and
      make sure to always check its return value. Better yet, write your
-     contract using a pattern where the recipient can withdraw Zond instead.
-  3. Sending Zond can also fail because the execution of the recipient
+     contract using a pattern where the recipient can withdraw Quanta instead.
+  3. Sending Quanta can also fail because the execution of the recipient
      contract requires more than the allotted amount of gas (explicitly by
      using :ref:`require <assert-and-require>`, :ref:`assert <assert-and-require>`,
      :ref:`revert <assert-and-require>` or because the
@@ -259,7 +259,7 @@ Let's say you have a wallet contract like this:
         }
     }
 
-Now someone tricks you into sending Zond to the address of this attack wallet:
+Now someone tricks you into sending Quanta to the address of this attack wallet:
 
 .. code-block:: hyperion
 
@@ -400,12 +400,12 @@ Messages of type ``info``, issued by the compiler, are not dangerous
 and simply represent extra suggestions and optional information
 that the compiler thinks might be useful to the user.
 
-Restrict the Amount of Zond
+Restrict the Amount of Quanta
 ============================
 
-Restrict the amount of Zond (or other tokens) that can be stored in a smart contract.
+Restrict the amount of Quanta (or other tokens) that can be stored in a smart contract.
 If your source code, the compiler or the platform has a bug, these funds may be lost.
-If you want to limit your loss, limit the amount of Zond.
+If you want to limit your loss, limit the amount of Quanta.
 
 Keep it Small and Modular
 =========================

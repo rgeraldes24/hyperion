@@ -53,7 +53,7 @@
   let virtual := 1
   let while := 1
   let planck := 1
-  let gplanck := 1
+  let shor := 1
   let quanta := 1
   let seconds := 1
   let minutes := 1

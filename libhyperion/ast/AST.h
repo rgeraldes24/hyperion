@@ -2391,7 +2391,7 @@ public:
 	{
 		None = static_cast<int>(Token::Illegal),
 		Planck = static_cast<int>(Token::SubPlanck),
-		Gplanck = static_cast<int>(Token::SubGplanck),
+		Shor = static_cast<int>(Token::SubShor),
 		Zond = static_cast<int>(Token::SubZond),
 		Second = static_cast<int>(Token::SubSecond),
 		Minute = static_cast<int>(Token::SubMinute),

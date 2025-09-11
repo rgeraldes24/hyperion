@@ -1,5 +1,5 @@
 contract C {
-	uint constant y = 8 gplanck quanta;
+	uint constant y = 8 shor quanta;
 }
 // ----
 // ParserError 2314: (42-46): Expected ';' but got 'quanta'

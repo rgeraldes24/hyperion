@@ -157,7 +157,7 @@ struct qrvmc_message
     size_t input_size;
 
     /**
-     * The amount of Zond transferred with the message.
+     * The amount of Quanta transferred with the message.
      *
      * This is transferred value for ::QRVMC_CALL or apparent value for ::QRVMC_DELEGATECALL.
      * Defined as `v` or `v~` in the Yellow Paper.
@@ -857,7 +857,7 @@ enum qrvmc_revision
     /**
      * The Shanghai revision.
      *
-     * The one Zond launched with.
+     * The one QRL launched with.
      */
     QRVMC_SHANGHAI = 11,
 

@@ -574,9 +574,9 @@ BOOST_AUTO_TEST_CASE(comments_mixed_in_sequence)
 
 BOOST_AUTO_TEST_CASE(qrl_subdenominations)
 {
-	TestScanner scanner("planck gplanck quanta");
+	TestScanner scanner("planck shor quanta");
 	BOOST_CHECK_EQUAL(scanner.currentToken(), Token::SubPlanck);
-	BOOST_CHECK_EQUAL(scanner.next(), Token::SubGplanck);
+	BOOST_CHECK_EQUAL(scanner.next(), Token::SubShor);
 	BOOST_CHECK_EQUAL(scanner.next(), Token::SubQuanta);
 }
 

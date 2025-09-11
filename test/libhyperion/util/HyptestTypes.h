@@ -273,7 +273,7 @@ struct FunctionCall
 	/// For a library deployment, this contains the library name.
 	std::string signature;
 	/// Optional value that can be sent with the call.
-	/// Value is expressed in planck, smallest unit of zond
+	/// Value is expressed in planck, smallest unit of qrl
 	/// Value has a field unit which represents denomination on which value was expressed originally
 	FunctionValue value;
 	/// Object that holds all function parameters in their `bytes`

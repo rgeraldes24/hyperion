@@ -1,5 +1,5 @@
 contract C {
-    uint public g = 1.5 gplanck;
+    uint public g = 1.5 shor;
     uint public e = 1.5 quanta;
     uint public m = 1.5 minutes;
     uint public h = 1.5 hours;

@@ -823,7 +823,7 @@ BOOST_AUTO_TEST_CASE(constructor)
 	)
 }
 
-BOOST_AUTO_TEST_CASE(send_zond)
+BOOST_AUTO_TEST_CASE(send_quanta)
 {
 	char const* sourceCode = R"(
 		contract test {
@@ -843,7 +843,7 @@ BOOST_AUTO_TEST_CASE(send_zond)
 	)
 }
 
-BOOST_AUTO_TEST_CASE(transfer_zond)
+BOOST_AUTO_TEST_CASE(transfer_quanta)
 {
 	char const* sourceCode = R"(
 		contract A {
@@ -2454,7 +2454,7 @@ BOOST_AUTO_TEST_CASE(calldata_offset)
 	ABI_CHECK(callContractFunction("last()", encodeArgs()), encodeDyn(std::string("nd")));
 }
 
-BOOST_AUTO_TEST_CASE(reject_zond_sent_to_library)
+BOOST_AUTO_TEST_CASE(reject_quanta_sent_to_library)
 {
 	char const* sourceCode = R"(
 		library lib {}

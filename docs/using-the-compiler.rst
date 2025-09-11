@@ -337,7 +337,7 @@ Input Description
           // after remappings were applied.
           // If this key is an empty string, that refers to a global level.
           "myFile.hyp": {
-            "MyLib": "Z123123..."
+            "MyLib": "Q123123..."
           }
         },
         // The following can be used to select desired outputs based

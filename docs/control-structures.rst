@@ -639,9 +639,9 @@ in the following situations:
 #. Calling ``require(x)`` where ``x`` evaluates to ``false``.
 #. If you use ``revert()`` or ``revert("description")``.
 #. If you perform an external function call targeting a contract that contains no code.
-#. If your contract receives Zond via a public function without
+#. If your contract receives Quanta via a public function without
    ``payable`` modifier (including the constructor and the fallback function).
-#. If your contract receives Zond via a public getter function.
+#. If your contract receives Quanta via a public getter function.
 
 For the following cases, the error data from the external call
 (if provided) is forwarded. This means that it can either cause
@@ -680,7 +680,7 @@ and ``assert`` for internal error checking.
             addr.transfer(msg.value / 2);
             // Since transfer throws an exception on failure and
             // cannot call back here, there should be no way for us to
-            // still have half of the Zond.
+            // still have half of the Quanta.
             assert(address(this).balance == balanceBeforeTransfer - msg.value / 2);
             return address(this).balance;
         }
@@ -769,7 +769,7 @@ for example if they are just strings.
     ``condition`` is true.
 
 The provided string is :ref:`abi-encoded <ABI>` as if it were a call to a function ``Error(string)``.
-In the above example, ``revert("Not enough Zond provided.");`` returns the following hexadecimal as error return data:
+In the above example, ``revert("Not enough Quanta provided.");`` returns the following hexadecimal as error return data:
 
 .. code::
 

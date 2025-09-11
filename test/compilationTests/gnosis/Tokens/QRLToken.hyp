@@ -2,9 +2,9 @@ pragma hyperion >=0.0;
 import "../Tokens/StandardToken.hyp";
 
 
-/// @title Token contract - Token exchanging Zond 1:1
+/// @title Token contract - Token exchanging QRL 1:1
 /// @author Stefan George - <stefan@gnosis.pm>
-contract ZondToken is StandardToken {
+contract QRLToken is StandardToken {
     using Math for *;
 
     /*
@@ -16,14 +16,14 @@ contract ZondToken is StandardToken {
     /*
      *  Constants
      */
-    string public constant name = "Zond Token";
-    string public constant symbol = "ETH";
+    string public constant name = "QRL Token";
+    string public constant symbol = "QRL";
     uint8 public constant decimals = 18;
 
     /*
      *  Public functions
      */
-    /// @dev Buys tokens with Zond, exchanging them 1:1
+    /// @dev Buys tokens with Quanta, exchanging them 1:1
     function deposit()
         public
         payable
@@ -33,7 +33,7 @@ contract ZondToken is StandardToken {
         emit Deposit(msg.sender, msg.value);
     }
 
-    /// @dev Sells tokens in exchange for Zond, exchanging them 1:1
+    /// @dev Sells tokens in exchange for Quanta, exchanging them 1:1
     /// @param value Number of tokens to sell
     function withdraw(uint value)
         public
