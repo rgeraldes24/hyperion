@@ -1255,7 +1255,7 @@ Complete ERC20 Example
         }
         object "runtime" {
             code {
-                // Protection against sending Zond
+                // Protection against sending Quanta
                 require(iszero(callvalue()))
 
                 // Dispatcher

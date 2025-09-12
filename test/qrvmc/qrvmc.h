@@ -64,7 +64,7 @@ typedef struct qrvmc_bytes32
  */
 typedef struct qrvmc_bytes32 qrvmc_uint256be;
 
-/** Big-endian 160-bit hash suitable for keeping an Ethereum address. */
+/** Big-endian 160-bit hash suitable for keeping a QRL address. */
 typedef struct qrvmc_address
 {
     /** The 20 bytes of the hash. */
@@ -849,7 +849,7 @@ typedef enum qrvmc_set_option_result (*qrvmc_set_option_fn)(struct qrvmc_vm* vm,
 /**
  * QRVM revision.
  *
- * The revision of the QRVM specification based on the Ethereum
+ * The revision of the QRVM specification based on the QRL
  * upgrade / hard fork codenames.
  */
 enum qrvmc_revision

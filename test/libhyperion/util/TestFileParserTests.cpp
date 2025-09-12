@@ -806,7 +806,7 @@ BOOST_AUTO_TEST_CASE(call_arguments_tuple_invalid_parantheses)
 	BOOST_REQUIRE_THROW(parse(source), TestParserError);
 }
 
-BOOST_AUTO_TEST_CASE(call_zond_value_expectations_missing)
+BOOST_AUTO_TEST_CASE(call_qrl_value_expectations_missing)
 {
 	char const* source = R"(
 		// f(), 0)";
@@ -829,7 +829,7 @@ BOOST_AUTO_TEST_CASE(call_arguments_invalid_decimal)
 	BOOST_REQUIRE_THROW(parse(source), TestParserError);
 }
 
-BOOST_AUTO_TEST_CASE(call_zond_value_invalid)
+BOOST_AUTO_TEST_CASE(call_qrl_value_invalid)
 {
 	char const* source = R"(
 		// f(uint256), abc : 1 -> 1
@@ -837,7 +837,7 @@ BOOST_AUTO_TEST_CASE(call_zond_value_invalid)
 	BOOST_REQUIRE_THROW(parse(source), TestParserError);
 }
 
-BOOST_AUTO_TEST_CASE(call_zond_value_invalid_decimal)
+BOOST_AUTO_TEST_CASE(call_qrl_value_invalid_decimal)
 {
 	char const* source = R"(
 		// sig(): 0.1hd quanta ->
@@ -845,7 +845,7 @@ BOOST_AUTO_TEST_CASE(call_zond_value_invalid_decimal)
 	BOOST_REQUIRE_THROW(parse(source), TestParserError);
 }
 
-BOOST_AUTO_TEST_CASE(call_zond_type_invalid)
+BOOST_AUTO_TEST_CASE(call_qrl_type_invalid)
 {
 	char const* source = R"(
 		// f(uint256), 2 btc : 1 -> 1

@@ -39,7 +39,7 @@ each ``KeyType``, recursively.
 
 In the example below, the ``MappingExample`` contract defines a public ``balances``
 mapping, with the key type an ``address``, and a value type a ``uint``, mapping
-an Ethereum address to an unsigned integer value. As ``uint`` is a value type, the getter
+a QRL address to an unsigned integer value. As ``uint`` is a value type, the getter
 returns a value that matches the type, which you can see in the ``MappingUser``
 contract that returns the value at the specified address.
 

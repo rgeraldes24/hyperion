@@ -994,7 +994,7 @@ std::string IRGenerator::dispatchRoutine(ContractDefinition const& _contract)
 			</cases>
 			default {}
 		}</+cases>
-		<?+receiveZond>if iszero(calldatasize()) { <receiveZond> }</+receiveZond>
+		<?+receiveQuanta>if iszero(calldatasize()) { <receiveQuanta> }</+receiveQuanta>
 		<fallback>
 	)X");
 	t("shr224", m_utils.shiftRightFunction(224));
@@ -1023,14 +1023,14 @@ std::string IRGenerator::dispatchRoutine(ContractDefinition const& _contract)
 		templ["externalFunction"] = generateExternalFunction(_contract, *type);
 	}
 	t("cases", functions);
-	FunctionDefinition const* zondReceiver = _contract.receiveFunction();
-	if (zondReceiver)
+	FunctionDefinition const* quantaReceiver = _contract.receiveFunction();
+	if (quantaReceiver)
 	{
 		hypAssert(!_contract.isLibrary(), "");
-		t("receiveZond", m_context.enqueueFunctionForCodeGeneration(*zondReceiver) + "() stop()");
+		t("receiveQuanta", m_context.enqueueFunctionForCodeGeneration(*quantaReceiver) + "() stop()");
 	}
 	else
-		t("receiveZond", "");
+		t("receiveQuanta", "");
 	if (FunctionDefinition const* fallback = _contract.fallbackFunction())
 	{
 		hypAssert(!_contract.isLibrary(), "");
@@ -1051,7 +1051,7 @@ std::string IRGenerator::dispatchRoutine(ContractDefinition const& _contract)
 	}
 	else
 		t("fallback", (
-			zondReceiver ?
+			quantaReceiver ?
 			m_utils.revertReasonIfDebugFunction("Unknown signature and no fallback defined") :
 			m_utils.revertReasonIfDebugFunction("Contract does not have fallback nor receive functions")
 		) + "()");

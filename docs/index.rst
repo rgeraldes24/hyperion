@@ -2,7 +2,7 @@ Hyperion
 ========
 
 Hyperion is an object-oriented, high-level language for implementing smart contracts.
-Smart contracts are programs that govern the behavior of accounts within the Ethereum state.
+Smart contracts are programs that govern the behavior of accounts within the QRL state.
 
 Hyperion is a `curly-bracket language <https://en.wikipedia.org/wiki/List_of_programming_languages_by_type#Curly-bracket_languages>`_ designed to target the Quantum Resistant Virtual Machine (QRVM).
 It is influenced by C++, Python, and JavaScript.

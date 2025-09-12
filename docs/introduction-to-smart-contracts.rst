@@ -43,7 +43,7 @@ This is to ensure that the contract is not compilable with a new (breaking) comp
 source code (e.g. `pragma once <https://en.wikipedia.org/wiki/Pragma_once>`_).
 
 A contract in the sense of Hyperion is a collection of code (its *functions*) and
-data (its *state*) that resides at a specific address on the Ethereum
+data (its *state*) that resides at a specific address on the QRL
 blockchain. The line ``uint storedData;`` declares a state variable called ``storedData`` of
 type ``uint`` (*u*\nsigned *int*\eger of *256* bits). You can think of it as a single slot
 in a database that you can query and alter by calling functions of the
@@ -57,7 +57,7 @@ Unlike in some other languages, omitting it is not just a matter of style,
 it results in a completely different way to access the member, but more on this later.
 
 This contract does not do much yet apart from (due to the infrastructure
-built by Ethereum) allowing anyone to store a single number that is accessible by
+built by QRL) allowing anyone to store a single number that is accessible by
 anyone in the world without a (feasible) way to prevent you from publishing
 this number. Anyone could call ``set`` again with a different value
 and overwrite your number, but the number is still stored in the history
@@ -80,7 +80,7 @@ Subcurrency Example
 The following contract implements the simplest form of a
 cryptocurrency. The contract allows only its creator to create new coins (different issuance schemes are possible).
 Anyone can send coins to each other without a need for
-registering with a username and password, all you need is an Ethereum keypair.
+registering with a username and password, all you need is a QRL keypair.
 
 .. code-block:: hyperion
 
@@ -178,7 +178,7 @@ You can use this function to query the balance of a single account.
 
 The line ``event Sent(address from, address to, uint amount);`` declares
 an :ref:`"event" <events>`, which is emitted in the last line of the function
-``send``. Ethereum clients such as web applications can
+``send``. QRL clients such as web applications can
 listen for these events emitted on the blockchain without much
 cost. As soon as it is emitted, the listener receives the
 arguments ``from``, ``to`` and ``amount``, which makes it possible to track
@@ -329,7 +329,7 @@ Overview
 ========
 
 The Quantum Resistant Virtual Machine or QRVM is the runtime environment
-for smart contracts in Ethereum. It is not only sandboxed but
+for smart contracts in QRL. It is not only sandboxed but
 actually completely isolated, which means that code running
 inside the QRVM has no access to network, filesystem or other processes.
 Smart contracts even have limited access to other smart contracts.
@@ -341,7 +341,7 @@ Smart contracts even have limited access to other smart contracts.
 Accounts
 ========
 
-There are two kinds of accounts in Ethereum which share the same
+There are two kinds of accounts in QRL which share the same
 address space: **External accounts** that are controlled by
 public-private key pairs (i.e. humans) and **contract accounts** which are
 controlled by the code stored together with the account.
@@ -483,7 +483,7 @@ Message Calls
 Contracts can call other contracts or send Quanta to non-contract
 accounts by the means of message calls. Message calls are similar
 to transactions, in that they have a source, a target, data payload,
-Zond, gas and return data. In fact, every transaction consists of
+Quanta, gas and return data. In fact, every transaction consists of
 a top-level message call which in turn can create further message calls.
 
 A contract can decide how much of its remaining **gas** should be sent
@@ -556,12 +556,12 @@ Deactivate and Self-destruct
 ============================
 
 Removing the contract in theory sounds like a good idea, but it is potentially
-dangerous, as if someone sends Zond to removed contracts, the Zond is forever
+dangerous, as if someone sends Quanta to removed contracts, the Quanta is forever
 lost.
 
 If you want to deactivate your contracts, you should instead **disable** them
 by changing some internal state which causes all functions to revert. This
-makes it impossible to use the contract, as it returns Zond immediately.
+makes it impossible to use the contract, as it returns Quanta immediately.
 
 
 .. index:: ! precompiled contracts, ! precompiles, ! contract;precompiled
@@ -580,6 +580,6 @@ but instead is implemented in the QRVM execution environment itself.
 
 Different QRVM-compatible chains might use a different set of
 precompiled contracts. It might also be possible that new
-precompiled contracts are added to the Ethereum main chain in the future,
+precompiled contracts are added to the QRL main chain in the future,
 but you can reasonably expect them to always be in the range between
 ``1`` and ``0xffff`` (inclusive).

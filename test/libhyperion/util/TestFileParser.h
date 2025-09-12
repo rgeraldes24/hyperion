@@ -132,8 +132,8 @@ private:
 	/// empty. If so, the signature is not allowed to define any parameters.
 	std::pair<std::string, bool> parseFunctionSignature();
 
-	/// Parses the optional zond value that can be passed alongside the
-	/// function call arguments. Throws an InvalidZondValueEncoding exception
+	/// Parses the optional qrl value that can be passed alongside the
+	/// function call arguments. Throws an InvalidQRLValueEncoding exception
 	/// if given value cannot be converted to `u256`.
 	FunctionValue parseFunctionCallValue();
 

@@ -16,7 +16,7 @@
 */
 // SPDX-License-Identifier: GPL-3.0
 /**
- * QRVM execution host, i.e. component that implements a simulated Ethereum blockchain
+ * QRVM execution host, i.e. component that implements a simulated QRL blockchain
  * for testing purposes.
  */
 

@@ -140,7 +140,7 @@ void ContractCompiler::initializeContext(
 
 void ContractCompiler::appendCallValueCheck()
 {
-	// Throw if function is not payable but call contained zond.
+	// Throw if function is not payable but call contained quanta.
 	m_context << Instruction::CALLVALUE;
 	m_context.appendConditionalRevert(false, "Quanta sent to non-payable function");
 }
@@ -421,8 +421,8 @@ void ContractCompiler::appendFunctionSelector(ContractDefinition const& _contrac
 	FunctionDefinition const* fallback = _contract.fallbackFunction();
 	hypAssert(!_contract.isLibrary() || !fallback, "Libraries can't have fallback functions");
 
-	FunctionDefinition const* zondReceiver = _contract.receiveFunction();
-	hypAssert(!_contract.isLibrary() || !zondReceiver, "Libraries can't have zond receiver functions");
+	FunctionDefinition const* quantaReceiver = _contract.receiveFunction();
+	hypAssert(!_contract.isLibrary() || !quantaReceiver, "Libraries can't have quanta receiver functions");
 
 	bool needToAddCallvalueCheck = true;
 	if (!hasPayableFunctions(_contract) && !interfaceFunctions.empty() && !_contract.isLibrary())
@@ -431,15 +431,15 @@ void ContractCompiler::appendFunctionSelector(ContractDefinition const& _contrac
 		needToAddCallvalueCheck = false;
 	}
 
-	qrvmasm::AssemblyItem notFoundOrReceiveZond = m_context.newTag();
-	// If there is neither a fallback nor a receive zond function, we only need one label to jump to, which
+	qrvmasm::AssemblyItem notFoundOrReceiveQuanta = m_context.newTag();
+	// If there is neither a fallback nor a receive quanta function, we only need one label to jump to, which
 	// always reverts.
-	qrvmasm::AssemblyItem notFound = (!fallback && !zondReceiver) ? notFoundOrReceiveZond : m_context.newTag();
+	qrvmasm::AssemblyItem notFound = (!fallback && !quantaReceiver) ? notFoundOrReceiveQuanta : m_context.newTag();
 
-	// directly jump to fallback or zond receiver if the data is too short to contain a function selector
+	// directly jump to fallback or quanta receiver if the data is too short to contain a function selector
 	// also guards against short data
 	m_context << u256(4) << Instruction::CALLDATASIZE << Instruction::LT;
-	m_context.appendConditionalJumpTo(notFoundOrReceiveZond);
+	m_context.appendConditionalJumpTo(notFoundOrReceiveQuanta);
 
 	// retrieve the function signature hash from the calldata
 	if (!interfaceFunctions.empty())
@@ -457,23 +457,23 @@ void ContractCompiler::appendFunctionSelector(ContractDefinition const& _contrac
 		appendInternalSelector(callDataUnpackerEntryPoints, sortedIDs, notFound, m_optimiserSettings.expectedExecutionsPerDeployment);
 	}
 
-	m_context << notFoundOrReceiveZond;
+	m_context << notFoundOrReceiveQuanta;
 
-	if (!fallback && !zondReceiver)
+	if (!fallback && !quantaReceiver)
 		m_context.appendRevert("Contract does not have fallback nor receive functions");
 	else
 	{
-		if (zondReceiver)
+		if (quantaReceiver)
 		{
 			// directly jump to fallback, if there is calldata
 			m_context << Instruction::CALLDATASIZE;
 			m_context.appendConditionalJumpTo(notFound);
 
 			hypAssert(!_contract.isLibrary(), "");
-			hypAssert(zondReceiver->isReceive(), "");
-			hypAssert(FunctionType(*zondReceiver).parameterTypes().empty(), "");
-			hypAssert(FunctionType(*zondReceiver).returnParameterTypes().empty(), "");
-			zondReceiver->accept(*this);
+			hypAssert(quantaReceiver->isReceive(), "");
+			hypAssert(FunctionType(*quantaReceiver).parameterTypes().empty(), "");
+			hypAssert(FunctionType(*quantaReceiver).returnParameterTypes().empty(), "");
+			quantaReceiver->accept(*this);
 			m_context << Instruction::STOP;
 		}
 

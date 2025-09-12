@@ -36,7 +36,7 @@ that call them, similar to internal library functions.
 .. note::
     Functions defined outside a contract are still always executed
     in the context of a contract.
-    They still can call other contracts, send them Zond and destroy the contract that called them,
+    They still can call other contracts, send them Quanta and destroy the contract that called them,
     among other things. The main difference to functions defined inside a contract
     is that free functions do not have direct access to the variable ``this``, storage variables and functions
     not in their scope.
@@ -176,7 +176,7 @@ The following statements are considered modifying the state:
 #. Writing to state variables.
 #. :ref:`Emitting events <events>`.
 #. :ref:`Creating other contracts <creating-contracts>`.
-#. Sending Zond via calls.
+#. Sending Quanta via calls.
 #. Calling any function not marked ``view`` or ``pure``.
 #. Using low-level calls.
 #. Using inline assembly that contains certain opcodes.
@@ -294,8 +294,8 @@ call to the contract with empty calldata. This is the function that is executed
 on plain quanta transfers (e.g. via ``.send()`` or ``.transfer()``). If no such
 function exists, but a payable :ref:`fallback function <fallback-function>`
 exists, the fallback function will be called on a plain Quanta transfer. If
-neither a receive Zond nor a payable fallback function is present, the
-contract cannot receive Zond through a transaction that does not represent a payable function call and throws an
+neither a receive Quanta nor a payable fallback function is present, the
+contract cannot receive Quanta through a transaction that does not represent a payable function call and throws an
 exception.
 
 In the worst case, the ``receive`` function can only rely on 2300 gas being
@@ -306,29 +306,29 @@ will consume more gas than the 2300 gas stipend:
 - Writing to storage
 - Creating a contract
 - Calling an external function which consumes a large amount of gas
-- Sending Zond
+- Sending Quanta
 
 .. warning::
-    When Zond is sent directly to a contract (without a function call, i.e. sender uses ``send`` or ``transfer``)
-    but the receiving contract does not define a receive Zond function or a payable fallback function,
-    an exception will be thrown, sending back the Zond (this was different
-    before Hyperion v0.4.0). If you want your contract to receive Zond,
-    you have to implement a receive Zond function (using payable fallback functions for receiving Zond is
+    When Quanta is sent directly to a contract (without a function call, i.e. sender uses ``send`` or ``transfer``)
+    but the receiving contract does not define a receive Quanta function or a payable fallback function,
+    an exception will be thrown, sending back the Quanta (this was different
+    before Hyperion v0.4.0). If you want your contract to receive Quanta,
+    you have to implement a receive Quanta function (using payable fallback functions for receiving Quanta is
     not recommended, since the fallback is invoked and would not fail for interface confusions
     on the part of the sender).
 
 
 .. warning::
-    A contract without a receive Zond function can receive Zond as a
+    A contract without a receive Quanta function can receive Quanta as a
     recipient of a *coinbase transaction* (aka *miner block reward*).
 
-    A contract cannot react to such Zond transfers and thus also
+    A contract cannot react to such Quanta transfers and thus also
     cannot reject them. This is a design choice of the QRVM and
     Hyperion cannot work around it.
 
     It also means that ``address(this).balance`` can be higher
     than the sum of some manual accounting implemented in a
-    contract (i.e. having a counter updated in the receive Zond function).
+    contract (i.e. having a counter updated in the receive Quanta function).
 
 Below you can see an example of a Sink contract that uses function ``receive``.
 
@@ -361,8 +361,8 @@ and can have modifiers.
 
 The fallback function is executed on a call to the contract if none of the other
 functions match the given function signature, or if no data was supplied at
-all and there is no :ref:`receive Zond function <receive-zond-function>`.
-The fallback function always receives data, but in order to also receive Zond
+all and there is no :ref:`receive Quanta function <receive-quanta-function>`.
+The fallback function always receives data, but in order to also receive Quanta
 it must be marked ``payable``.
 
 If the version with parameters is used, ``input`` will contain the full data sent to the contract
@@ -371,7 +371,7 @@ ABI-encoded. Instead it will be returned without modifications (not even padding
 
 In the worst case, if a payable fallback function is also used in
 place of a receive function, it can only rely on 2300 gas being
-available (see :ref:`receive Zond function <receive-zond-function>`
+available (see :ref:`receive Quanta function <receive-quanta-function>`
 for a brief description of the implications of this).
 
 Like any function, the fallback function can execute complex
@@ -379,10 +379,10 @@ operations as long as there is enough gas passed on to it.
 
 .. warning::
     A ``payable`` fallback function is also executed for
-    plain Quanta transfers, if no :ref:`receive Zond function <receive-zond-function>`
-    is present. It is recommended to always define a receive Zond
+    plain Quanta transfers, if no :ref:`receive Quanta function <receive-quanta-function>`
+    is present. It is recommended to always define a receive Quanta
     function as well, if you define a payable fallback function
-    to distinguish Zond transfers from interface confusions.
+    to distinguish Quanta transfers from interface confusions.
 
 .. note::
     If you want to decode the input data, you can check the first four bytes
@@ -403,7 +403,7 @@ operations as long as there is enough gas passed on to it.
         uint x;
         // This function is called for all messages sent to
         // this contract (there is no other function).
-        // Sending Zond to this contract will cause an exception,
+        // Sending Quanta to this contract will cause an exception,
         // because the fallback function does not have the `payable`
         // modifier.
         fallback() external { x = 1; }

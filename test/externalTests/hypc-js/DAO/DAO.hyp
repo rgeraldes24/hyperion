@@ -27,7 +27,7 @@ import "./ManagedAccount.hyp";
 abstract contract DAOInterface {
 
     // The amount of days for which people who try to participate in the
-    // creation by calling the fallback function will still get their zond back
+    // creation by calling the fallback function will still get their quanta back
     uint constant creationGracePeriod = 40 days;
     // The minimum debate period that a generic proposal can have
     uint constant minProposalDebatePeriod = 2 weeks;
@@ -41,10 +41,10 @@ abstract contract DAOInterface {
     // (used in the case `executeProposal` fails because it throws)
     uint constant executeProposalPeriod = 10 days;
     // Denotes the maximum proposal deposit that can be given. It is given as
-    // a fraction of total Zond spent plus balance of the DAO
+    // a fraction of total Quanta spent plus balance of the DAO
     uint constant maxDepositDivisor = 100;
 
-    // Proposals to spend the DAO's zond or to choose a new Curator
+    // Proposals to spend the DAO's quanta or to choose a new Curator
     Proposal[] public proposals;
     // The quorum needed for each proposal is partially calculated by
     // totalSupply / minQuorumDivisor
@@ -54,13 +54,13 @@ abstract contract DAOInterface {
 
     // Address of the curator
     address payable public curator;
-    // The whitelist: List of addresses the DAO is allowed to send zond to
+    // The whitelist: List of addresses the DAO is allowed to send quanta to
     mapping (address => bool) public allowedRecipients;
 
     // Tracks the addresses that own Reward Tokens. Those addresses can only be
     // DAOs that have split from the original DAO. Conceptually, Reward Tokens
     // represent the proportion of the rewards that the DAO has the right to
-    // receive. These Reward Tokens are generated when the DAO spends zond.
+    // receive. These Reward Tokens are generated when the DAO spends quanta.
     mapping (address => uint) public rewardToken;
     // Total supply of rewardToken
     uint public totalRewardToken;
@@ -240,7 +240,7 @@ abstract contract DAOInterface {
         bytes memory _transactionData
     ) public virtual returns (bool _success);
 
-    /// @notice ATTENTION! I confirm to move my remaining zond to a new DAO
+    /// @notice ATTENTION! I confirm to move my remaining quanta to a new DAO
     /// with `_newCurator` as the new Curator, as has been
     /// proposed in proposal `_proposalID`. This will burn my tokens. This can
     /// not be undone and will split the DAO into two DAO's, with two
@@ -249,7 +249,7 @@ abstract contract DAOInterface {
     /// @param _newCurator The new Curator of the new DAO
     /// @dev This function, when called for the first time for this proposal,
     /// will create a new DAO and send the sender's portion of the remaining
-    /// zond and Reward Tokens to the new DAO. It will also burn the DAO Tokens
+    /// quanta and Reward Tokens to the new DAO. It will also burn the DAO Tokens
     /// of the sender.
     function splitDAO(
         uint _proposalID,
@@ -257,7 +257,7 @@ abstract contract DAOInterface {
     ) public virtual returns (bool _success);
 
     /// @dev can only be called by the DAO itself through a proposal
-    /// updates the contract of the DAO by sending all zond and rewardTokens
+    /// updates the contract of the DAO by sending all quanta and rewardTokens
     /// to the new DAO. The new DAO needs to be approved by the Curator
     /// @param _newContract the address of the new contract
     function newContract(address payable _newContract) virtual public;
@@ -439,7 +439,7 @@ contract DAO is DAOInterface, Token, TokenCreation {
         if (block.timestamp + _debatingPeriod < block.timestamp) // prevents overflow
             revert();
 
-        // to prevent a 51% attacker to convert the zond into deposit
+        // to prevent a 51% attacker to convert the quanta into deposit
         if (msg.sender == address(this))
             revert();
 

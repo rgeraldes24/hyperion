@@ -566,7 +566,7 @@ public:
 	/// Returns the fallback function or nullptr if no fallback function was specified.
 	FunctionDefinition const* fallbackFunction() const;
 
-	/// Returns the zond receiver function or nullptr if no receive function was specified.
+	/// Returns the quanta receiver function or nullptr if no receive function was specified.
 	FunctionDefinition const* receiveFunction() const;
 
 	std::string fullyQualifiedName() const { return sourceUnitName() + ":" + name(); }
@@ -2392,7 +2392,7 @@ public:
 		None = static_cast<int>(Token::Illegal),
 		Planck = static_cast<int>(Token::SubPlanck),
 		Shor = static_cast<int>(Token::SubShor),
-		Zond = static_cast<int>(Token::SubZond),
+		Quanta = static_cast<int>(Token::SubQuanta),
 		Second = static_cast<int>(Token::SubSecond),
 		Minute = static_cast<int>(Token::SubMinute),
 		Hour = static_cast<int>(Token::SubHour),

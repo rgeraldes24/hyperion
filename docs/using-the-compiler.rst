@@ -503,7 +503,7 @@ Output Description
         "sourceFile.hyp": {
           // If the language used has no contract names, this field should equal to an empty string.
           "ContractName": {
-            // The Ethereum Contract ABI. If empty, it is represented as an empty array.
+            // The QRL Contract ABI. If empty, it is represented as an empty array.
             // See https://docs.soliditylang.org/en/develop/abi-spec.html
             "abi": [],
             // See the Metadata Output documentation (serialised JSON string)

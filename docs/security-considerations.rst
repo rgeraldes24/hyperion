@@ -50,7 +50,7 @@ Reentrancy
 ==========
 
 Any interaction from a contract (A) with another contract (B)
-and any transfer of Zond hands over control to that contract (B).
+and any transfer of Quanta hands over control to that contract (B).
 This makes it possible for B to call back into A before this interaction is completed.
 To give an example, the following code contains a bug (it is just a snippet and not a complete contract):
 
@@ -61,7 +61,7 @@ To give an example, the following code contains a bug (it is just a snippet and 
 
     // THIS CONTRACT CONTAINS A BUG - DO NOT USE
     contract Fund {
-        /// @dev Mapping of zond shares of the contract.
+        /// @dev Mapping of quanta shares of the contract.
         mapping(address => uint) shares;
         /// Withdraw your share.
         function withdraw() public {
@@ -72,9 +72,9 @@ To give an example, the following code contains a bug (it is just a snippet and 
 
 The problem is not too serious here because of the limited gas as part of ``send``,
 but it still exposes a weakness:
-Zond transfer can always include code execution,
+Quanta transfer can always include code execution,
 so the recipient could be a contract that calls back into ``withdraw``.
-This would let it get multiple refunds and, basically, retrieve all the Zond in the contract.
+This would let it get multiple refunds and, basically, retrieve all the Quanta in the contract.
 In particular, the following contract will allow an attacker to refund multiple times
 as it uses ``call`` which forwards all remaining gas by default:
 
@@ -85,7 +85,7 @@ as it uses ``call`` which forwards all remaining gas by default:
 
     // THIS CONTRACT CONTAINS A BUG - DO NOT USE
     contract Fund {
-        /// @dev Mapping of zond shares of the contract.
+        /// @dev Mapping of quanta shares of the contract.
         mapping(address => uint) shares;
         /// Withdraw your share.
         function withdraw() public {
@@ -103,7 +103,7 @@ To avoid reentrancy, you can use the Checks-Effects-Interactions pattern as demo
     pragma hyperion >=0.1.0;
 
     contract Fund {
-        /// @dev Mapping of zond shares of the contract.
+        /// @dev Mapping of quanta shares of the contract.
         mapping(address => uint) shares;
         /// Withdraw your share.
         function withdraw() public {
@@ -123,7 +123,7 @@ where an externally called malicious contract can double-spend an allowance,
 double-withdraw a balance, among other things,
 by using logic that calls back into the original contract before it has finalized its transaction.
 
-Note that reentrancy is not only an effect of Zond transfer
+Note that reentrancy is not only an effect of Quanta transfer
 but of any function call on another contract.
 Furthermore, you also have to take multi-contract situations into account.
 A called contract could modify the state of another contract you depend on.
@@ -150,11 +150,11 @@ Sending and Receiving Quanta
 
 - If a contract receives Quanta (without a function being called), either the :ref:`receive Quanta <receive-quanta-function>`
   or the :ref:`fallback <fallback-function>` function is executed.
-  If it does not have a ``receive`` nor a ``fallback`` function, the Zond will be rejected (by throwing an exception).
+  If it does not have a ``receive`` nor a ``fallback`` function, the Quanta will be rejected (by throwing an exception).
   During the execution of one of these functions, the contract can only rely on the "gas stipend" it is passed (2300 gas)
   being available to it at that time.
   This stipend is not enough to modify storage (do not take this for granted though, the stipend might change with future hard forks).
-  To be sure that your contract can receive Zond in that way, check the gas requirements of the receive and fallback functions
+  To be sure that your contract can receive Quanta in that way, check the gas requirements of the receive and fallback functions
   (for example in the "details" section in Remix).
 
 - There is a way to forward more gas to the receiving contract using ``addr.call{value: x}("")``.
@@ -421,7 +421,7 @@ Use the Checks-Effects-Interactions Pattern
 ===========================================
 
 Most functions will first perform some checks and they should be done first
-(who called the function, are the arguments in range, did they send enough Zond,
+(who called the function, are the arguments in range, did they send enough Quanta,
 does the person have tokens, etc.).
 
 As the second step, if all checks passed, effects to the state variables of the current contract should be made.
@@ -439,7 +439,7 @@ Include a Fail-Safe Mode
 While making your system fully decentralized will remove any intermediary,
 it might be a good idea, especially for new code, to include some kind of fail-safe mechanism:
 
-You can add a function in your smart contract that performs some self-checks like "Has any Zond leaked?",
+You can add a function in your smart contract that performs some self-checks like "Has any Quanta leaked?",
 "Is the sum of the tokens equal to the balance of the contract?" or similar things.
 Keep in mind that you cannot use too much gas for that,
 so help through off-chain computations might be needed there.
@@ -447,7 +447,7 @@ so help through off-chain computations might be needed there.
 If the self-check fails, the contract automatically switches into some kind of "failsafe" mode,
 which, for example, disables most of the features,
 hands over control to a fixed and trusted third party
-or just converts the contract into a simple "give me back my Zond" contract.
+or just converts the contract into a simple "give me back my Quanta" contract.
 
 Ask for Peer Review
 ===================

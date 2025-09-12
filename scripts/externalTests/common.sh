@@ -219,12 +219,12 @@ function force_truffle_compiler_settings
 
     local compiler_settings gas_reporter_settings
     compiler_settings=$(truffle_compiler_settings "$hypc_path" "$preset" "$qrvm_version" "$extra_settings" "$extra_optimizer_settings")
-    gas_reporter_settings=$(zond_gas_reporter_settings "$preset")
+    gas_reporter_settings=$(qrl_gas_reporter_settings "$preset")
 
     {
-        echo "require('eth-gas-reporter');"
+        echo "require('qrl-gas-reporter');"
         echo "module.exports['mocha'] = {"
-        echo "    reporter: 'eth-gas-reporter',"
+        echo "    reporter: 'qrl-gas-reporter',"
         echo "    reporterOptions: ${gas_reporter_settings}"
         echo "};"
 
@@ -323,7 +323,7 @@ function force_hardhat_compiler_settings
 
     local compiler_settings gas_reporter_settings
     compiler_settings=$(hardhat_compiler_settings "$HYPCVERSION_SHORT" "$preset" "$qrvm_version" "$extra_settings" "$extra_optimizer_settings")
-    gas_reporter_settings=$(zond_gas_reporter_settings "$preset")
+    gas_reporter_settings=$(qrl_gas_reporter_settings "$preset")
     if [[ $config_file == *\.js ]]; then
         [[ $config_var_name == "" ]] || assertFail
         echo "require('hardhat-gas-reporter');"
@@ -407,7 +407,7 @@ function replace_global_hypc
     export PATH="$PWD:$PATH"
 }
 
-function zond_gas_reporter_settings
+function qrl_gas_reporter_settings
 {
     local preset="$1"
 
@@ -567,7 +567,7 @@ function gas_report_path
 
 function gas_report_to_json
 {
-    cat - | "${REPO_ROOT}/scripts/externalTests/parse_zond_gas_report.py" | jq '{gas: .}'
+    cat - | "${REPO_ROOT}/scripts/externalTests/parse_qrl_gas_report.py" | jq '{gas: .}'
 }
 
 function detect_hardhat_artifact_dir

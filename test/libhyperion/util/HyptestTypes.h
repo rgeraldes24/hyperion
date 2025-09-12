@@ -265,7 +265,7 @@ struct FunctionValue
 
 /**
  * Represents a function call read from an input stream. It contains the signature, the
- * arguments, an optional zond value and an expected execution result.
+ * arguments, an optional qrl value and an expected execution result.
  */
 struct FunctionCall
 {

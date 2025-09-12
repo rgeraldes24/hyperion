@@ -85,7 +85,7 @@ of votes.
         function giveRightToVote(address voter) external {
             // If the first argument of `require` evaluates
             // to `false`, execution terminates and all
-            // changes to the state and to Zond balances
+            // changes to the state and to QRL balances
             // are reverted.
             // This used to consume all gas in old QRVM versions, but
             // not anymore.

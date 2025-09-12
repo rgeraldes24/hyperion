@@ -289,7 +289,7 @@ FunctionValue TestFileParser::parseFunctionCallValue()
 	}
 	catch (std::exception const&)
 	{
-		BOOST_THROW_EXCEPTION(TestParserError("Zond value encoding invalid."));
+		BOOST_THROW_EXCEPTION(TestParserError("QRL value encoding invalid."));
 	}
 }
 

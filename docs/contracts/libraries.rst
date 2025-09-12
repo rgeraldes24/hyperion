@@ -207,7 +207,7 @@ In comparison to contracts, libraries are restricted in the following ways:
 
 - they cannot have state variables
 - they cannot inherit nor be inherited
-- they cannot receive Zond
+- they cannot receive Quanta
 - they cannot be destroyed
 
 (These might be lifted at a later point.)

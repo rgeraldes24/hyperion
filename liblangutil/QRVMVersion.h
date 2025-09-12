@@ -39,7 +39,7 @@ namespace hyperion::langutil
 
 /**
  * A version specifier of the QRVM we want to compile to.
- * Defaults to the latest version deployed on Ethereum Mainnet at the time of compiler release.
+ * Defaults to the latest version deployed on QRL Mainnet at the time of compiler release.
  */
 class QRVMVersion:
 	boost::less_than_comparable<QRVMVersion>,

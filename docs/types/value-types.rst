@@ -183,12 +183,12 @@ Address
 
 The address type comes in two largely identical flavors:
 
-- ``address``: Holds a 20 byte value (size of an Ethereum address).
+- ``address``: Holds a 20 byte value (size of a QRL address).
 - ``address payable``: Same as ``address``, but with the additional members ``transfer`` and ``send``.
 
-The idea behind this distinction is that ``address payable`` is an address you can send Zond to,
-while you are not supposed to send Zond to a plain ``address``, for example because it might be a smart contract
-that was not built to accept Zond.
+The idea behind this distinction is that ``address payable`` is an address you can send Quanta to,
+while you are not supposed to send Quanta to a plain ``address``, for example because it might be a smart contract
+that was not built to accept Quanta.
 
 Type conversions:
 
@@ -200,12 +200,12 @@ Explicit conversions to and from ``address`` are allowed for ``uint160``, intege
 
 Only expressions of type ``address`` and contract-type can be converted to the type ``address
 payable`` via the explicit conversion ``payable(...)``. For contract-type, this conversion is only
-allowed if the contract can receive Zond, i.e., the contract either has a :ref:`receive
-<receive-zond-function>` or a payable fallback function. Note that ``payable(0)`` is valid and is
+allowed if the contract can receive Quanta, i.e., the contract either has a :ref:`receive
+<receive-quanta-function>` or a payable fallback function. Note that ``payable(0)`` is valid and is
 an exception to this rule.
 
 .. note::
-    If you need a variable of type ``address`` and plan to send Zond to it, then
+    If you need a variable of type ``address`` and plan to send Quanta to it, then
     declare its type as ``address payable`` to make this requirement visible. Also,
     try to make this distinction or conversion as early as possible.
 
@@ -239,7 +239,7 @@ For a quick reference of all members of address, see :ref:`address_related`.
 * ``balance`` and ``transfer``
 
 It is possible to query the balance of an address using the property ``balance``
-and to send Zond (in units of planck) to a payable address using the ``transfer`` function:
+and to send Quanta (in units of planck) to a payable address using the ``transfer`` function:
 
 .. code-block:: hyperion
     :force:
@@ -249,11 +249,11 @@ and to send Zond (in units of planck) to a payable address using the ``transfer`
     if (x.balance < 10 && myAddress.balance >= 10) x.transfer(10);
 
 The ``transfer`` function fails if the balance of the current contract is not large enough
-or if the Zond transfer is rejected by the receiving account. The ``transfer`` function
+or if the Quanta transfer is rejected by the receiving account. The ``transfer`` function
 reverts on failure.
 
 .. note::
-    If ``x`` is a contract address, its code (more specifically: its :ref:`receive-zond-function`, if present, or otherwise its :ref:`fallback-function`, if present) will be executed together with the ``transfer`` call (this is a feature of the QRVM and cannot be prevented). If that execution runs out of gas or fails in any way, the Zond transfer will be reverted and the current contract will stop with an exception.
+    If ``x`` is a contract address, its code (more specifically: its :ref:`receive-quanta-function`, if present, or otherwise its :ref:`fallback-function`, if present) will be executed together with the ``transfer`` call (this is a feature of the QRVM and cannot be prevented). If that execution runs out of gas or fails in any way, the Quanta transfer will be reverted and the current contract will stop with an exception.
 
 * ``send``
 
@@ -262,8 +262,8 @@ reverts on failure.
 .. warning::
     There are some dangers in using ``send``: The transfer fails if the call stack depth is at 1024
     (this can always be forced by the caller) and it also fails if the recipient runs out of gas. So in order
-    to make safe Zond transfers, always check the return value of ``send``, use ``transfer`` or even better:
-    use a pattern where the recipient withdraws the Zond.
+    to make safe Quanta transfers, always check the return value of ``send``, use ``transfer`` or even better:
+    use a pattern where the recipient withdraws the Quanta.
 
 * ``call``, ``delegatecall`` and ``staticcall``
 
@@ -303,7 +303,7 @@ It is possible to adjust the supplied gas with the ``gas`` modifier:
 
     address(nameReg).call{gas: 1000000}(abi.encodeWithSignature("register(string)", "MyName"));
 
-Similarly, the supplied Zond value can be controlled too:
+Similarly, the supplied QRL value can be controlled too:
 
 .. code-block:: hyperion
 
@@ -765,19 +765,19 @@ No other conversions between function types are possible.
 
 The rule about ``payable`` and ``non-payable`` might be a little
 confusing, but in essence, if a function is ``payable``, this means that it
-also accepts a payment of zero Zond, so it also is ``non-payable``.
+also accepts a payment of zero Quanta, so it also is ``non-payable``.
 On the other hand, a ``non-payable`` function will reject Quanta sent to it,
 so ``non-payable`` functions cannot be converted to ``payable`` functions.
-To clarify, rejecting zond is more restrictive than not rejecting zond.
+To clarify, rejecting quanta is more restrictive than not rejecting quanta.
 This means you can override a payable function with a non-payable but not the
 other way around.
 
 Additionally, When you define a ``non-payable`` function pointer,
-the compiler does not enforce that the pointed function will actually reject zond.
-Instead, it enforces that the function pointer is never used to send zond.
+the compiler does not enforce that the pointed function will actually reject quanta.
+Instead, it enforces that the function pointer is never used to send quanta.
 Which makes it possible to assign a ``payable`` function pointer to a ``non-payable``
 function pointer ensuring both types behave the same way, i.e, both cannot be used
-to send zond.
+to send quanta.
 
 If a function type variable is not initialised, calling it results
 in a :ref:`Panic error<assert-and-require>`. The same happens if you call a function after using ``delete``

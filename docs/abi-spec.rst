@@ -9,7 +9,7 @@ Contract ABI Specification
 Basic Design
 ============
 
-The Contract Application Binary Interface (ABI) is the standard way to interact with contracts in the Ethereum ecosystem, both
+The Contract Application Binary Interface (ABI) is the standard way to interact with contracts in the QRL ecosystem, both
 from outside the blockchain and for contract-to-contract interaction. Data is encoded according to its type,
 as described in this specification. The encoding is not self describing and thus requires a schema in order to decode.
 
@@ -465,7 +465,7 @@ thus ``g = 0x0000000000000000000000000000000000000000000000000000000000000140``.
 Events
 ======
 
-Events are an abstraction of the Ethereum logging/event-watching protocol. Log entries provide the contract's
+Events are an abstraction of the QRL logging/event-watching protocol. Log entries provide the contract's
 address, a series of up to four topics and some arbitrary length binary data. Events leverage the existing function
 ABI in order to interpret this (together with an interface spec) as a properly typed structure.
 
@@ -477,7 +477,7 @@ Those which are not indexed form the byte array of the event.
 
 In effect, a log entry using this ABI is described as:
 
-- ``address``: the address of the contract (intrinsically provided by Ethereum);
+- ``address``: the address of the contract (intrinsically provided by QRL);
 - ``topics[0]``: ``keccak(EVENT_NAME+"("+EVENT_ARGS.map(canonical_type_of).join(",")+")")`` (``canonical_type_of``
   is a function that simply returns the canonical type of a given argument, e.g. for ``uint indexed foo``, it would
   return ``uint256``). This value is only present in ``topics[0]`` if the event is not declared as ``anonymous``;

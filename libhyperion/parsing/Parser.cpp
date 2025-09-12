@@ -1998,7 +1998,7 @@ ASTPointer<Expression> Parser::parseLiteral()
 	}
 
 	if (initialToken == Token::Number && (
-		TokenTraits::isZondSubdenomination(m_scanner->currentToken()) ||
+		TokenTraits::isQRLSubdenomination(m_scanner->currentToken()) ||
 		TokenTraits::isTimeSubdenomination(m_scanner->currentToken())
 	))
 	{

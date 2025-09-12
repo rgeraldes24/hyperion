@@ -14,7 +14,7 @@ In particular, we appreciate support in the following areas:
 * Improving the documentation.
 * `Translating <https://github.com/hyperion-docs>`_ the documentation into more languages.
 * Responding to questions from other users on `StackExchange
-  <https://ethereum.stackexchange.com>`_ and the `Hyperion Gitter Chat
+  <https://theqrl.stackexchange.com>`_ and the `Hyperion Gitter Chat
   <https://gitter.im/theQRL/hyperion>`_.
 * Getting involved in the language design process by proposing language changes or new features in the `Hyperion forum <https://forum.soliditylang.org/>`_ and providing feedback.
 
@@ -498,7 +498,7 @@ voice is sometimes more applicable.
 
 As a summary:
 
-* Use passive voice for technical reference, for example language definition and internals of the Ethereum VM.
+* Use passive voice for technical reference, for example language definition and internals of the Quantum Resistant VM.
 * Use active voice when describing recommendations on how to apply an aspect of Hyperion.
 
 For example, the below is in passive voice as it specifies an aspect of Hyperion:
