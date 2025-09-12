@@ -3,6 +3,6 @@ contract C {
     receive() {}
 }
 // ----
-// SyntaxError 4937: (94-106): No visibility specified. Did you intend to add "external"?
-// DeclarationError 7793: (94-106): Receive quanta function must be payable, but is "nonpayable".
-// DeclarationError 4095: (94-106): Receive quanta function must be defined as "external".
+// SyntaxError 4937: (96-108): No visibility specified. Did you intend to add "external"?
+// DeclarationError 7793: (96-108): Receive quanta function must be payable, but is "nonpayable".
+// DeclarationError 4095: (96-108): Receive quanta function must be defined as "external".

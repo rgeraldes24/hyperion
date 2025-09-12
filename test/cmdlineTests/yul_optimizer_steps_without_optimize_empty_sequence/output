@@ -9,7 +9,7 @@ object "C_28" {
             mstore(64, memoryguard(0x80))
             if callvalue()
             {
-                revert_error_c51b573d57c2d2c06c47452bd71c2ef51b7bdac1648334dac5064732f4ea03df()
+                revert_error_be32188dd738710e8ecae48fc1f4112ee921f6859083d2f996c0e95db286cbd8()
             }
             constructor_C()
             let _1 := allocate_unbounded()
@@ -18,7 +18,7 @@ object "C_28" {
         }
         function allocate_unbounded() -> memPtr
         { memPtr := mload(64) }
-        function revert_error_c51b573d57c2d2c06c47452bd71c2ef51b7bdac1648334dac5064732f4ea03df()
+        function revert_error_be32188dd738710e8ecae48fc1f4112ee921f6859083d2f996c0e95db286cbd8()
         { revert(0, 0) }
         /// @ast-id 5 @src 0:77:93  "constructor() {}"
         function constructor_C()
@@ -43,7 +43,7 @@ object "C_28" {
             { newValue := shr(224, value) }
             function allocate_unbounded() -> memPtr
             { memPtr := mload(64) }
-            function revert_error_c51b573d57c2d2c06c47452bd71c2ef51b7bdac1648334dac5064732f4ea03df()
+            function revert_error_be32188dd738710e8ecae48fc1f4112ee921f6859083d2f996c0e95db286cbd8()
             { revert(0, 0) }
             function revert_error_dbdddcbe895c83990c08b3492a0e83918d802a52331272ac6fdb6a7c4aea3b1b()
             { revert(0, 0) }
@@ -71,7 +71,7 @@ object "C_28" {
             {
                 if callvalue()
                 {
-                    revert_error_c51b573d57c2d2c06c47452bd71c2ef51b7bdac1648334dac5064732f4ea03df()
+                    revert_error_be32188dd738710e8ecae48fc1f4112ee921f6859083d2f996c0e95db286cbd8()
                 }
                 abi_decode(4, calldatasize())
                 let ret := fun_foo()

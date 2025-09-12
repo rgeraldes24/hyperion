@@ -2,4 +2,4 @@ contract C {
 	bool constant x = true quanta;
 }
 // ----
-// ParserError 2314: (37-41): Expected ';' but got 'quanta'
+// ParserError 2314: (37-43): Expected ';' but got 'quanta'

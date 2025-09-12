@@ -2,4 +2,4 @@ contract C {
 	string s = "abc" quanta;
 }
 // ----
-// ParserError 2314: (31-35): Expected ';' but got 'quanta'
+// ParserError 2314: (31-37): Expected ';' but got 'quanta'

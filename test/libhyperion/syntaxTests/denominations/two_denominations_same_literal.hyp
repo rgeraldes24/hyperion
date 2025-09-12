@@ -2,4 +2,4 @@ contract C {
 	uint constant y = 8 shor quanta;
 }
 // ----
-// ParserError 2314: (42-46): Expected ';' but got 'quanta'
+// ParserError 2314: (39-45): Expected ';' but got 'quanta'

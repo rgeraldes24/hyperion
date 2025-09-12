@@ -2,4 +2,4 @@ function f() pure {
     assembly "qrvmasm" () {}
 }
 // ----
-// ParserError 2314: (43-44): Expected 'StringLiteral' but got ')'
+// ParserError 2314: (44-45): Expected 'StringLiteral' but got ')'

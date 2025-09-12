@@ -74,8 +74,8 @@
                 "externalReferences": [],
                 "id": 3,
                 "nodeType": "InlineAssembly",
-                "src": "47:27:1",
-                "qrvmVersion": %QRVMVERSION%
+                "qrvmVersion": %QRVMVERSION%,
+                "src": "47:27:1"
               }
             ]
           },

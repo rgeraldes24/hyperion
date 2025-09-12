@@ -3,4 +3,4 @@ contract C {
     function f() costs(1 quanta) public view {}
 }
 // ----
-// TypeError 4006: (101-114): This modifier uses "msg.value" or "callvalue()" and thus the function has to be payable or internal.
+// TypeError 4006: (101-116): This modifier uses "msg.value" or "callvalue()" and thus the function has to be payable or internal.

@@ -3,4 +3,4 @@ contract C {
     function f() m(1 quanta, msg.value) public view {}
 }
 // ----
-// TypeError 5887: (117-126): "msg.value" and "callvalue()" can only be used in payable public functions. Make the function "payable" or use an internal function to avoid this error.
+// TypeError 5887: (119-128): "msg.value" and "callvalue()" can only be used in payable public functions. Make the function "payable" or use an internal function to avoid this error.

@@ -247,7 +247,7 @@ std::vector<std::string> SemanticTest::eventSideEffectHook(FunctionCall const&) 
 			sideEffect << "<anonymous>";
 
 		if (m_contractAddress != log.creator)
-			sideEffect << " from Z" << log.creator;
+			sideEffect << " from Q" << log.creator;
 
 		std::vector<std::string> eventStrings;
 		size_t index{0};

@@ -2,4 +2,4 @@ function f() pure {
     assembly " qrvmasm" {}
 }
 // ----
-// ParserError 4531: (33-42): Only "qrvmasm" supported.
+// ParserError 4531: (33-43): Only "qrvmasm" supported.
