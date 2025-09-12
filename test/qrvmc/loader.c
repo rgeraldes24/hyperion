@@ -1,11 +1,11 @@
-// QRVMC: QRL Client-VM Connector API.
-// Copyright 2018 The QRVMC Authors.
+// QRVMC: Quantum Resistant Client-VM Connector API.
+// Copyright 2018 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 
 #include <qrvmc/loader.h>
 
-#include <qrvmc/qrvmc.h>
 #include <qrvmc/helpers.h>
+#include <qrvmc/qrvmc.h>
 
 #include <stdarg.h>
 #include <stdint.h>
@@ -80,8 +80,8 @@ static char last_error_msg_buffer[LAST_ERROR_MSG_BUFFER_SIZE + 1];
 
 ATTR_FORMAT(printf, 2, 3)
 static enum qrvmc_loader_error_code set_error(enum qrvmc_loader_error_code error_code,
-                                             const char* format,
-                                             ...)
+                                              const char* format,
+                                              ...)
 {
     va_list args;
     va_start(args, format);
@@ -109,7 +109,8 @@ qrvmc_create_fn qrvmc_load(const char* filename, enum qrvmc_loader_error_code* e
     const size_t length = strlen(filename);
     if (length == 0)
     {
-        ec = set_error(QRVMC_LOADER_INVALID_ARGUMENT, "invalid argument: file name cannot be empty");
+        ec =
+            set_error(QRVMC_LOADER_INVALID_ARGUMENT, "invalid argument: file name cannot be empty");
         goto exit;
     }
     else if (length > PATH_MAX_LENGTH)
@@ -192,7 +193,8 @@ const char* qrvmc_last_error_msg(void)
     return m;
 }
 
-struct qrvmc_vm* qrvmc_load_and_create(const char* filename, enum qrvmc_loader_error_code* error_code)
+struct qrvmc_vm* qrvmc_load_and_create(const char* filename,
+                                       enum qrvmc_loader_error_code* error_code)
 {
     // First load the DLL. This also resets the last_error_msg;
     qrvmc_create_fn create_fn = qrvmc_load(filename, error_code);
@@ -250,7 +252,8 @@ static char* get_token(char** str_ptr, char delim)
     return str;
 }
 
-struct qrvmc_vm* qrvmc_load_and_configure(const char* config, enum qrvmc_loader_error_code* error_code)
+struct qrvmc_vm* qrvmc_load_and_configure(const char* config,
+                                          enum qrvmc_loader_error_code* error_code)
 {
     enum qrvmc_loader_error_code ec = QRVMC_LOADER_SUCCESS;
     struct qrvmc_vm* vm = NULL;

@@ -562,17 +562,17 @@ BOOST_AUTO_TEST_CASE(multisig_value_transfer)
 	h160 destination = h160("0x5c6d6026d3fb35cd7175fd0054ae8df50d8f8b41");
 	BOOST_CHECK_EQUAL(balanceAt(destination), 0);
 	m_sender = account(0);
-	quanta(account(1), 10 * quanta);
+	sendQuanta(account(1), 10 * quanta);
 	m_sender = account(1);
 	auto ophash = callContractFunction("execute(address,uint256,bytes)", destination, 100, 0x60, 0x00);
 	BOOST_CHECK_EQUAL(balanceAt(destination), 0);
 	m_sender = account(0);
-	quanta(account(2), 10 * quanta);
+	sendQuanta(account(2), 10 * quanta);
 	m_sender = account(2);
 	callContractFunction("confirm(bytes32)", ophash);
 	BOOST_CHECK_EQUAL(balanceAt(destination), 0);
 	m_sender = account(0);
-	quanta(account(3), 10 * quanta);
+	sendQuanta(account(3), 10 * quanta);
 	m_sender = account(3);
 	callContractFunction("confirm(bytes32)", ophash);
 	// now it should go through

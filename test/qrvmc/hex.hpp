@@ -1,5 +1,5 @@
-// QRVMC: QRL Client-VM Connector API.
-// Copyright 2021 The QRVMC Authors.
+// QRVMC: Quantum Resistant Client-VM Connector API.
+// Copyright 2021 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 #pragma once
 
@@ -100,19 +100,6 @@ inline bool validate_hex(std::string_view hex) noexcept
     return from_hex(hex.begin(), hex.end(), noop_output_iterator{});
 }
 
-/// Decodes hex encoded string to bytes.
-///
-/// In case the input is invalid the returned value is std::nullopt.
-/// This can happen if a non-hex digit or odd number of digits is encountered.
-inline std::optional<bytes> from_hex(std::string_view hex)
-{
-    bytes bs;
-    bs.reserve(hex.size() / 2);
-    if (!from_hex(hex.begin(), hex.end(), std::back_inserter(bs)))
-        return {};
-    return bs;
-}
-
 /// Decodes hex-encoded string with a custom prefix into custom type T with .bytes array of uint8_t.
 ///
 /// When the input is smaller than the result type, the result is padded with zeros on the left
@@ -138,6 +125,20 @@ constexpr std::optional<T> from_prefixed_hex(std::string_view s, std::string_vie
     if (!from_hex(s.begin(), s.end(), &r.bytes[num_out_bytes - num_in_bytes]))
         return {};
     return r;
+}
+
+
+/// Decodes hex encoded string to bytes.
+///
+/// In case the input is invalid the returned value is std::nullopt.
+/// This can happen if a non-hex digit or odd number of digits is encountered.
+inline std::optional<bytes> from_hex(std::string_view hex)
+{
+    bytes bs;
+    bs.reserve(hex.size() / 2);
+    if (!from_hex(hex.begin(), hex.end(), std::back_inserter(bs)))
+        return {};
+    return bs;
 }
 
 /// Decodes hex-encoded string into custom type T with .bytes array of uint8_t.

@@ -49,4 +49,4 @@ add_executable(ihyptest
 	../libyul/YulInterpreterTest.cpp
 )
 target_compile_definitions(ihyptest PRIVATE IHYPTEST)
-target_link_libraries(ihyptest PRIVATE c libhypc hyperion yulInterpreter qrvmasm Boost::boost Boost::program_options Boost::unit_test_framework Threads::Threads)
+target_link_libraries(ihyptest PRIVATE qrvmc libhypc hyperion yulInterpreter qrvmasm Boost::boost Boost::program_options Boost::unit_test_framework Threads::Threads)

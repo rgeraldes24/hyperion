@@ -1,5 +1,5 @@
-// QRVMC: QRL Client-VM Connector API.
-// Copyright 2018 The QRVMC Authors.
+// QRVMC: Quantum Resistant Client-VM Connector API.
+// Copyright 2018 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 
 /**
@@ -76,8 +76,8 @@ static inline void qrvmc_destroy(struct qrvmc_vm* vm)
  * @see qrvmc_set_option_fn
  */
 static inline enum qrvmc_set_option_result qrvmc_set_option(struct qrvmc_vm* vm,
-                                                          char const* name,
-                                                          char const* value)
+                                                            char const* name,
+                                                            char const* value)
 {
     if (vm->set_option)
         return vm->set_option(vm, name, value);
@@ -90,12 +90,12 @@ static inline enum qrvmc_set_option_result qrvmc_set_option(struct qrvmc_vm* vm,
  * @see qrvmc_execute_fn.
  */
 static inline struct qrvmc_result qrvmc_execute(struct qrvmc_vm* vm,
-                                              const struct qrvmc_host_interface* host,
-                                              struct qrvmc_host_context* context,
-                                              enum qrvmc_revision rev,
-                                              const struct qrvmc_message* msg,
-                                              uint8_t const* code,
-                                              size_t code_size)
+                                                const struct qrvmc_host_interface* host,
+                                                struct qrvmc_host_context* context,
+                                                enum qrvmc_revision rev,
+                                                const struct qrvmc_message* msg,
+                                                uint8_t const* code,
+                                                size_t code_size)
 {
     return vm->execute(vm, host, context, rev, msg, code, code_size);
 }
@@ -125,10 +125,10 @@ static void qrvmc_free_result_memory(const struct qrvmc_result* result)
 /// @param output_data  The pointer to the output.
 /// @param output_size  The output size.
 static inline struct qrvmc_result qrvmc_make_result(enum qrvmc_status_code status_code,
-                                                  int64_t gas_left,
-                                                  int64_t gas_refund,
-                                                  const uint8_t* output_data,
-                                                  size_t output_size)
+                                                    int64_t gas_left,
+                                                    int64_t gas_refund,
+                                                    const uint8_t* output_data,
+                                                    size_t output_size)
 {
     struct qrvmc_result result;
     memset(&result, 0, sizeof(result));

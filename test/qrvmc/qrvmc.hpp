@@ -1,11 +1,11 @@
-// QRVMC: QRL Client-VM Connector API.
-// Copyright 2018 The QRVMC Authors.
+// QRVMC: Quantum Resistant Client-VM Connector API.
+// Copyright 2018 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 #pragma once
 
-#include <qrvmc/qrvmc.h>
 #include <qrvmc/helpers.h>
 #include <qrvmc/hex.hpp>
+#include <qrvmc/qrvmc.h>
 
 #include <functional>
 #include <initializer_list>
@@ -39,25 +39,25 @@ struct address : qrvmc_address
     /// in big-endian order.
     constexpr explicit address(uint64_t v) noexcept
       : qrvmc_address{{0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      static_cast<uint8_t>(v >> 56),
-                      static_cast<uint8_t>(v >> 48),
-                      static_cast<uint8_t>(v >> 40),
-                      static_cast<uint8_t>(v >> 32),
-                      static_cast<uint8_t>(v >> 24),
-                      static_cast<uint8_t>(v >> 16),
-                      static_cast<uint8_t>(v >> 8),
-                      static_cast<uint8_t>(v >> 0)}}
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       static_cast<uint8_t>(v >> 56),
+                       static_cast<uint8_t>(v >> 48),
+                       static_cast<uint8_t>(v >> 40),
+                       static_cast<uint8_t>(v >> 32),
+                       static_cast<uint8_t>(v >> 24),
+                       static_cast<uint8_t>(v >> 16),
+                       static_cast<uint8_t>(v >> 8),
+                       static_cast<uint8_t>(v >> 0)}}
     {}
 
     /// Explicit operator converting to bool.
@@ -83,37 +83,37 @@ struct bytes32 : qrvmc_bytes32
     /// in big-endian order.
     constexpr explicit bytes32(uint64_t v) noexcept
       : qrvmc_bytes32{{0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      0,
-                      static_cast<uint8_t>(v >> 56),
-                      static_cast<uint8_t>(v >> 48),
-                      static_cast<uint8_t>(v >> 40),
-                      static_cast<uint8_t>(v >> 32),
-                      static_cast<uint8_t>(v >> 24),
-                      static_cast<uint8_t>(v >> 16),
-                      static_cast<uint8_t>(v >> 8),
-                      static_cast<uint8_t>(v >> 0)}}
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       0,
+                       static_cast<uint8_t>(v >> 56),
+                       static_cast<uint8_t>(v >> 48),
+                       static_cast<uint8_t>(v >> 40),
+                       static_cast<uint8_t>(v >> 32),
+                       static_cast<uint8_t>(v >> 24),
+                       static_cast<uint8_t>(v >> 16),
+                       static_cast<uint8_t>(v >> 8),
+                       static_cast<uint8_t>(v >> 0)}}
     {}
 
     /// Explicit operator converting to bool.
@@ -419,9 +419,9 @@ public:
     /// @return      The reference to the left-hand side object.
     Result& operator=(Result&& other) noexcept
     {
-        this->~Result();                           // Release this object.
+        this->~Result();                            // Release this object.
         static_cast<qrvmc_result&>(*this) = other;  // Copy data.
-        other.release = nullptr;                   // Disable releasing of the rvalue object.
+        other.release = nullptr;                    // Disable releasing of the rvalue object.
         return *this;
     }
 
@@ -442,7 +442,7 @@ public:
     qrvmc_result release_raw() noexcept
     {
         const auto out = qrvmc_result{*this};  // Copy data.
-        this->release = nullptr;              // Disable releasing of this object.
+        this->release = nullptr;               // Disable releasing of this object.
         return out;
     }
 };
@@ -462,8 +462,8 @@ public:
 
     /// @copydoc qrvmc_host_interface::set_storage
     virtual qrvmc_storage_status set_storage(const address& addr,
-                                            const bytes32& key,
-                                            const bytes32& value) noexcept = 0;
+                                             const bytes32& key,
+                                             const bytes32& value) noexcept = 0;
 
     /// @copydoc qrvmc_host_interface::get_balance
     virtual uint256be get_balance(const address& addr) const noexcept = 0;
@@ -500,7 +500,8 @@ public:
     virtual qrvmc_access_status access_account(const address& addr) noexcept = 0;
 
     /// @copydoc qrvmc_host_interface::access_storage
-    virtual qrvmc_access_status access_storage(const address& addr, const bytes32& key) noexcept = 0;
+    virtual qrvmc_access_status access_storage(const address& addr,
+                                               const bytes32& key) noexcept = 0;
 };
 
 
@@ -534,8 +535,8 @@ public:
     }
 
     qrvmc_storage_status set_storage(const address& address,
-                                    const bytes32& key,
-                                    const bytes32& value) noexcept final
+                                     const bytes32& key,
+                                     const bytes32& value) noexcept final
     {
         return host->set_storage(context, &address, &key, &value);
     }
@@ -611,7 +612,10 @@ public:
 
     /// Converts the Host object to the opaque host context pointer.
     /// @returns  Pointer to qrvmc_host_context.
-    qrvmc_host_context* to_context() noexcept { return reinterpret_cast<qrvmc_host_context*>(this); }
+    qrvmc_host_context* to_context() noexcept
+    {
+        return reinterpret_cast<qrvmc_host_context*>(this);
+    }
 
     /// Converts the opaque host context pointer back to the original Host object.
     /// @tparam DerivedClass  The class derived from the Host class.
@@ -738,9 +742,9 @@ public:
 
     /// Returns the pointer to C QRVMC struct representing the VM.
     ///
-    /// Gives access to the C QRVMC VM struct to allow advanced interaction with the VM not supported
-    /// by the C++ interface. Use as the last resort.
-    /// This object still owns the VM after returning the pointer. The returned pointer MAY be null.
+    /// Gives access to the C QRVMC VM struct to allow advanced interaction with the VM not
+    /// supported by the C++ interface. Use as the last resort. This object still owns the VM after
+    /// returning the pointer. The returned pointer MAY be null.
     qrvmc_vm* get_raw_pointer() const noexcept { return m_instance; }
 
 private:
@@ -759,43 +763,43 @@ inline VM::VM(qrvmc_vm* vm,
 
 namespace internal
 {
-inline bool account_exists(qrvmc_host_context* h, const qrvmc_address addr) noexcept
+inline bool account_exists(qrvmc_host_context* h, const qrvmc_address* addr) noexcept
 {
     return Host::from_context(h)->account_exists(*addr);
 }
 
 inline qrvmc_bytes32 get_storage(qrvmc_host_context* h,
-                                const qrvmc_address addr,
-                                const qrvmc_bytes32* key) noexcept
+                                 const qrvmc_address* addr,
+                                 const qrvmc_bytes32* key) noexcept
 {
     return Host::from_context(h)->get_storage(*addr, *key);
 }
 
 inline qrvmc_storage_status set_storage(qrvmc_host_context* h,
-                                       const qrvmc_address addr,
-                                       const qrvmc_bytes32* key,
-                                       const qrvmc_bytes32* value) noexcept
+                                        const qrvmc_address* addr,
+                                        const qrvmc_bytes32* key,
+                                        const qrvmc_bytes32* value) noexcept
 {
     return Host::from_context(h)->set_storage(*addr, *key, *value);
 }
 
-inline qrvmc_uint256be get_balance(qrvmc_host_context* h, const qrvmc_address addr) noexcept
+inline qrvmc_uint256be get_balance(qrvmc_host_context* h, const qrvmc_address* addr) noexcept
 {
     return Host::from_context(h)->get_balance(*addr);
 }
 
-inline size_t get_code_size(qrvmc_host_context* h, const qrvmc_address addr) noexcept
+inline size_t get_code_size(qrvmc_host_context* h, const qrvmc_address* addr) noexcept
 {
     return Host::from_context(h)->get_code_size(*addr);
 }
 
-inline qrvmc_bytes32 get_code_hash(qrvmc_host_context* h, const qrvmc_address addr) noexcept
+inline qrvmc_bytes32 get_code_hash(qrvmc_host_context* h, const qrvmc_address* addr) noexcept
 {
     return Host::from_context(h)->get_code_hash(*addr);
 }
 
 inline size_t copy_code(qrvmc_host_context* h,
-                        const qrvmc_address addr,
+                        const qrvmc_address* addr,
                         size_t code_offset,
                         uint8_t* buffer_data,
                         size_t buffer_size) noexcept
@@ -819,7 +823,7 @@ inline qrvmc_bytes32 get_block_hash(qrvmc_host_context* h, int64_t block_number)
 }
 
 inline void emit_log(qrvmc_host_context* h,
-                     const qrvmc_address addr,
+                     const qrvmc_address* addr,
                      const uint8_t* data,
                      size_t data_size,
                      const qrvmc_bytes32 topics[],
@@ -829,14 +833,14 @@ inline void emit_log(qrvmc_host_context* h,
                                     num_topics);
 }
 
-inline qrvmc_access_status access_account(qrvmc_host_context* h, const qrvmc_address addr) noexcept
+inline qrvmc_access_status access_account(qrvmc_host_context* h, const qrvmc_address* addr) noexcept
 {
     return Host::from_context(h)->access_account(*addr);
 }
 
 inline qrvmc_access_status access_storage(qrvmc_host_context* h,
-                                         const qrvmc_address addr,
-                                         const qrvmc_bytes32* key) noexcept
+                                          const qrvmc_address* addr,
+                                          const qrvmc_bytes32* key) noexcept
 {
     return Host::from_context(h)->access_storage(*addr, *key);
 }
@@ -848,10 +852,10 @@ inline const qrvmc_host_interface& Host::get_interface() noexcept
         ::qrvmc::internal::account_exists, ::qrvmc::internal::get_storage,
         ::qrvmc::internal::set_storage,    ::qrvmc::internal::get_balance,
         ::qrvmc::internal::get_code_size,  ::qrvmc::internal::get_code_hash,
-        ::qrvmc::internal::copy_code,      
-        ::qrvmc::internal::call,           ::qrvmc::internal::get_tx_context,
-        ::qrvmc::internal::get_block_hash, ::qrvmc::internal::emit_log,
-        ::qrvmc::internal::access_account, ::qrvmc::internal::access_storage,
+        ::qrvmc::internal::copy_code,      ::qrvmc::internal::call,
+        ::qrvmc::internal::get_tx_context, ::qrvmc::internal::get_block_hash,
+        ::qrvmc::internal::emit_log,       ::qrvmc::internal::access_account,
+        ::qrvmc::internal::access_storage,
     };
     return interface;
 }

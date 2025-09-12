@@ -1,13 +1,13 @@
-// QRVMC: QRL Client-VM Connector API.
-// Copyright 2019 The QRVMC Authors.
+// QRVMC: Quantum Resistant Client-VM Connector API.
+// Copyright 2019 The EVMC Authors.
 // Licensed under the Apache License, Version 2.0.
 #pragma once
 
 #include <qrvmc/qrvmc.hpp>
 #include <algorithm>
 #include <cassert>
-#include <map>
 #include <string>
+#include <map>
 #include <unordered_map>
 #include <vector>
 
@@ -167,8 +167,8 @@ public:
 
     /// Set the account's storage value (QRVMC Host method).
     qrvmc_storage_status set_storage(const address& addr,
-                                    const bytes32& key,
-                                    const bytes32& value) noexcept override
+                                     const bytes32& key,
+                                     const bytes32& value) noexcept override
     {
         record_account_access(addr);
 
@@ -411,8 +411,8 @@ public:
 
     /// Record an account access.
     ///
-    /// This method is required by EIP-2929. It will record the account access in
-    /// MockedHost::recorded_account_accesses and return previous access status.
+    /// This method is required by EIP-2929. It will record the account
+    /// access in MockedHost::recorded_account_accesses and return previous access status.
     /// This methods returns ::QRVMC_ACCESS_WARM for known addresses of precompiles.
     /// The EIP-2929 specifies that qrvmc_message::sender and qrvmc_message::recipient are always
     /// ::QRVMC_ACCESS_WARM. Therefore, you should init the MockedHost with:
@@ -444,10 +444,10 @@ public:
 
     /// Access the account's storage value at the given key.
     ///
-    /// This method is required by EIP-2929. In records that the given account's
-    /// storage key has been access and returns the previous access status.
-    /// To mock storage access list (EIP-2930), you can pre-init account's storage
-    /// values with the ::QRVMC_ACCESS_WARM flag:
+    /// This method is required by EIP-2929. In records
+    /// that the given account's storage key has been access and returns the
+    /// previous access status. To mock storage access list (EIP-2930), you can
+    /// pre-init account's storage values with the ::QRVMC_ACCESS_WARM flag:
     ///
     ///     mocked_host.accounts[msg.recipient].storage[key] = {value,
     ///     QRVMC_ACCESS_WARM};

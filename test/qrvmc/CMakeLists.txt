@@ -1,4 +1,4 @@
-# QRVMC: QRL Client-VM Connector API.
+# QRVMC: Quantum Resistant Client-VM Connector API.
 # Copyright 2016-2019 The QRVMC Authors.
 # Licensed under the Apache License, Version 2.0.
 
