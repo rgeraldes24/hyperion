@@ -15,5 +15,5 @@ contract C {
 // ABIEncoderV1Only: true
 // compileViaYul: false
 // ----
-// f(address): Zffff1234567890123456789012345678901234567890 -> 0x0 # We input longer data on purpose.#
-// g(address): Zffff1234567890123456789012345678901234567890 -> 0x0
+// f(address): Qffff1234567890123456789012345678901234567890 -> 0x0 # We input longer data on purpose.#
+// g(address): Qffff1234567890123456789012345678901234567890 -> 0x0

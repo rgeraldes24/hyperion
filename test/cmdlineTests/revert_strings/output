@@ -26,12 +26,12 @@ object "C_15" {
             pos := add(pos, 4)
             mstore(pos, 0x20)
             pos := add(pos, 0x20)
-            mstore(pos, 33)
+            mstore(pos, 35)
             pos := add(pos, 0x20)
 
-            mstore(add(pos, 0), "Quanta sent to non-payable functio")
+            mstore(add(pos, 0), "Quanta sent to non-payable funct")
 
-            mstore(add(pos, 32), "n")
+            mstore(add(pos, 32), "ion")
 
             revert(start, 132)
 
@@ -86,12 +86,12 @@ object "C_15" {
                 pos := add(pos, 4)
                 mstore(pos, 0x20)
                 pos := add(pos, 0x20)
-                mstore(pos, 33)
+                mstore(pos, 35)
                 pos := add(pos, 0x20)
 
-                mstore(add(pos, 0), "Quanta sent to non-payable functio")
+                mstore(add(pos, 0), "Quanta sent to non-payable funct")
 
-                mstore(add(pos, 32), "n")
+                mstore(add(pos, 32), "ion")
 
                 revert(start, 132)
 

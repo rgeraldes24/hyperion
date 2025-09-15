@@ -108,7 +108,7 @@ std::map<string const, yul::Dialect const& (*)(langutil::QRVMVersion)> const val
 		{ return yul::QRVMDialect::strictAssemblyForQRVMObjects(_qrvmVersion); }
 	},
 	{
-		"qrvmTyped ",
+		"qrvmTyped",
 		[](langutil::QRVMVersion _qrvmVersion) -> yul::Dialect const&
 		{ return yul::QRVMDialectTyped::instance(_qrvmVersion); }
 	},

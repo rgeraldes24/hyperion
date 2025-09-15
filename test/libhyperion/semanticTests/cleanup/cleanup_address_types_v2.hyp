@@ -14,5 +14,5 @@ contract C {
     }
 }
 // ----
-// f(address): Zffff1234567890123456789012345678901234567890 -> FAILURE # We input longer data on purpose.#
-// g(address): Zffff1234567890123456789012345678901234567890 -> FAILURE
+// f(address): Qffff1234567890123456789012345678901234567890 -> FAILURE # We input longer data on purpose.#
+// g(address): Qffff1234567890123456789012345678901234567890 -> FAILURE

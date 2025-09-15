@@ -75,6 +75,6 @@ void SyntaxTest::parseAndAnalyze()
 SyntaxTest::SyntaxTest(string const& _filename, langutil::QRVMVersion _qrvmVersion):
 	CommonSyntaxTest(_filename, _qrvmVersion)
 {
-	string dialectName = m_reader.stringSetting("dialect", "qrvmTyped ");
+	string dialectName = m_reader.stringSetting("dialect", "qrvmTyped");
 	m_dialect = &dialect(dialectName, hyperion::test::CommonOptions::get().qrvmVersion());
 }
