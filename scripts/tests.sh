@@ -93,7 +93,7 @@ then
     "$REPO_ROOT/test/cmdlineTests.sh" &
     CMDLINE_PID=$!
 else
-    if ! "$REPO_ROOT/test/cmdlineTests.sh" "$no_smt"
+    if ! "$REPO_ROOT/test/cmdlineTests.sh"
     then
         printError "Commandline tests FAILED"
         exit 1
