@@ -64,14 +64,14 @@ public:
 
 	// Hyperion testing specific features.
 
-	/// Tries to dynamically load an qrvmc vm supporting qrvm1 and caches the loaded VM.
+	/// Tries to dynamically load a qrvmc vm supporting qrvm1 and caches the loaded VM.
 	/// @returns vmc::VM(nullptr) on failure.
 	static qrvmc::VM& getVM(std::string const& _path = {});
 
 	/// Tries to load all defined qrvmc vm shared libraries.
 	/// @param _vmPaths paths to multiple qrvmc shared libraries.
 	/// @throw Exception if multiple qrvm1 vms where loaded.
-	/// @returns true, if an qrvmc vm supporting qrvm1 was loaded properly,
+	/// @returns true, if a qrvmc vm supporting qrvm1 was loaded properly,
 	static bool checkVmPaths(std::vector<boost::filesystem::path> const& _vmPaths);
 
 	explicit QRVMHost(langutil::QRVMVersion _qrvmVersion, qrvmc::VM& _vm);

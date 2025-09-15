@@ -51,7 +51,7 @@ bool isRestrictedIdentifier(Dialect const& _dialect, YulString const& _identifie
 std::optional<qrvmasm::Instruction> toQRVMInstruction(Dialect const& _dialect, YulString const& _name);
 
 /// Helper function that returns the QRVM version from a dialect.
-/// It returns the default QRVM version if dialect is not an QRVMDialect.
+/// It returns the default QRVM version if dialect is not a QRVMDialect.
 langutil::QRVMVersion const qrvmVersionFromDialect(Dialect const& _dialect);
 
 class StatementRemover: public ASTModifier

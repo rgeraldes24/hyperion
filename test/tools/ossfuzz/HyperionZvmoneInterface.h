@@ -128,7 +128,7 @@ public:
 	/// @returns true if `_result` is zero, false
 	/// otherwise.
 	static bool zeroWord(uint8_t const* _result, size_t _length);
-	/// @returns an qrvmc_message with all of its fields zero
+	/// @returns a qrvmc_message with all of its fields zero
 	/// initialized except gas and input fields.
 	/// The gas field is set to the maximum permissible value so that we
 	/// don't run into out of gas errors. The input field is copied from

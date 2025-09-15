@@ -268,7 +268,7 @@ private:
 	/// dictionarySize is the total number of entries in the dictionary.
 	std::string dictionaryToken(util::HexPrefix _p = util::HexPrefix::Add);
 
-	/// Returns an QRVMVersion object corresponding to the protobuf
+	/// Returns a QRVMVersion object corresponding to the protobuf
 	/// enum of type Program_Version
 	static hyperion::langutil::QRVMVersion qrvmVersionMapping(Program_Version const& _x);
 
