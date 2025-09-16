@@ -711,7 +711,7 @@ ASTPointer<ArrayTypeName> ASTJsonImporter::createArrayTypeName(Json::Value const
 
 ASTPointer<InlineAssembly> ASTJsonImporter::createInlineAssembly(Json::Value const& _node)
 {
-	astAssert(_node["qrvmVersion"].isString(), "Expected qrvmVersionto be a string!");
+	astAssert(_node["qrvmVersion"].isString(), "Expected qrvmVersion to be a string!");
 	auto qrvmVersion= langutil::QRVMVersion::fromString(_node["qrvmVersion"].asString());
 	astAssert(qrvmVersion.has_value(), "Invalid QRVM version!");
 	astAssert(m_qrvmVersion == qrvmVersion, "Imported tree qrvm version differs from configured qrvm version!");
