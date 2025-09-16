@@ -80,8 +80,8 @@ function zeppelin_test
     sed -i "s|it(\('fails deploying a contract if factory contract does not have sufficient balance'\)|it.skip(\1|g" test/utils/Create2.test.js
     sed -i "s|it(\('reverts when casting -1'\)|it.skip(\1|g" test/utils/math/SafeCast.test.js
     sed -i 's|it(\(`reverts when casting [^`]\+`\)|it.skip(\1|g' test/utils/math/SafeCast.test.js
-    sed -i "s|it(\('reverts if index is greater than supply'\)|it.skip(\1|g" test/token/SQRCTN1 /SQRCTN1 .behavior.js
-    sed -i "s|it(\('burns all tokens'\)|it.skip(\1|g" test/token/SQRCTN1 /SQRCTN1 .behavior.js
+    sed -i "s|it(\('reverts if index is greater than supply'\)|it.skip(\1|g" test/token/SQRCTN1/SQRCTN1.behavior.js
+    sed -i "s|it(\('burns all tokens'\)|it.skip(\1|g" test/token/SQRCTN1/SQRCTN1.behavior.js
     sed -i "s|it(\('guards transfer against invalid user'\)|it.skip(\1|g" test/access/Ownable2Step.test.js
     sed -i "s|it(\('reverting initialization function'\)|it.skip(\1|g" test/proxy/beacon/BeaconProxy.test.js
     sed -i "s|describe(\('reverting initialization'\)|describe.skip(\1|g" test/proxy/Proxy.behaviour.js
