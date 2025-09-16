@@ -8,7 +8,7 @@ Contracts can be created "from outside" via QRL transactions or from within Hype
 
 IDEs, such as `Remix <https://remix.ethereum.org/>`_, make the creation process seamless using UI elements.
 
-One way to create contracts programmatically on QRL is via the JavaScript API `web3.js <https://github.com/web3/web3.js>`_.
+One way to create contracts programmatically on QRL is via the JavaScript API `web3.js <https://github.com/theQRL/web3.js>`_.
 It has a function called `web3.qrl.Contract <https://web3js.readthedocs.io/en/1.0/web3-eth-contract.html#new-contract>`_
 to facilitate contract creation.
 
