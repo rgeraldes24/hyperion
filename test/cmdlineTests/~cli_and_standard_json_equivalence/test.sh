@@ -50,7 +50,7 @@ test_cli_and_standard_json_equivalence \
     '--asm' \
     '"optimizer": {"enabled": true}' \
     'qrvm.assembly' \
-    "test/libhyperion/semanticTests/various/erc20.hyp"
+    "test/libhyperion/semanticTests/various/sqrctf1.hyp"
 
 printTask "    - --optimize-yul vs optimizer.details.yul: true (--asm output)"
 test_cli_and_standard_json_equivalence \
@@ -58,4 +58,4 @@ test_cli_and_standard_json_equivalence \
     '--asm' \
     '"optimizer": {"enabled": false, "details": {"yul": true}}' \
     'qrvm.assembly' \
-    "test/libhyperion/semanticTests/various/erc20.hyp"
+    "test/libhyperion/semanticTests/various/sqrctf1.hyp"

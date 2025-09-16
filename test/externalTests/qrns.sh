@@ -36,7 +36,7 @@ function test_fn { yarn test; }
 
 function ens_test
 {
-    local repo="https://github.com/ensdomains/ens-contracts.git"
+    local repo="https://github.com/theQRL/qrns-contracts.git"
     local ref_type=commit
     local ref="083d29a2c50cd0a8307386abf8fadc217b256256"
     local config_file="hardhat.config.js"
@@ -85,8 +85,8 @@ function ens_test
 
     for preset in $SELECTED_PRESETS; do
         hardhat_run_test "$config_file" "$preset" "${compile_only_presets[*]}" compile_fn test_fn
-        store_benchmark_report hardhat ens "$repo" "$preset"
+        store_benchmark_report hardhat qrns "$repo" "$preset"
     done
 }
 
-external_test ENS ens_test
+external_test QRNS qrns_test

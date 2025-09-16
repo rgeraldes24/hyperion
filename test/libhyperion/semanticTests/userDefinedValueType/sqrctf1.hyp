@@ -1,5 +1,5 @@
 pragma abicoder v2;
-// A rewrite of the test/libhyperion/semanticTests/various/erc20.hyp, but using user defined value
+// A rewrite of the test/libhyperion/semanticTests/various/sqrctf1.hyp, but using user defined value
 // types.
 
 // User defined type name. Indicating a type with 18 decimals.
@@ -15,7 +15,7 @@ library FixedMath
     }
 }
 
-contract ERC20 {
+contract SQRCTF1 {
     using FixedMath for UFixed18;
 
     event Transfer(address indexed from, address indexed to, UFixed18 value);
@@ -71,7 +71,7 @@ contract ERC20 {
     }
 
     function _transfer(address from, address to, UFixed18 value) internal {
-        require(to != address(0), "ERC20: transfer to the zero address");
+        require(to != address(0), "SQRCTF1: transfer to the zero address");
 
         // The subtraction and addition here will revert on overflow.
         _balances[from] = _balances[from].sub(value);
@@ -80,7 +80,7 @@ contract ERC20 {
     }
 
     function _mint(address account, UFixed18 value) internal {
-        require(account != address(0), "ERC20: mint to the zero address");
+        require(account != address(0), "SQRCTF1: mint to the zero address");
 
         // The additions here will revert on overflow.
         _totalSupply = _totalSupply.add(value);
@@ -89,7 +89,7 @@ contract ERC20 {
     }
 
     function _burn(address account, UFixed18 value) internal {
-        require(account != address(0), "ERC20: burn from the zero address");
+        require(account != address(0), "SQRCTF1: burn from the zero address");
 
         // The subtractions here will revert on overflow.
         _totalSupply = _totalSupply.sub(value);
@@ -98,8 +98,8 @@ contract ERC20 {
     }
 
     function _approve(address owner, address spender, UFixed18 value) internal {
-        require(owner != address(0), "ERC20: approve from the zero address");
-        require(spender != address(0), "ERC20: approve to the zero address");
+        require(owner != address(0), "SQRCTF1: approve from the zero address");
+        require(spender != address(0), "SQRCTF1: approve to the zero address");
 
         _allowances[owner][spender] = value;
         emit Approval(owner, spender, value);
