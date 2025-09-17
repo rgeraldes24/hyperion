@@ -65,7 +65,7 @@ contract that returns the value at the specified address.
     }
 
 The example below is a simplified version of an
-`SQRCTF1 token <https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/SQRCTF1/SQRCTF1.sol>`_.
+`SQRCTF1 token <https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol>`_.
 ``_allowances`` is an example of a mapping type inside another mapping type.
 
 In the example below, the optional ``KeyName`` and ``ValueName`` are provided for the mapping.
