@@ -34,7 +34,7 @@ SELECTED_PRESETS="$3"
 function compile_fn { yarn build; }
 function test_fn { yarn test; }
 
-function ens_test
+function qrns_test
 {
     local repo="https://github.com/theQRL/qrns-contracts.git"
     local ref_type=commit
