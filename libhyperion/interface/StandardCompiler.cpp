@@ -793,7 +793,7 @@ std::variant<StandardCompiler::InputsAndSettings, Json::Value> StandardCompiler:
 	if (settings.isMember("qrvmVersion"))
 	{
 		if (!settings["qrvmVersion"].isString())
-			return formatFatalError(Error::Type::JSONError, "qrvmVersionmust be a string.");
+			return formatFatalError(Error::Type::JSONError, "qrvmVersion must be a string.");
 		std::optional<langutil::QRVMVersion> version = langutil::QRVMVersion::fromString(settings["qrvmVersion"].asString());
 		if (!version)
 			return formatFatalError(Error::Type::JSONError, "Invalid QRVM version requested.");
