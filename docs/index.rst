@@ -74,7 +74,7 @@ the `QRL Developer Resources <https://theqrl.org/en/developers/>`_ can help you 
 and a wide selection of tutorials, tools, and development frameworks.
 
 If you have any questions, you can try searching for answers or asking on the
-`QRL StackExchange <https://qrl.stackexchange.com/>`_,
+`The QRL StackExchange <https://theqrl.stackexchange.com/>`_,
 or our `Gitter channel <https://gitter.im/theQRL/hyperion>`_.
 
 .. _translations:
