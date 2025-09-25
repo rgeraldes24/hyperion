@@ -9,11 +9,11 @@
   }
  },
  "settings": {
-  "zvmVersion": "shanghai",
+  "qrvmVersion": "shanghai",
   "outputSelection": {
    "*": {
     "A2": [
-     "zvm.bytecode.object"
+     "qrvm.bytecode.object"
     ]
    }
   }

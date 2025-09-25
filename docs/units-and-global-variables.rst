@@ -4,19 +4,19 @@
 Units and Globally Available Variables
 **************************************
 
-.. index:: ! planck, ! gplanck, ! zond, ! denomination;zond
+.. index:: ! planck, ! shor, ! quanta, ! denomination;qrl
 
-Zond Units
+QRL Units
 ===========
 
-A literal number can take a suffix of ``planck``, ``gplanck`` or ``zond`` to specify a subdenomination of Zond, where Zond numbers without a postfix are assumed to be Planck.
+A literal number can take a suffix of ``planck``, ``shor`` or ``quanta`` to specify a subdenomination of QRL, where QRL numbers without a postfix are assumed to be Planck.
 
 .. code-block:: hyperion
     :force:
 
     assert(1 planck == 1);
-    assert(1 gplanck == 1e9);
-    assert(1 zond == 1e18);
+    assert(1 shor == 1e9);
+    assert(1 quanta == 1e18);
 
 The only effect of the subdenomination suffix is a multiplication by a power of ten.
 
@@ -91,7 +91,7 @@ Block and Transaction Properties
 .. note::
     When contracts are evaluated off-chain rather than in context of a transaction included in a
     block, you should not assume that ``block.*`` and ``tx.*`` refer to values from any specific
-    block or transaction. These values are provided by the ZVM implementation that executes the
+    block or transaction. These values are provided by the QRVM implementation that executes the
     contract and can be arbitrary.
 
 .. note::
@@ -100,7 +100,7 @@ Block and Transaction Properties
 
     Both the timestamp and the block hash can be influenced by miners to some degree.
     Bad actors in the mining community can for example run a casino payout function on a chosen hash
-    and just retry a different hash if they did not receive any compensation, e.g. Zond.
+    and just retry a different hash if they did not receive any compensation, e.g. Quanta.
 
     The current block timestamp must be strictly larger than the timestamp of the last block,
     but the only guarantee is that it will be somewhere between the timestamps of two
@@ -236,11 +236,11 @@ For more information, see the section on :ref:`address`.
 .. warning::
     There are some dangers in using ``send``: The transfer fails if the call stack depth is at 1024
     (this can always be forced by the caller) and it also fails if the recipient runs out of gas. So in order
-    to make safe Zond transfers, always check the return value of ``send``, use ``transfer`` or even better:
-    Use a pattern where the recipient withdraws the Zond.
+    to make safe Quanta transfers, always check the return value of ``send``, use ``transfer`` or even better:
+    Use a pattern where the recipient withdraws the Quanta.
 
 .. warning::
-    Due to the fact that the ZVM considers a call to a non-existing contract to always succeed,
+    Due to the fact that the QRVM considers a call to a non-existing contract to always succeed,
     Hyperion includes an extra check using the ``extcodesize`` opcode when performing external calls.
     This ensures that the contract that is about to be called either actually exists (it contains code)
     or an exception is raised.

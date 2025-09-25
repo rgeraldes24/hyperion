@@ -195,7 +195,7 @@ In this example, we will use a library.
         }
     }
 
-Note that all external library calls are actual ZVM function calls. This means that
+Note that all external library calls are actual QRVM function calls. This means that
 if you pass memory or value types, a copy will be performed, even in case of the
 ``self`` variable. The only situation where no copy will be performed
 is when storage reference variables are used or when internal library

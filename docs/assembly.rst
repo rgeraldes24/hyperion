@@ -4,11 +4,11 @@
 Inline Assembly
 ###############
 
-.. index:: ! assembly, ! asm, ! zvmasm
+.. index:: ! assembly, ! asm, ! qrvmasm
 
 
 You can interleave Hyperion statements with inline assembly in a language close
-to the one of the Zond Virtual Machine. This gives you more fine-grained control,
+to the one of the Quantum Resistant Virtual Machine. This gives you more fine-grained control,
 which is especially useful when you are enhancing the language by writing libraries.
 
 The language used for inline assembly in Hyperion is called :ref:`Yul <yul>`
@@ -17,7 +17,7 @@ how the inline assembly code can interface with the surrounding Hyperion code.
 
 
 .. warning::
-    Inline assembly is a way to access the Zond Virtual Machine
+    Inline assembly is a way to access the Quantum Resistant Virtual Machine
     at a low level. This bypasses several important safety
     features and checks of Hyperion. You should only use it for
     tasks that need it, and only if you are confident with using it.
@@ -232,7 +232,7 @@ Conventions in Hyperion
 Values of Typed Variables
 =========================
 
-In contrast to ZVM assembly, Hyperion has types which are narrower than 256 bits,
+In contrast to QRVM assembly, Hyperion has types which are narrower than 256 bits,
 e.g. ``uint24``. For efficiency, most arithmetic operations ignore the fact that
 types can be shorter than 256
 bits, and the higher-order bits are cleaned when necessary,

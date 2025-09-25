@@ -6,11 +6,11 @@
   }
  },
  "settings": {
-  "zvmVersion": "shanghai",
+  "qrvmVersion": "shanghai",
   "outputSelection": {
    "*": {
     "A": [
-     "zvm.deployedBytecode.immutableReferences"
+     "qrvm.deployedBytecode.immutableReferences"
     ]
    }
   }

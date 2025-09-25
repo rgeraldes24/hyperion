@@ -52,7 +52,7 @@ this nonsensical example:
         function f() internal pure returns (uint ret) { return g(7) + f(); }
     }
 
-These function calls are translated into simple jumps inside the ZVM. This has
+These function calls are translated into simple jumps inside the QRVM. This has
 the effect that the current memory is not cleared, i.e. passing memory references
 to internally-called functions is very efficient. Only functions of the same
 contract instance can be called internally.
@@ -111,7 +111,7 @@ otherwise, the ``value`` option would not be available.
   the ``value`` and ``gas`` settings are lost, only
   ``feed.info{value: 10, gas: 800}()`` performs the function call.
 
-Due to the fact that the ZVM considers a call to a non-existing contract to
+Due to the fact that the QRVM considers a call to a non-existing contract to
 always succeed, Hyperion uses the ``extcodesize`` opcode to check that
 the contract that is about to be called actually exists (it contains code)
 and causes an exception if it does not. This check is skipped if the return
@@ -222,13 +222,13 @@ is compiled so recursive creation-dependencies are not possible.
         }
 
         function createAndEndowD(uint arg, uint amount) public payable {
-            // Send zond along with the creation
+            // Send quanta along with the creation
             D newD = new D{value: amount}(arg);
             newD.x();
         }
     }
 
-As seen in the example, it is possible to send Zond while creating
+As seen in the example, it is possible to send Quanta while creating
 an instance of ``D`` using the ``value`` option, but it is not possible
 to limit the amount of gas.
 If the creation fails (due to out-of-stack, not enough balance or other problems),
@@ -581,7 +581,7 @@ of an exception instead of "bubbling up".
     The low-level functions ``call``, ``delegatecall`` and
     ``staticcall`` return ``true`` as their first return value
     if the account called is non-existent, as part of the design
-    of the ZVM. Account existence must be checked prior to calling if needed.
+    of the QRVM. Account existence must be checked prior to calling if needed.
 
 Exceptions can contain error data that is passed back to the caller
 in the form of :ref:`error instances <errors>`.
@@ -639,9 +639,9 @@ in the following situations:
 #. Calling ``require(x)`` where ``x`` evaluates to ``false``.
 #. If you use ``revert()`` or ``revert("description")``.
 #. If you perform an external function call targeting a contract that contains no code.
-#. If your contract receives Zond via a public function without
+#. If your contract receives Quanta via a public function without
    ``payable`` modifier (including the constructor and the fallback function).
-#. If your contract receives Zond via a public getter function.
+#. If your contract receives Quanta via a public getter function.
 
 For the following cases, the error data from the external call
 (if provided) is forwarded. This means that it can either cause
@@ -680,7 +680,7 @@ and ``assert`` for internal error checking.
             addr.transfer(msg.value / 2);
             // Since transfer throws an exception on failure and
             // cannot call back here, there should be no way for us to
-            // still have half of the Zond.
+            // still have half of the Quanta.
             assert(address(this).balance == balanceBeforeTransfer - msg.value / 2);
             return address(this).balance;
         }
@@ -688,7 +688,7 @@ and ``assert`` for internal error checking.
 
 Internally, Hyperion performs a revert operation (instruction
 ``0xfd``). This causes
-the ZVM to revert all changes made to the state. The reason for reverting
+the QRVM to revert all changes made to the state. The reason for reverting
 is that there is no safe way to continue execution, because an expected effect
 did not occur. Because we want to keep the atomicity of transactions, the
 safest action is to revert all changes and make the whole transaction
@@ -741,12 +741,12 @@ together with ``revert`` and the equivalent ``require``:
         address owner;
         error Unauthorized();
         function buy(uint amount) public payable {
-            if (amount > msg.value / 2 zond)
-                revert("Not enough Zond provided.");
+            if (amount > msg.value / 2 quanta)
+                revert("Not enough Quanta provided.");
             // Alternative way to do it:
             require(
-                amount <= msg.value / 2 zond,
-                "Not enough Zond provided."
+                amount <= msg.value / 2 quanta,
+                "Not enough Quanta provided."
             );
             // Perform the purchase.
         }
@@ -769,7 +769,7 @@ for example if they are just strings.
     ``condition`` is true.
 
 The provided string is :ref:`abi-encoded <ABI>` as if it were a call to a function ``Error(string)``.
-In the above example, ``revert("Not enough Zond provided.");`` returns the following hexadecimal as error return data:
+In the above example, ``revert("Not enough Quanta provided.");`` returns the following hexadecimal as error return data:
 
 .. code::
 

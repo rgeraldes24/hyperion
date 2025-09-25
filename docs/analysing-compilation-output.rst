@@ -26,7 +26,7 @@ The following would be the output of ``hypc --asm contract.hyp``
 .. code-block:: none
 
     ======= contract.hyp:C =======
-    ZVM assembly:
+    QRVM assembly:
         /* "contract.hyp":0:86  contract C {... */
       mstore(0x40, 0x80)
       callvalue

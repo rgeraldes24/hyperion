@@ -9,11 +9,11 @@
   }
  },
  "settings": {
-  "zvmVersion": "shanghai",
+  "qrvmVersion": "shanghai",
   "outputSelection": {
    "a.hyp": {
     "*": [
-     "zvm.bytecode.object"
+     "qrvm.bytecode.object"
     ]
    }
   }

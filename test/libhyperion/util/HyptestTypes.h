@@ -54,8 +54,8 @@ namespace hyperion::frontend::test
 	T(Address, "address", 0)      \
 	T(Identifier, "identifier", 0)     \
 	/* type keywords */                \
-	K(Zond, "zond", 0)               \
-	K(Planck, "planck", 0)                   \
+	K(Quanta, "quanta", 0)             \
+	K(Planck, "planck", 0)             \
 	K(Hex, "hex", 0)                   \
 	K(Boolean, "boolean", 0)           \
 	/* special keywords */             \
@@ -95,7 +95,7 @@ namespace hyptest
  * return values to `bytes` and vice-versa.
  * Defaults to None, a 0-byte representation. 0-bytes
  * can also be interpreted as Failure, which means
- * either a REVERT or another ZVM failure.
+ * either a REVERT or another QRVM failure.
  */
 struct ABIType
 {
@@ -202,7 +202,7 @@ struct FunctionCallExpectations
 	/// a function call when used in test framework.
 	ParameterList result;
 	/// Expected status of the transaction. It can be either
-	/// a REVERT or a different ZVM failure (e.g. out-of-gas).
+	/// a REVERT or a different QRVM failure (e.g. out-of-gas).
 	bool failure = true;
 	/// A Comment that can be attached to the expectations,
 	/// that is retained and can be displayed.
@@ -252,7 +252,7 @@ struct FunctionCallArgs
 enum class FunctionValueUnit
 {
 	Planck,
-	Zond
+	Quanta
 };
 
 /// Holds value along with unit it was expressed in originally.
@@ -265,7 +265,7 @@ struct FunctionValue
 
 /**
  * Represents a function call read from an input stream. It contains the signature, the
- * arguments, an optional zond value and an expected execution result.
+ * arguments, an optional qrl value and an expected execution result.
  */
 struct FunctionCall
 {
@@ -273,7 +273,7 @@ struct FunctionCall
 	/// For a library deployment, this contains the library name.
 	std::string signature;
 	/// Optional value that can be sent with the call.
-	/// Value is expressed in planck, smallest unit of zond
+	/// Value is expressed in planck, smallest unit of qrl
 	/// Value has a field unit which represents denomination on which value was expressed originally
 	FunctionValue value;
 	/// Object that holds all function parameters in their `bytes`

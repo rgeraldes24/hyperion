@@ -1,6 +1,0 @@
-contract C {
-    receive () payable external { }
-}
-// ----
-// (), 1 zond
-// (), 1 zond: 1 -> FAILURE

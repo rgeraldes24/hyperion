@@ -319,10 +319,10 @@ BOOST_AUTO_TEST_CASE(call_arguments)
 	);
 }
 
-BOOST_AUTO_TEST_CASE(call_arguments_zond)
+BOOST_AUTO_TEST_CASE(call_arguments_quanta)
 {
 	char const* source = R"(
-		// f(uint256), 1 zond: 5 # optional zond value #
+		// f(uint256), 1 quanta: 5 # optional quanta value #
 		// -> 4
 	)";
 	auto const calls = parse(source);
@@ -334,8 +334,8 @@ BOOST_AUTO_TEST_CASE(call_arguments_zond)
 		false,
 		fmt::encodeArgs(5),
 		fmt::encodeArgs(4),
-		{exp256(u256(10), u256(18)) , FunctionValueUnit::Zond},
-		" optional zond value "
+		{exp256(u256(10), u256(18)) , FunctionValueUnit::Quanta},
+		" optional quanta value "
 	);
 }
 
@@ -806,7 +806,7 @@ BOOST_AUTO_TEST_CASE(call_arguments_tuple_invalid_parantheses)
 	BOOST_REQUIRE_THROW(parse(source), TestParserError);
 }
 
-BOOST_AUTO_TEST_CASE(call_zond_value_expectations_missing)
+BOOST_AUTO_TEST_CASE(call_qrl_value_expectations_missing)
 {
 	char const* source = R"(
 		// f(), 0)";
@@ -829,7 +829,7 @@ BOOST_AUTO_TEST_CASE(call_arguments_invalid_decimal)
 	BOOST_REQUIRE_THROW(parse(source), TestParserError);
 }
 
-BOOST_AUTO_TEST_CASE(call_zond_value_invalid)
+BOOST_AUTO_TEST_CASE(call_qrl_value_invalid)
 {
 	char const* source = R"(
 		// f(uint256), abc : 1 -> 1
@@ -837,15 +837,15 @@ BOOST_AUTO_TEST_CASE(call_zond_value_invalid)
 	BOOST_REQUIRE_THROW(parse(source), TestParserError);
 }
 
-BOOST_AUTO_TEST_CASE(call_zond_value_invalid_decimal)
+BOOST_AUTO_TEST_CASE(call_qrl_value_invalid_decimal)
 {
 	char const* source = R"(
-		// sig(): 0.1hd zond ->
+		// sig(): 0.1hd quanta ->
 	)";
 	BOOST_REQUIRE_THROW(parse(source), TestParserError);
 }
 
-BOOST_AUTO_TEST_CASE(call_zond_type_invalid)
+BOOST_AUTO_TEST_CASE(call_qrl_type_invalid)
 {
 	char const* source = R"(
 		// f(uint256), 2 btc : 1 -> 1

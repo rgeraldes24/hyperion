@@ -74,12 +74,12 @@ then
   cp "${z3_dir}/include/"* /usr/local/include
   rm -r "$z3_dir"
 
-  # zvmone
-  zvmone_version="0.10.0"
-  zvmone_package="zvmone-${zvmone_version}-darwin-x86_64.tar.gz"
-  wget "https://github.com/theQRL/zvmone/releases/download/v${zvmone_version}/${zvmone_package}"
-  validate_checksum "$zvmone_package" 1b7773779287d7908baca6b8d556a98800cbd7d6e5c910b55fa507642bc0a15c
-  tar xzpf "$zvmone_package" -C /usr/local
-  rm "$zvmone_package"
+  # qrvmone
+  qrvmone_version="0.10.0"
+  qrvmone_package="qrvmone-${qrvmone_version}-darwin-x86_64.tar.gz"
+  wget "https://github.com/theQRL/qrvmone/releases/download/v${qrvmone_version}/${qrvmone_package}"
+  validate_checksum "$qrvmone_package" 1b7773779287d7908baca6b8d556a98800cbd7d6e5c910b55fa507642bc0a15c
+  tar xzpf "$qrvmone_package" -C /usr/local
+  rm "$qrvmone_package"
 
 fi
