@@ -111,6 +111,10 @@ public:
 	/// Stores a 256 bit integer from stack in memory.
 	/// @param _offset offset in memory
 	void storeInMemory(unsigned _offset);
+	/// Stores a value from the stack in memory after cleanup for its actual type.
+	/// @param _offset offset in memory
+	/// @param _type type used to preserve the canonical full-width value
+	void storeInMemory(unsigned _offset, Type const& _type);
 
 	/// Dynamic version of @see storeInMemory, expects the memory offset below the value on the stack
 	/// and also updates that. For reference types, only copies the data pointer. Fails for

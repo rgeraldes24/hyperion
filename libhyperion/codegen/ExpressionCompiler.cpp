@@ -188,7 +188,7 @@ void ExpressionCompiler::appendStateVariableAccessor(VariableDeclaration const& 
 
 				// move key to memory.
 				utils().copyToStackTop(static_cast<unsigned>(paramTypes.size() - i), 1);
-				utils().storeInMemory(0);
+				utils().storeInMemory(0, *paramTypes[i]);
 				m_context << u256(2 * VMWordBytes) << u256(0);
 				m_context << Instruction::KECCAK256;
 			}

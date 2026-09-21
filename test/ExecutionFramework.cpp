@@ -292,11 +292,12 @@ bool ExecutionFramework::storageEmpty(h512 const& _addr) const
 vector<hyperion::frontend::test::LogRecord> ExecutionFramework::recordedLogs() const
 {
 	vector<LogRecord> logs;
+	auto const convertTopic
+		= [](qrvmc::bytes64 const& _bytes) { return h512(bytes(_bytes.bytes, _bytes.bytes + h512::size)); };
 	for (qrvmc::MockedHost::log_record const& logRecord: m_qrvmcHost->recorded_logs)
 		logs.emplace_back(
 			QRVMHost::convertFromQRVMC(logRecord.creator),
 			bytes{logRecord.data.begin(), logRecord.data.end()},
-			logRecord.topics | ranges::views::transform([](qrvmc::bytes64 _bytes) { return QRVMHost::convertFromQRVMC(_bytes); }) | ranges::to<vector>
-		);
+			logRecord.topics | ranges::views::transform(convertTopic) | ranges::to<vector>);
 	return logs;
 }
