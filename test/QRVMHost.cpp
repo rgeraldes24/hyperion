@@ -434,8 +434,8 @@ qrvmc::Result QRVMHost::precompileDepositRoot(qrvmc_message const& _message) noe
 	// Input: DepositData fields concatenated without padding, in SSZ order:
 	//   pubkey(2592) || withdrawal_recipient(64) || amount(8, little-endian) ||
 	//   randao_commitment(32) || signature(4627)
-	// Output: the SSZ hash tree root of the DepositData container, left-aligned
-	// in a 64-byte word (like sha256). Gas: flat 18000 (go-qrl DepositrootGas).
+	// Output: the 32-byte SSZ hash tree root of the DepositData container, as
+	// returned by go-qrl (like sha256). Gas: flat 18000 (go-qrl DepositrootGas).
 	size_t constexpr pubkeyLength = 2592;
 	size_t constexpr withdrawalRecipientLength = 64;
 	size_t constexpr amountLength = 8;
@@ -473,8 +473,6 @@ qrvmc::Result QRVMHost::precompileDepositRoot(qrvmc_message const& _message) noe
 	// static data so that we do not need a release routine...
 	bytes static root;
 	root = sszMerkleize(fieldRoots, 5);
-	// Pad to 64 bytes (VMWordBytes), bytes32 left-aligned in upper 32 bytes.
-	root.resize(64, 0);
 
 	int64_t constexpr gas_cost = 18000;
 	return resultWithGas(_message.gas, gas_cost, root);
