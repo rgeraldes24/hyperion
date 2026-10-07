@@ -1,0 +1,179 @@
+contract C {
+    uint256 order;
+
+    function markedKey(uint256 length) internal pure returns (bytes memory publicKey) {
+        publicKey = new bytes(length);
+        publicKey[0] = 0x44;
+    }
+
+    function markedSignature(uint256 length) internal pure returns (bytes memory signature) {
+        signature = new bytes(length);
+        signature[0] = 0x43;
+    }
+
+    function signedContext(uint256 length) internal pure returns (bytes memory context) {
+        bytes memory pattern = "QNS-SIGN-v1";
+        context = new bytes(length);
+        for (uint256 i = 0; i < length; ++i)
+            context[i] = pattern[i % pattern.length];
+    }
+
+    function verify(bytes1 marker) internal pure returns (bool) {
+        return mldsa87verify(bytes64(marker), markedSignature(4627), markedKey(2592), bytes("QNS-SIGN-v1"));
+    }
+
+    function valid() public pure returns (bool) {
+        return verify(0x42);
+    }
+
+    function invalid() public pure returns (bool) {
+        return mldsa87verify(bytes64(0), new bytes(0), new bytes(0), new bytes(0));
+    }
+
+    function invalidSignature() public pure returns (bool) {
+        return verify(0x47);
+    }
+
+    function noncanonical() public pure returns (bool) {
+        return verify(0x45);
+    }
+
+    function canonicalFalse() public pure returns (bool) {
+        return verify(0x46);
+    }
+
+    function shortTrue() public pure returns (bool) {
+        return verify(0x48);
+    }
+
+    function literalContext() public pure returns (bool) {
+        return mldsa87verify(bytes64(bytes1(0x42)), markedSignature(4627), markedKey(2592), "QNS-SIGN-v1");
+    }
+
+    function verifyCalldata(
+        bytes64 digest,
+        bytes calldata signature,
+        bytes calldata publicKey,
+        bytes calldata context
+    ) external pure returns (bool) {
+        return mldsa87verify(digest, signature, publicKey, context);
+    }
+
+    function calldataArguments() public view returns (bool) {
+        return this.verifyCalldata(bytes64(bytes1(0x42)), markedSignature(4627), markedKey(2592), "QNS-SIGN-v1");
+    }
+
+    function emptyContext() public pure returns (bool) {
+        return mldsa87verify(bytes64(bytes1(0x42)), markedSignature(4627), markedKey(2592), "");
+    }
+
+    function maxContext() public pure returns (bool) {
+        return mldsa87verify(bytes64(bytes1(0x42)), markedSignature(4627), markedKey(2592), signedContext(255));
+    }
+
+    function oversizedContext() public pure returns (bool) {
+        return mldsa87verify(bytes64(bytes1(0x42)), markedSignature(4627), markedKey(2592), signedContext(256));
+    }
+
+    // Without the length check, the precompile would read a 4627-byte signature
+    // ending in the context length byte, then an 11-byte context.
+    function misalignedSignature() public pure returns (bool) {
+        return mldsa87verify(bytes64(bytes1(0x42)), markedSignature(4626), markedKey(2592), bytes.concat(bytes1(0x0b), "QNS-SIGN-v1"));
+    }
+
+    // Without the length check, the precompile would read a 2592-byte public key
+    // ending in the first signature byte, then a 4627-byte signature.
+    function misalignedPublicKey() public pure returns (bool) {
+        bytes memory signature = new bytes(4628);
+        signature[1] = 0x43;
+        return mldsa87verify(bytes64(bytes1(0x42)), signature, markedKey(2591), "QNS-SIGN-v1");
+    }
+
+    function record(uint256 step) internal returns (uint256) {
+        order = order * 10 + step;
+        return step;
+    }
+
+    function argumentOrder() public returns (bool result, uint256) {
+        result = mldsa87verify(
+            bytes64(bytes32(record(1))),
+            new bytes(record(2)),
+            new bytes(record(3)),
+            new bytes(record(4))
+        );
+        return (result, order);
+    }
+
+    // A precompile call that runs out of gas reverts instead of returning false.
+    function callValid(uint256 gasLimit) public view returns (bool success, bool result) {
+        bytes memory data;
+        (success, data) = address(this).staticcall{gas: gasLimit}(abi.encodeCall(this.valid, ()));
+        if (success)
+            result = abi.decode(data, (bool));
+    }
+}
+// ----
+// valid() -> true
+// gas irOptimized: 156222
+// gas legacy: 157643
+// gas legacyOptimized: 156510
+// invalid() -> false
+// gas irOptimized: 147069
+// gas legacy: 147201
+// gas legacyOptimized: 146771
+// invalidSignature() -> false
+// gas irOptimized: 156217
+// gas legacy: 157576
+// gas legacyOptimized: 156443
+// noncanonical() -> false
+// gas irOptimized: 156019
+// gas legacy: 157644
+// gas legacyOptimized: 156511
+// canonicalFalse() -> false
+// gas irOptimized: 156151
+// gas legacy: 157599
+// gas legacyOptimized: 156466
+// shortTrue() -> false
+// gas irOptimized: 156239
+// gas legacy: 157598
+// gas legacyOptimized: 156465
+// literalContext() -> true
+// gas irOptimized: 156090
+// gas legacy: 157557
+// gas legacyOptimized: 156406
+// calldataArguments() -> true
+// gas irOptimized: 174843
+// gas legacy: 175777
+// gas legacyOptimized: 172108
+// emptyContext() -> true
+// gas irOptimized: 155854
+// gas legacy: 157455
+// gas legacyOptimized: 156307
+// maxContext() -> true
+// gas irOptimized: 234342
+// gas legacy: 259106
+// gas legacyOptimized: 249770
+// oversizedContext() -> false
+// gas irOptimized: 226217
+// gas legacy: 249845
+// gas legacyOptimized: 241435
+// misalignedSignature() -> false
+// gas irOptimized: 147929
+// gas legacy: 148478
+// gas legacyOptimized: 148050
+// misalignedPublicKey() -> false
+// gas irOptimized: 147784
+// gas legacy: 148182
+// gas legacyOptimized: 147910
+// argumentOrder() -> false, 1234
+// gas irOptimized: 169667
+// gas legacy: 173112
+// gas legacyOptimized: 171886
+// callValid(uint256): 300000 -> true, true
+// gas irOptimized: 157700
+// gas legacy: 163722
+// gas legacyOptimized: 161452
+// callValid(uint256): 100000 -> false, false
+// gas irOptimized: 121044
+// gas legacy: 125572
+// gas legacyOptimized: 124514

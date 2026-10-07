@@ -1,0 +1,20 @@
+contract C {
+	function verify(
+		bytes64 digest0,
+		bytes memory signature0,
+		bytes memory publicKey0,
+		bytes memory context0
+	) public pure {
+		bytes64 digest1 = digest0;
+		bytes memory signature1 = signature0;
+		bytes memory publicKey1 = publicKey0;
+		bytes memory context1 = context0;
+		bool result0 = mldsa87verify(digest0, signature0, publicKey0, context0);
+		bool result1 = mldsa87verify(digest1, signature1, publicKey1, context1);
+		assert(result0 == result1);
+	}
+}
+// ====
+// SMTEngine: all
+// ----
+// Info 1391: CHC: 1 verification condition(s) proved safe! Enable the model checker option "show proved safe" to see all of them.

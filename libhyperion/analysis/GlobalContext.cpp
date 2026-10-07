@@ -45,6 +45,7 @@ int magicVariableToID(std::string const& _name)
 	else if (_name == "depositroot") return -6;
 	else if (_name == "gasleft") return -7;
 	else if (_name == "keccak256") return -8;
+	else if (_name == "mldsa87verify") return -29;
 	else if (_name == "msg") return -15;
 	else if (_name == "mulmod") return -16;
 	else if (_name == "require") return -18;
@@ -74,6 +75,7 @@ inline std::vector<std::shared_ptr<MagicVariableDeclaration const>> constructMag
 		magicVarDecl("depositroot", TypeProvider::function(strings{"bytes memory", "bytes memory", "bytes memory", "bytes memory", "bytes memory"}, strings{"bytes32"}, FunctionType::Kind::DepositRoot, StateMutability::Pure)),
 		magicVarDecl("gasleft", TypeProvider::function(strings(), strings{"uint256"}, FunctionType::Kind::GasLeft, StateMutability::View)),
 		magicVarDecl("keccak256", TypeProvider::function(strings{"bytes memory"}, strings{"bytes32"}, FunctionType::Kind::KECCAK256, StateMutability::Pure)),
+		magicVarDecl("mldsa87verify", TypeProvider::function(strings{"bytes64", "bytes memory", "bytes memory", "bytes memory"}, strings{"bool"}, FunctionType::Kind::MLDSA87Verify, StateMutability::Pure)),
 		magicVarDecl("msg", TypeProvider::magic(MagicType::Kind::Message)),
 		magicVarDecl("mulmod", TypeProvider::function(strings{"uint256", "uint256", "uint256"}, strings{"uint256"}, FunctionType::Kind::MulMod, StateMutability::Pure)),
 		magicVarDecl("require", TypeProvider::function(strings{"bool"}, strings{}, FunctionType::Kind::Require, StateMutability::Pure)),

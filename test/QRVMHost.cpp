@@ -182,6 +182,8 @@ qrvmc::Result QRVMHost::call(qrvmc_message const& _message) noexcept
 		return precompileDepositRoot(_message);
 	else if (_message.recipient == "Q00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002"_address)
 		return precompileSha256(_message);
+	else if (_message.recipient == "Q00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003"_address)
+		return precompileMLDSA87Verify(_message);
 	else if (_message.recipient == "Q00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004"_address)
 		return precompileIdentity(_message);
 	else if (_message.recipient == "Q00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005"_address)
@@ -556,6 +558,56 @@ qrvmc::Result QRVMHost::precompileModExp(qrvmc_message const&) noexcept
 {
 	// TODO implement
 	return resultWithFailure();
+}
+
+qrvmc::Result QRVMHost::precompileMLDSA87Verify(qrvmc_message const& _message) noexcept
+{
+	// Fixture for the compiler's frame packing and return data decoding. go-qrl tests
+	// the cryptography. The frame is parsed like the go-qrl slot 3 verifier:
+	//   digest(64) || publicKey(2592) || signature(4627) || uint8(contextLength) || context
+	// A short frame, or a length byte that does not match the trailing context, returns
+	// no data, as a failed verification does in go-qrl. The signature check is replaced
+	// by markers: publicKey[0] == 0x44, signature[0] == 0x43 and a context that repeats
+	// "QNS-SIGN-v1". The first digest byte then selects the return data: 0x42 the success
+	// word, 0x45 a noncanonical word, 0x46 the zero word and 0x48 a single 0x01 byte.
+	// Gas: flat 125000 (go-qrl MLDSA87VerifyGas).
+	size_t constexpr publicKeyOffset = 64;
+	size_t constexpr signatureOffset = publicKeyOffset + 2592;
+	size_t constexpr contextLengthOffset = signatureOffset + 4627;
+	size_t constexpr contextOffset = contextLengthOffset + 1;
+	int64_t constexpr gas_cost = 125000;
+	bytes static const signedContext = asBytes("QNS-SIGN-v1");
+	// static data so that we do not need a release routine...
+	bytes static const noData;
+	bytes static const shortTrue{1};
+	bytes static const zeroWord(64, 0);
+	bytes static const successWord = [] { bytes word(64, 0); word.back() = 1; return word; }();
+	bytes static const noncanonicalWord = [] { bytes word(64, 0); word.back() = 2; return word; }();
+
+	uint8_t const* input = _message.input_data;
+	size_t const inputSize = _message.input_size;
+	if (inputSize < contextOffset || inputSize - contextOffset != input[contextLengthOffset])
+		return resultWithGas(_message.gas, gas_cost, noData);
+
+	bool signedFrame = input[publicKeyOffset] == 0x44 && input[signatureOffset] == 0x43;
+	for (size_t i = contextOffset; i < inputSize; ++i)
+		signedFrame = signedFrame && input[i] == signedContext[(i - contextOffset) % signedContext.size()];
+	if (!signedFrame)
+		return resultWithGas(_message.gas, gas_cost, noData);
+
+	switch (input[0])
+	{
+	case 0x42:
+		return resultWithGas(_message.gas, gas_cost, successWord);
+	case 0x45:
+		return resultWithGas(_message.gas, gas_cost, noncanonicalWord);
+	case 0x46:
+		return resultWithGas(_message.gas, gas_cost, zeroWord);
+	case 0x48:
+		return resultWithGas(_message.gas, gas_cost, shortTrue);
+	default:
+		return resultWithGas(_message.gas, gas_cost, noData);
+	}
 }
 
 qrvmc::Result QRVMHost::precompileGeneric(
