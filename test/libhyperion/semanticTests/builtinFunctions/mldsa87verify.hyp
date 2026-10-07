@@ -3,12 +3,14 @@ contract C {
 
     function markedKey(uint256 length) internal pure returns (bytes memory publicKey) {
         publicKey = new bytes(length);
-        publicKey[0] = 0x44;
+        for (uint256 i = 0; i < length; ++i)
+            publicKey[i] = bytes1(uint8(i % 251) ^ 0x44);
     }
 
     function markedSignature(uint256 length) internal pure returns (bytes memory signature) {
         signature = new bytes(length);
-        signature[0] = 0x43;
+        for (uint256 i = 0; i < length; ++i)
+            signature[i] = bytes1(uint8(i % 241) ^ 0x43);
     }
 
     function signedContext(uint256 length) internal pure returns (bytes memory context) {
@@ -46,6 +48,18 @@ contract C {
         return verify(0x48);
     }
 
+    function corruptedKey() public pure returns (bool) {
+        bytes memory publicKey = markedKey(2592);
+        publicKey[1000] = bytes1(uint8(publicKey[1000]) ^ 1);
+        return mldsa87verify(bytes64(bytes1(0x42)), markedSignature(4627), publicKey, "QNS-SIGN-v1");
+    }
+
+    function corruptedSignature() public pure returns (bool) {
+        bytes memory signature = markedSignature(4627);
+        signature[4000] = bytes1(uint8(signature[4000]) ^ 1);
+        return mldsa87verify(bytes64(bytes1(0x42)), signature, markedKey(2592), "QNS-SIGN-v1");
+    }
+
     function literalContext() public pure returns (bool) {
         return mldsa87verify(bytes64(bytes1(0x42)), markedSignature(4627), markedKey(2592), "QNS-SIGN-v1");
     }
@@ -75,17 +89,18 @@ contract C {
         return mldsa87verify(bytes64(bytes1(0x42)), markedSignature(4627), markedKey(2592), signedContext(256));
     }
 
-    // Without the length check, the precompile would read a 4627-byte signature
-    // ending in the context length byte, then an 11-byte context.
+    // Without the length check, the precompile would read the context length byte as
+    // the last signature byte and the first context byte as the context length.
     function misalignedSignature() public pure returns (bool) {
-        return mldsa87verify(bytes64(bytes1(0x42)), markedSignature(4626), markedKey(2592), bytes.concat(bytes1(0x0b), "QNS-SIGN-v1"));
+        uint8 contextLength = uint8(markedSignature(4627)[4626]);
+        bytes memory context = bytes.concat(bytes1(contextLength - 1), signedContext(contextLength - 1));
+        return mldsa87verify(bytes64(bytes1(0x42)), markedSignature(4626), markedKey(2592), context);
     }
 
-    // Without the length check, the precompile would read a 2592-byte public key
-    // ending in the first signature byte, then a 4627-byte signature.
+    // Without the length check, the precompile would read the first signature byte as
+    // the last public key byte.
     function misalignedPublicKey() public pure returns (bool) {
-        bytes memory signature = new bytes(4628);
-        signature[1] = 0x43;
+        bytes memory signature = bytes.concat(markedKey(2592)[2591], markedSignature(4627));
         return mldsa87verify(bytes64(bytes1(0x42)), signature, markedKey(2591), "QNS-SIGN-v1");
     }
 
@@ -104,76 +119,87 @@ contract C {
         return (result, order);
     }
 
-    // A precompile call that runs out of gas reverts instead of returning false.
-    function callValid(uint256 gasLimit) public view returns (bool success, bool result) {
+    // A precompile call that runs out of gas makes the builtin revert.
+    function callVerifyCalldata(uint256 gasLimit) public view returns (bool success, bool result) {
         bytes memory data;
-        (success, data) = address(this).staticcall{gas: gasLimit}(abi.encodeCall(this.valid, ()));
+        (success, data) = address(this).staticcall{gas: gasLimit}(abi.encodeCall(
+            this.verifyCalldata,
+            (bytes64(bytes1(0x42)), markedSignature(4627), markedKey(2592), bytes("QNS-SIGN-v1"))
+        ));
         if (success)
             result = abi.decode(data, (bool));
     }
 }
 // ----
 // valid() -> true
-// gas irOptimized: 156222
-// gas legacy: 157643
-// gas legacyOptimized: 156510
+// gas irOptimized: 1693895
+// gas legacy: 2655276
+// gas legacyOptimized: 2293217
 // invalid() -> false
-// gas irOptimized: 147069
+// gas irOptimized: 147094
 // gas legacy: 147201
 // gas legacyOptimized: 146771
 // invalidSignature() -> false
-// gas irOptimized: 156217
-// gas legacy: 157576
-// gas legacyOptimized: 156443
+// gas irOptimized: 1693890
+// gas legacy: 2655298
+// gas legacyOptimized: 2293239
 // noncanonical() -> false
-// gas irOptimized: 156019
-// gas legacy: 157644
-// gas legacyOptimized: 156511
+// gas irOptimized: 1693648
+// gas legacy: 2655344
+// gas legacyOptimized: 2293285
 // canonicalFalse() -> false
-// gas irOptimized: 156151
-// gas legacy: 157599
-// gas legacyOptimized: 156466
+// gas irOptimized: 1693802
+// gas legacy: 2655299
+// gas legacyOptimized: 2293240
 // shortTrue() -> false
-// gas irOptimized: 156239
-// gas legacy: 157598
-// gas legacyOptimized: 156465
+// gas irOptimized: 1693912
+// gas legacy: 2655320
+// gas legacyOptimized: 2293261
+// corruptedKey() -> false
+// gas irOptimized: 1694166
+// gas legacy: 2655481
+// gas legacyOptimized: 2293416
+// corruptedSignature() -> false
+// gas irOptimized: 1694057
+// gas legacy: 2655460
+// gas legacyOptimized: 2293395
 // literalContext() -> true
-// gas irOptimized: 156090
-// gas legacy: 157557
-// gas legacyOptimized: 156406
+// gas irOptimized: 1693719
+// gas legacy: 2655257
+// gas legacyOptimized: 2293180
 // calldataArguments() -> true
-// gas irOptimized: 174843
-// gas legacy: 175777
-// gas legacyOptimized: 172108
+// gas irOptimized: 1710456
+// gas legacy: 2673499
+// gas legacyOptimized: 2308904
 // emptyContext() -> true
-// gas irOptimized: 155854
-// gas legacy: 157455
-// gas legacyOptimized: 156307
+// gas irOptimized: 1693508
+// gas legacy: 2655155
+// gas legacyOptimized: 2293081
 // maxContext() -> true
-// gas irOptimized: 234342
-// gas legacy: 259106
-// gas legacyOptimized: 249770
+// gas irOptimized: 1779855
+// gas legacy: 2756806
+// gas legacyOptimized: 2386544
 // oversizedContext() -> false
-// gas irOptimized: 226217
-// gas legacy: 249845
-// gas legacyOptimized: 241435
+// gas irOptimized: 1771761
+// gas legacy: 2747545
+// gas legacyOptimized: 2378209
 // misalignedSignature() -> false
-// gas irOptimized: 147929
-// gas legacy: 148478
-// gas legacyOptimized: 148050
+// gas irOptimized: 2639801
+// gas legacy: 4292436
+// gas legacyOptimized: 3695900
 // misalignedPublicKey() -> false
-// gas irOptimized: 147784
-// gas legacy: 148182
-// gas legacyOptimized: 147910
+// gas irOptimized: 2207630
+// gas legacy: 3552179
+// gas legacyOptimized: 3060302
 // argumentOrder() -> false, 1234
-// gas irOptimized: 169667
-// gas legacy: 173112
-// gas legacyOptimized: 171886
-// callValid(uint256): 300000 -> true, true
-// gas irOptimized: 157700
-// gas legacy: 163722
-// gas legacyOptimized: 161452
-// callValid(uint256): 100000 -> false, false
-// gas irOptimized: 121044
-// gas legacy: 125572
-// gas legacyOptimized: 124514
+// gas irOptimized: 169673
+// gas legacy: 173200
+// gas legacyOptimized: 171974
+// callVerifyCalldata(uint256): 300000 -> true, true
+// gas irOptimized: 1714305
+// gas legacy: 2691980
+// gas legacyOptimized: 2325131
+// callVerifyCalldata(uint256): 100000 -> false, false
+// gas irOptimized: 1677016
+// gas legacy: 2653013
+// gas legacyOptimized: 2287588
