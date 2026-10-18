@@ -73,7 +73,8 @@ class ReleasePublishingTests(unittest.TestCase):
         self.release = self.root / 'remote_release'
         self.assets.mkdir()
         self.remote.mkdir()
-        for name in ('hypc-static-linux', 'hypc-macos', 'hypc-windows.exe', 'hypjson.js', 'SHA256SUMS'):
+        for name in ('hypc-static-linux', 'hypc-static-linux-arm', 'hypc-macos',
+                     'hypc-windows.exe', 'hypjson.js', 'SHA256SUMS'):
             (self.assets / name).write_bytes(b'build content: ' + name.encode())
 
     def publish(self, tag='v0.2.0', failure=''):
@@ -127,7 +128,7 @@ class ReleasePublishingTests(unittest.TestCase):
         self.assert_assets_published()
         upload, = self.calls('upload')
         self.assertNotIn('release files/hypc-static-linux', upload)
-        self.assertEqual(len(upload[3:]), 4)
+        self.assertEqual(len(upload[3:]), 5)
         result = self.publish()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual(len(self.calls('upload')), 1, 'Completed reruns must not upload again')
@@ -168,7 +169,7 @@ class ReleasePublishingTests(unittest.TestCase):
         result = self.publish(tag='v0.2.0"invalid')
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('Invalid release tag', result.stderr)
-        (self.assets / 'hypjson.js').unlink()
+        (self.assets / 'hypc-static-linux-arm').unlink()
         result = self.publish()
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('Missing or empty release asset', result.stderr)

@@ -6,6 +6,9 @@ on:
       compiler:
         type: string
         default: gcc
+      architecture:
+        type: string
+        default: amd64
       sanitizer:
         type: string
         default: ''
@@ -18,12 +21,13 @@ permissions:
 
 jobs:
   linux:
-    name: Linux ${{ inputs.compiler }} ${{ inputs.sanitizer }}
-    runs-on: ubuntu-22.04
+    name: Linux ${{ inputs.compiler }} ${{ inputs.architecture }} ${{ inputs.sanitizer }}
+    runs-on: ${{ inputs.architecture == 'arm64' && 'ubuntu-22.04-arm' || 'ubuntu-22.04' }}
     timeout-minutes: 120
     container:
-      # These images contain the compiler's pinned Z3 4.12.1 and Boost dependencies.
-      image: ${{ inputs.compiler == 'clang' && 'solbuildpackpusher/solidity-buildpack-deps@sha256:538596bf55961197f8b5670d8a6742d9bcd502b6a1045ae9d372cdf35ce69d93' || 'solbuildpackpusher/solidity-buildpack-deps@sha256:4df420b7ccd96f540a4300a4fae0fcac2f4d3f23ffff9e3777c1f2d7c37ef901' }}
+      # AMD64 images include Boost and Z3 4.12.1. ARM64 uses buildpack-deps:jammy
+      # with the same dependencies installed below; all images use Ubuntu 22.04.
+      image: ${{ inputs.architecture == 'arm64' && 'buildpack-deps@sha256:b42a097e9ba880d3e3e2345ea52306ab6862926392a00150afc9e43437808cfe' || inputs.compiler == 'clang' && 'solbuildpackpusher/solidity-buildpack-deps@sha256:538596bf55961197f8b5670d8a6742d9bcd502b6a1045ae9d372cdf35ce69d93' || 'solbuildpackpusher/solidity-buildpack-deps@sha256:4df420b7ccd96f540a4300a4fae0fcac2f4d3f23ffff9e3777c1f2d7c37ef901' }}
     defaults:
       run:
         shell: bash
@@ -34,6 +38,8 @@ jobs:
       TEST_JOBS: '2'
       HYPTEST_FLAGS: ${{ !inputs.run-smt && '--no-smt' || '' }}
       SANITIZER: ${{ inputs.sanitizer }}
+      PLATFORM: linux-${{ inputs.compiler }}${{ inputs.architecture == 'arm64' && '-arm64' || '' }}
+      RELEASE_ASSET: hypc-static-linux${{ inputs.architecture == 'arm64' && '-arm' || '' }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -45,13 +51,27 @@ jobs:
           apt-get update
           apt-get install -y --no-install-recommends ccache python3-pip
           python3 -m pip install requests parsec tabulate 'deepdiff==6.7.1' colorama
+      - name: Install ARM64 build dependencies
+        if: inputs.architecture == 'arm64'
+        run: |
+          apt-get install -y --no-install-recommends cmake ninja-build jq locales-all \
+            libboost-filesystem-dev libboost-test-dev libboost-system-dev libboost-program-options-dev
+      - name: Cache ARM64 solver
+        if: inputs.architecture == 'arm64'
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: deps/z3
+          key: z3-ubuntu22.04-${{ inputs.architecture }}-${{ inputs.compiler }}-${{ hashFiles('scripts/ci/build_z3.sh', '.github/workflows/linux.yml') }}
+      - name: Build ARM64 solver
+        if: inputs.architecture == 'arm64'
+        run: bash scripts/ci/build_z3.sh
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             .ccache
             ~/.hunter
-          key: linux-${{ inputs.compiler }}-${{ inputs.sanitizer }}-${{ hashFiles('cmake/**', '.github/workflows/linux.yml') }}-${{ github.sha }}
-          restore-keys: linux-${{ inputs.compiler }}-${{ inputs.sanitizer }}-${{ hashFiles('cmake/**', '.github/workflows/linux.yml') }}-
+          key: linux-${{ inputs.architecture }}-${{ inputs.compiler }}-${{ inputs.sanitizer }}-${{ hashFiles('cmake/**', '.github/workflows/linux.yml') }}-${{ github.sha }}
+          restore-keys: linux-${{ inputs.architecture }}-${{ inputs.compiler }}-${{ inputs.sanitizer }}-${{ hashFiles('cmake/**', '.github/workflows/linux.yml') }}-
       - name: Check out QRVM test engine
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -66,6 +86,9 @@ jobs:
         run: |
           export CCACHE_DIR="$GITHUB_WORKSPACE/.ccache"
           export CMAKE_OPTIONS='-DUSE_CVC4=OFF -DHYPC_STATIC_STDLIBS=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+          if [[ -d deps/z3 ]]; then
+            export CMAKE_OPTIONS="$CMAKE_OPTIONS -DCMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/deps/z3"
+          fi
           if [[ -n "$SANITIZER" ]]; then
             export CMAKE_OPTIONS="$CMAKE_OPTIONS -DSANITIZE=$SANITIZER"
           fi
@@ -84,21 +107,26 @@ jobs:
         run: python3 test/lsp.py build/hypc/hypc --non-interactive
       - name: Generate bytecode comparison
         if: inputs.sanitizer == ''
-        run: python3 scripts/ci/bytecode_report.py build/hypc/hypc "reports/linux-${CC}.json"
+        run: python3 scripts/ci/bytecode_report.py build/hypc/hypc "reports/${PLATFORM}.json"
       - name: Upload bytecode comparison
         if: inputs.sanitizer == ''
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: bytecode-linux-${{ inputs.compiler }}
+          name: bytecode-${{ env.PLATFORM }}
           path: reports/*.json
           if-no-files-found: error
       - name: Prepare Linux release binary
         if: inputs.compiler == 'gcc' && inputs.sanitizer == ''
+        env:
+          EXPECTED_MACHINE: ${{ inputs.architecture == 'arm64' && 'AArch64' || 'Advanced Micro Devices X86-64' }}
         run: |
           mkdir -p release
-          cp build/hypc/hypc release/hypc-static-linux
-          strip release/hypc-static-linux
-          if ldd release/hypc-static-linux | grep -E 'libboost|libstdc\+\+|libgcc_s|libz3|libcvc4'; then
+          cp build/hypc/hypc "release/$RELEASE_ASSET"
+          strip "release/$RELEASE_ASSET"
+          readelf -h "release/$RELEASE_ASSET" | grep -F "$EXPECTED_MACHINE"
+          readelf -h "release/$RELEASE_ASSET" | grep -F ELF64
+          "release/$RELEASE_ASSET" --version
+          if ldd "release/$RELEASE_ASSET" | grep -E 'libboost|libstdc\+\+|libgcc_s|libz3|libcvc4'; then
             echo 'Release binary unexpectedly depends on an unbundled runtime library.' >&2
             exit 1
           fi
@@ -106,13 +134,13 @@ jobs:
         if: inputs.compiler == 'gcc' && inputs.sanitizer == ''
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: release-linux
-          path: release/hypc-static-linux
+          name: release-linux-${{ inputs.architecture }}
+          path: release/${{ env.RELEASE_ASSET }}
           if-no-files-found: error
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: tests-linux-${{ inputs.compiler }}-${{ inputs.sanitizer || 'regular' }}
+          name: tests-${{ env.PLATFORM }}-${{ inputs.sanitizer || 'regular' }}
           path: test_results/
           if-no-files-found: ignore
