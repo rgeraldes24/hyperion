@@ -26,18 +26,18 @@ set -e
 # changes directory. The paths returned by `caller` are relative to it.
 _initial_work_dir=$(pwd)
 
-if [[ -n ${CIRCLECI:-} ]]
+# CI logs and redirected output do not need terminal styling.
+if [[ -t 1 && -n ${TERM:-} && ${TERM:-} != dumb ]] && tput sgr0 > /dev/null 2>&1
 then
-    export TERM="${TERM:-xterm}"
-    function printTask { echo -e "$(tput bold)$(tput setaf 2)${1:-}$(tput setaf 7)"; }
-    function printError { >&2 echo -e "$(tput setaf 1)${1:-}$(tput setaf 7)"; }
-    function printWarning { >&2 echo -e "$(tput setaf 11)${1:-}$(tput setaf 7)"; }
-    function printLog { echo -e "$(tput setaf 3)${1:-}$(tput setaf 7)"; }
-else
     function printTask { echo -e "$(tput bold)$(tput setaf 2)${1:-}$(tput sgr0)"; }
     function printError { >&2 echo -e "$(tput setaf 1)${1:-}$(tput sgr0)"; }
     function printWarning { >&2 echo -e "$(tput setaf 11)${1:-}$(tput sgr0)"; }
     function printLog { echo -e "$(tput setaf 3)${1:-}$(tput sgr0)"; }
+else
+    function printTask { echo -e "${1:-}"; }
+    function printError { >&2 echo -e "${1:-}"; }
+    function printWarning { >&2 echo -e "${1:-}"; }
+    function printLog { echo -e "${1:-}"; }
 fi
 
 function checkDputEntries
