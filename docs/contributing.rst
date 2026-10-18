@@ -219,8 +219,17 @@ the bytecode comparison succeed, Actions publishes a GitHub Release containing:
 
 Tags with a suffix create prereleases. The release job alone receives
 ``contents: write`` through ``GITHUB_TOKEN``; PR builds need no publishing secrets.
-An existing release is not overwritten by rerunning the workflow. Publishing
-``@theqrl/hypc`` to npm and updating ``hypc-bin`` remain separate release steps.
+If a release for the tag already exists, Actions uploads missing assets while
+preserving its title, notes and draft/prerelease status. Reruns keep identical
+assets; differing assets cause an error before any uploads, so published files
+are never silently replaced. Publishing ``@theqrl/hypc`` to npm and updating
+``hypc-bin`` remain separate release steps.
+
+Rerunning an old workflow uses the code at its original tag. If that tag predates
+the existing-release handling, use ``scripts/ci/publish_release.sh`` from an updated
+checkout with ``GH_REPO`` and ``RELEASE_TAG`` set and a directory containing the
+original tag run's four release assets and ``SHA256SUMS``. Do not use binaries
+from a different commit or move the tag to pick up a workflow fix.
 
 When enabling Actions, replace any required CircleCI status checks in repository
 branch protection with the new Actions checks and disconnect the old CircleCI
