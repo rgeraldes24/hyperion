@@ -1,0 +1,7 @@
+contract C {
+    function f() public {
+        xmssverify.value();
+    }
+}
+// ----
+// TypeError 8820: (47-63): Member "value" is only available for payable functions.

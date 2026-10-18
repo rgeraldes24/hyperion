@@ -1,38 +1,41 @@
 contract C {
 	bytes data;
 	bytes pubkey;
-	bytes withdrawal_credentials;
+	bytes withdrawal_recipient;
 	bytes amount;
+	bytes randao_commitment;
 	bytes signature;
 
 	bytes32 kec;
 	bytes32 sha;
 	bytes32 dep;
 
-	constructor(bytes memory _data, bytes memory _pubkey, bytes memory _withdrawal_credentials, bytes memory _amount, bytes memory _signature) {
+	constructor(bytes memory _data, bytes memory _pubkey, bytes memory _withdrawal_recipient, bytes memory _amount, bytes memory _randao_commitment, bytes memory _signature) {
 		data = _data;
 		pubkey = _pubkey;
-		withdrawal_credentials = _withdrawal_credentials;
+		withdrawal_recipient = _withdrawal_recipient;
 		amount = _amount;
+		randao_commitment = _randao_commitment;
 		signature = _signature;
 
 		kec = keccak256(data);
 		sha = sha256(data);
-		dep = depositroot(pubkey, withdrawal_credentials, amount, signature);
+		dep = depositroot(pubkey, withdrawal_recipient, amount, randao_commitment, signature);
 	}
 
-	function set(bytes memory _data, bytes memory _pubkey, bytes memory _withdrawal_credentials, bytes memory _amount, bytes memory _signature) public {
+	function set(bytes memory _data, bytes memory _pubkey, bytes memory _withdrawal_recipient, bytes memory _amount, bytes memory _randao_commitment, bytes memory _signature) public {
 		data = _data;
 		pubkey = _pubkey;
-		withdrawal_credentials = _withdrawal_credentials;
+		withdrawal_recipient = _withdrawal_recipient;
 		amount = _amount;
+		randao_commitment = _randao_commitment;
 		signature = _signature;
 	}
 
 	function f() public view {
 		bytes32 _kec = keccak256(data);
 		bytes32 _sha = sha256(data);
-		bytes32 _dep = depositroot(pubkey, withdrawal_credentials, amount, signature);
+		bytes32 _dep = depositroot(pubkey, withdrawal_recipient, amount, randao_commitment, signature);
 		assert(_kec == kec);
 		assert(_sha == sha);
 		assert(_dep == dep);
@@ -43,6 +46,6 @@ contract C {
 // SMTIgnoreCex: yes
 // SMTIgnoreOS: macos
 // ----
-// Warning 6328: (1013-1032): CHC: Assertion violation happens here.
-// Warning 6328: (1036-1055): CHC: Assertion violation happens here.
-// Warning 6328: (1059-1078): CHC: Assertion violation happens here.
+// Warning 6328: (1209-1228): CHC: Assertion violation happens here.
+// Warning 6328: (1232-1251): CHC: Assertion violation happens here.
+// Warning 6328: (1255-1274): CHC: Assertion violation happens here.

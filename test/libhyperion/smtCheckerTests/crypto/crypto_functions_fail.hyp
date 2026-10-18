@@ -10,9 +10,9 @@ contract C {
 		// Disabled because of Spacer nondeterminism.
 		//assert(s0 == s1);
 	}
-	function e(bytes memory p0, bytes memory w0, bytes memory a0, bytes memory s0, bytes memory p1, bytes memory w1, bytes memory a1, bytes memory s1) public pure {
-		bytes32 r0 = depositroot(p0, w0, a0, s0);
-		bytes32 r1 = depositroot(p1, w1, a1, s1);
+	function e(bytes memory p0, bytes memory w0, bytes memory a0, bytes memory c0, bytes memory s0, bytes memory p1, bytes memory w1, bytes memory a1, bytes memory c1, bytes memory s1) public pure {
+		bytes32 r0 = depositroot(p0, w0, a0, c0, s0);
+		bytes32 r1 = depositroot(p1, w1, a1, c1, s1);
 		// Disabled because of Spacer nondeterminism.
 		//assert(r0 == r1);
 	}
@@ -23,6 +23,6 @@ contract C {
 // ----
 // Warning 2072: (218-228): Unused local variable.
 // Warning 2072: (245-255): Unused local variable.
-// Warning 2072: (507-517): Unused local variable.
-// Warning 2072: (551-561): Unused local variable.
+// Warning 2072: (541-551): Unused local variable.
+// Warning 2072: (589-599): Unused local variable.
 // Warning 6328: (135-151): CHC: Assertion violation happens here.

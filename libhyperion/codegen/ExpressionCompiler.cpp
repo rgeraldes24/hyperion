@@ -37,6 +37,7 @@
 #include <libhyputil/FunctionSelector.h>
 #include <libhyputil/Keccak256.h>
 #include <libhyputil/Whiskers.h>
+#include <libhyputil/XmssVerify.h>
 #include <libhyputil/StackTooDeepString.h>
 
 #include <boost/algorithm/string/replace.hpp>
@@ -1088,6 +1089,58 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 			appendExternalFunctionCall(function, arguments, false);
 			break;
 		}
+		case FunctionType::Kind::XMSSVerify:
+		{
+			// Calls the xmssverify precompiled contract (address 7) with the packed input
+			//   uint32 message_length (big-endian) || message || signature || extended_pk
+			// and turns the returned word into a boolean.
+			hypAssert(!_functionCall.annotation().tryCall, "");
+			hypAssert(arguments.size() == 3, "");
+			_functionCall.expression().accept(*this);
+			TypePointers const& parameterTypes = function.parameterTypes();
+			for (size_t i = 0; i < arguments.size(); ++i)
+				acceptAndConvert(*arguments[i], *parameterTypes[i]);
+			// Stack: message signature pk
+			// The precompiled contract delimits the key as the trailing 67 bytes of its input, so a
+			// key of any other length is rejected here (result false) instead of being packed:
+			// otherwise key bytes passed as part of the signature argument would produce the same
+			// input as the well-formed call.
+			qrvmasm::AssemblyItem invalidKeyTag = m_context.newTag();
+			qrvmasm::AssemblyItem endTag = m_context.newTag();
+			m_context << Instruction::DUP1 << Instruction::MLOAD << u256(util::xmssExtendedPublicKeySize);
+			m_context << Instruction::EQ << Instruction::ISZERO;
+			m_context.appendConditionalJumpTo(invalidKeyTag);
+			utils().fetchFreeMemoryPointer();
+			// Stack: message signature pk pos
+			// Big-endian 4-byte message length prefix (memory byte arrays cannot reach 2**32 bytes).
+			m_context << Instruction::DUP4 << Instruction::MLOAD << u256(VMWordBits - 32) << Instruction::SHL;
+			m_context << Instruction::DUP2 << Instruction::MSTORE;
+			m_context << u256(4) << Instruction::ADD;
+			// Stack: message signature pk pos+4
+			utils().encodeToMemory(parameterTypes, parameterTypes, false, true);
+			// Stack: end
+			utils().fetchFreeMemoryPointer();
+			// Stack: end pos
+			m_context << u256(0) << u256(0) << Instruction::MSTORE;
+			// staticcall(gas(), 7, pos, sub(end, pos), 0, VMWordBytes)
+			m_context << u256(VMWordBytes) << u256(0);
+			m_context << Instruction::DUP3 << Instruction::DUP5 << Instruction::SUB << Instruction::DUP4;
+			m_context << u256(7) << Instruction::GAS << Instruction::STATICCALL;
+			// Stack: end pos success
+			m_context << Instruction::ISZERO;
+			m_context.appendConditionalRevert(true);
+			m_context << Instruction::POP << Instruction::POP;
+			m_context << u256(0) << Instruction::MLOAD << Instruction::ISZERO << Instruction::ISZERO;
+			// Stack: result
+			m_context.appendJumpTo(endTag);
+			m_context << invalidKeyTag;
+			// Stack: message signature pk
+			m_context.adjustStackOffset(2);
+			m_context << Instruction::POP << Instruction::POP << Instruction::POP << u256(0);
+			// Stack: result (false)
+			m_context << endTag;
+			break;
+		}
 		case FunctionType::Kind::ArrayPush:
 		{
 			hypAssert(function.hasBoundFirstArgument(), "");
@@ -1650,6 +1703,7 @@ bool ExpressionCompiler::visit(MemberAccess const& _memberAccess)
 					case FunctionType::Kind::Transfer:
 					case FunctionType::Kind::DepositRoot:
 					case FunctionType::Kind::SHA256:
+					case FunctionType::Kind::XMSSVerify:
 					default:
 						hypAssert(false, "unsupported member function");
 					}
@@ -2020,7 +2074,7 @@ bool ExpressionCompiler::visit(MemberAccess const& _memberAccess)
 				{
 					hypAssert(memberType->calldataEncodedSize() > 0, "");
 					hypAssert(memberType->storageBytes() <= VMWordBytes, "");
-					if (memberType->storageBytes() < VMWordBytes && m_context.useABICoderV2())
+					if (memberType->storageBytes() < VMWordBytes)
 					{
 						m_context << u256(VMWordBytes);
 						CompilerUtils(m_context).abiDecodeV2({memberType}, false);
@@ -2801,18 +2855,6 @@ void ExpressionCompiler::appendExternalFunctionCall(
 		utils().fetchFreeMemoryPointer();
 		// Stack: return_data_start
 
-		// The old decoder did not allocate any memory (i.e. did not touch the free
-		// memory pointer), but kept references to the return data for
-		// (statically-sized) arrays
-		bool needToUpdateFreeMemoryPtr = false;
-		if (dynamicReturnSize || m_context.useABICoderV2())
-			needToUpdateFreeMemoryPtr = true;
-		else
-			for (auto const& retType: returnTypes)
-				if (dynamic_cast<ReferenceType const*>(retType))
-					needToUpdateFreeMemoryPtr = true;
-
-		// Stack: return_data_start
 		if (dynamicReturnSize)
 		{
 			m_context.appendInlineAssembly("{ returndatacopy(return_data_start, 0, returndatasize()) }", {"return_data_start"});
@@ -2840,17 +2882,16 @@ void ExpressionCompiler::appendExternalFunctionCall(
 				calldatacopy(add(start, copied), calldatasize(), sub(paddedSize, copied))
 			}
 		})", {"start", "paddedSize"});
-		if (needToUpdateFreeMemoryPtr)
-			m_context.appendInlineAssembly(
-				Whiskers(R"({
-				// size is already rounded to the next multiple of VM word size
-				let newMem := add(start, size)
-				mstore(<freeMemoryPointer>, newMem)
-			})")
-				("freeMemoryPointer", std::to_string(CompilerUtils::freeMemoryPointer))
-				.render(),
-				{"start", "size"}
-			);
+		m_context.appendInlineAssembly(
+			Whiskers(R"({
+			// size is already rounded to the next multiple of VM word size
+			let newMem := add(start, size)
+			mstore(<freeMemoryPointer>, newMem)
+		})")
+			("freeMemoryPointer", std::to_string(CompilerUtils::freeMemoryPointer))
+			.render(),
+			{"start", "size"}
+		);
 
 		utils().abiDecode(returnTypes, true);
 	}

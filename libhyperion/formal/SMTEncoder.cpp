@@ -666,6 +666,7 @@ void SMTEncoder::endVisit(FunctionCall const& _funCall)
 	case FunctionType::Kind::KECCAK256:
 	case FunctionType::Kind::DepositRoot:
 	case FunctionType::Kind::SHA256:
+	case FunctionType::Kind::XMSSVerify:
 		visitCryptoFunction(_funCall);
 		break;
 	case FunctionType::Kind::BlockHash:
@@ -844,12 +845,25 @@ void SMTEncoder::visitCryptoFunction(FunctionCall const& _funCall)
 		auto arg1 = expr(*_funCall.arguments().at(1));
 		auto arg2 = expr(*_funCall.arguments().at(2));
 		auto arg3 = expr(*_funCall.arguments().at(3));
+		auto arg4 = expr(*_funCall.arguments().at(4));
 		auto inputSort = dynamic_cast<smtutil::ArraySort&>(*e.sort).domain;
 		auto depositrootInput = smtutil::Expression::tuple_constructor(
 			smtutil::Expression(std::make_shared<smtutil::SortSort>(inputSort), ""),
-			{arg0, arg1, arg2, arg3}
+			{arg0, arg1, arg2, arg3, arg4}
 		);
 		result = smtutil::Expression::select(e, depositrootInput);
+	}
+	else if (kind == FunctionType::Kind::XMSSVerify)
+	{
+		auto e = state().cryptoFunction("xmssverify");
+		auto arg1 = expr(*_funCall.arguments().at(1));
+		auto arg2 = expr(*_funCall.arguments().at(2));
+		auto inputSort = dynamic_cast<smtutil::ArraySort&>(*e.sort).domain;
+		auto xmssverifyInput = smtutil::Expression::tuple_constructor(
+			smtutil::Expression(std::make_shared<smtutil::SortSort>(inputSort), ""),
+			{arg0, arg1, arg2}
+		);
+		result = smtutil::Expression::select(e, xmssverifyInput);
 	}
 	else
 		hypAssert(false, "");

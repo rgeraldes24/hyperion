@@ -44,6 +44,7 @@ set(libhyputil_sources
     libhyputil/TemporaryDirectoryTest.cpp
     libhyputil/UTF8.cpp
     libhyputil/Whiskers.cpp
+    libhyputil/XmssVerify.cpp
 )
 detect_stray_source_files("${libhyputil_sources}" "libhyputil/")
 
@@ -65,7 +66,6 @@ set(libhyperion_sources
     libhyperion/ABIEncoderTests.cpp
     libhyperion/ABIJsonTest.cpp
     libhyperion/ABIJsonTest.h
-    libhyperion/ABITestsCommon.h
     libhyperion/AnalysisFramework.cpp
     libhyperion/AnalysisFramework.h
     libhyperion/Assembly.cpp

@@ -41,6 +41,8 @@ set(sources
 	Visitor.h
 	Whiskers.cpp
 	Whiskers.h
+	XmssVerify.cpp
+	XmssVerify.h
 )
 
 add_library(hyputil ${sources})

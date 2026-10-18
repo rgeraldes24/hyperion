@@ -189,4 +189,14 @@ bytes shake256(bytesConstRef _input, size_t _outlen)
 	return output;
 }
 
+bytes shake128(bytesConstRef _input, size_t _outlen)
+{
+	bytes output(_outlen);
+	if (_outlen == 0)
+		return output;
+	// SHAKE-128 has a 1344-bit rate (capacity 256) and the 0x1f XOF padding.
+	hash(output.data(), output.size(), _input.data(), _input.size(), 200 - (128 / 4), 0x1f);
+	return output;
+}
+
 }

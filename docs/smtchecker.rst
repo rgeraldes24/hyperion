@@ -927,7 +927,8 @@ the arguments.
 |``addmod``, ``mulmod``             |Supported precisely.                  |
 +-----------------------------------+--------------------------------------+
 |``gasleft``, ``blockhash``,        |Abstracted with UF.                   |
-|``keccak256``, ``depositroot``     |                                      |
+|``keccak256``, ``depositroot``,    |                                      |
+|``xmssverify``                     |                                      |
 +-----------------------------------+--------------------------------------+
 |pure functions without             |Abstracted with UF                    |
 |implementation (external or        |                                      |

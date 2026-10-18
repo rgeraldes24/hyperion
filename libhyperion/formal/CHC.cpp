@@ -609,6 +609,7 @@ void CHC::endVisit(FunctionCall const& _funCall)
 	case FunctionType::Kind::KECCAK256:
 	case FunctionType::Kind::DepositRoot:
 	case FunctionType::Kind::SHA256:
+	case FunctionType::Kind::XMSSVerify:
 	case FunctionType::Kind::BlockHash:
 	case FunctionType::Kind::AddMod:
 	case FunctionType::Kind::MulMod:
@@ -1489,7 +1490,7 @@ void CHC::defineExternalFunctionInterface(FunctionDefinition const& _function, C
 	m_context.addAssertion(initialConstraints(_contract, &_function));
 	m_context.addAssertion(state().txTypeConstraints() && state().txFunctionConstraints(_function));
 
-	// The contract may have received funds through block.coinbase, 
+	// The contract may have received funds through block.coinbase,
 	// which do not trigger calls into the contract.
 	// So the only constraint we can add here is that the balance of
 	// the contract grows by at least `msg.value`.

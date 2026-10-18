@@ -42,6 +42,7 @@
 #include <liblangutil/Exceptions.h>
 
 #include <libhyputil/Whiskers.h>
+#include <libhyputil/XmssVerify.h>
 #include <libhyputil/StringUtils.h>
 #include <libhyputil/Keccak256.h>
 #include <libhyputil/FunctionSelector.h>
@@ -1229,7 +1230,7 @@ void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 		}
 		else
 			for (auto const& argument: argumentsOfEncodeFunction)
-				targetTypes.emplace_back(type(*argument).fullEncodingType(false, true, isPacked));
+				targetTypes.emplace_back(type(*argument).fullEncodingType(false));
 
 
 		if (functionType->kind() == FunctionType::Kind::ABIEncodeCall)
@@ -1655,6 +1656,56 @@ void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 		templ("retVars", IRVariable(_functionCall).commaSeparatedList());
 		templ("forwardingRevert", m_utils.forwardingRevertFunction());
 		templ("gas", "gas()");
+
+		appendCode() << templ.render();
+
+		break;
+	}
+	case FunctionType::Kind::XMSSVerify:
+	{
+		hypAssert(!_functionCall.annotation().tryCall);
+		hypAssert(!functionType->valueSet());
+		hypAssert(!functionType->gasSet());
+		hypAssert(!functionType->hasBoundFirstArgument());
+		hypAssert(arguments.size() == 3 && parameterTypes.size() == 3);
+
+		// Calls the xmssverify precompiled contract (address 7) with the packed input
+		//   uint32 message_length (big-endian) || message || signature || extended_pk
+		// and turns the returned word into a boolean.
+		// The precompiled contract delimits the key as the trailing 67 bytes of its input, so a
+		// key of any other length is rejected here (result false) instead of being packed:
+		// otherwise key bytes passed as part of the signature argument would produce the same
+		// input as the well-formed call.
+		std::vector<IRVariable> convertedArguments;
+		for (size_t i = 0; i < arguments.size(); ++i)
+			convertedArguments.emplace_back(convert(IRVariable(*arguments[i]), *parameterTypes[i]));
+
+		Whiskers templ(R"(
+			let <retVars> := 0
+			if eq(mload(<publicKey>), <keySize>) {
+				let <pos> := <allocateUnbounded>()
+				mstore(<pos>, shl(<lengthShift>, mload(<message>)))
+				let <end> := <encodeArgs>(add(<pos>, 4), <message>, <signature>, <publicKey>)
+				mstore(0, 0)
+				let <success> := staticcall(gas(), <address>, <pos>, sub(<end>, <pos>), 0, <wordSize>)
+				if iszero(<success>) { <forwardingRevert>() }
+				<retVars> := iszero(iszero(mload(0)))
+			}
+		)");
+		templ("keySize", std::to_string(util::xmssExtendedPublicKeySize));
+		templ("allocateUnbounded", m_utils.allocateUnboundedFunction());
+		templ("pos", m_context.newYulVariable());
+		templ("end", m_context.newYulVariable());
+		templ("lengthShift", std::to_string(VMWordBits - 32));
+		templ("message", convertedArguments[0].commaSeparatedList());
+		templ("signature", convertedArguments[1].commaSeparatedList());
+		templ("publicKey", convertedArguments[2].commaSeparatedList());
+		templ("encodeArgs", m_context.abiFunctions().tupleEncoderPacked(parameterTypes, parameterTypes));
+		templ("address", "7");
+		templ("wordSize", std::to_string(VMWordBytes));
+		templ("success", m_context.newYulVariable());
+		templ("retVars", IRVariable(_functionCall).commaSeparatedList());
+		templ("forwardingRevert", m_utils.forwardingRevertFunction());
 
 		appendCode() << templ.render();
 
@@ -2143,6 +2194,7 @@ void IRGeneratorForStatements::endVisit(MemberAccess const& _memberAccess)
 				case FunctionType::Kind::Transfer:
 				case FunctionType::Kind::DepositRoot:
 				case FunctionType::Kind::SHA256:
+				case FunctionType::Kind::XMSSVerify:
 				default:
 					hypAssert(false, "unsupported member function");
 				}
@@ -2654,8 +2706,8 @@ void IRGeneratorForStatements::appendExternalFunctionCall(
 	else
 	{
 		templ("gas", "gas()");
-	}	
-	
+	}
+
 	// Order is important here, STATICCALL might overlap with DELEGATECALL.
 	if (isDelegateCall)
 		templ("call", "delegatecall");

@@ -85,14 +85,15 @@ Validations and Assertions
 - ``revert()``: abort execution and revert state changes
 - ``revert(string memory message)``: abort execution and revert state changes providing an explanatory string
 
-.. index:: cryptography, keccak256, sha256, depositroot, addmod, mulmod
+.. index:: cryptography, keccak256, sha256, depositroot, xmssverify, addmod, mulmod
 
 Mathematical and Cryptographic Functions
 ========================================
 
 - ``keccak256(bytes memory) returns (bytes32)``: compute the Keccak-256 hash of the input
 - ``sha256(bytes memory) returns (bytes32)``: compute the SHA-256 hash of the input
-- ``depositroot(bytes memory pubkey, bytes memory withdrawal_credentials, bytes memory amount, bytes memory sig) returns (bytes32)``: compute the deposit root
+- ``depositroot(bytes memory pubkey, bytes memory withdrawal_recipient, bytes memory amount, bytes memory randao_commitment, bytes memory sig) returns (bytes32)``: compute the SSZ hash tree root of the beacon chain ``DepositData`` container (2592-byte ML-DSA-87 public key, 64-byte withdrawal recipient, 8-byte little-endian amount, 32-byte RANDAO commitment, 4627-byte signature); implemented by the precompiled contract at address ``1``
+- ``xmssverify(bytes memory message, bytes memory signature, bytes memory extendedPublicKey) returns (bool)``: verify an XMSS signature of a legacy QRL wallet (`qrllib <https://github.com/theQRL/qrllib>`_ semantics: 67-byte extended public key, ``2180 + 32 * height`` byte signature, SHA2-256/SHAKE-128/SHAKE-256 keys, WOTS+ ``w = 16``); returns ``false`` instead of reverting on malformed input; implemented by the precompiled contract at address ``7``
 - ``addmod(uint x, uint y, uint k) returns (uint)``: compute ``(x + y) % k`` where the addition is performed with
   arbitrary precision and does not wrap around at ``2**256``. Assert that ``k != 0`` starting from version 0.5.0.
 - ``mulmod(uint x, uint y, uint k) returns (uint)``: compute ``(x * y) % k`` where the multiplication is performed

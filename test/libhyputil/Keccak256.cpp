@@ -77,6 +77,27 @@ BOOST_AUTO_TEST_CASE(shake256_empty_64)
 	);
 }
 
+BOOST_AUTO_TEST_CASE(shake128_vectors)
+{
+	BOOST_CHECK_EQUAL(
+		toHex(shake128("", 32)),
+		"7f9c2ba4e88f827d616045507605853ed73b8093f6efbc88eb1a6eacfa66ef26"
+	);
+	BOOST_CHECK_EQUAL(
+		toHex(shake128("abc", 32)),
+		"5881092dd818bf5cf8a3ddb793fbcba74097d5c526a6d35f97b83351940f2cc8"
+	);
+	BOOST_CHECK_EQUAL(
+		toHex(shake128("The quick brown fox jumps over the lazy dog", 32)),
+		"f4202e3c5852f9182a0430fd8144f0a74b95e7417ecae17db0f8cfeed0e3e66e"
+	);
+	BOOST_CHECK_EQUAL(
+		toHex(shake256("abc", 32)),
+		"483366601360a8771c6863080cc4114d8db44530f8f1e1ee4f94ea37e78b5739"
+	);
+	BOOST_CHECK(shake128("", 0).empty());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 }

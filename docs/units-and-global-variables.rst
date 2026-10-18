@@ -170,7 +170,7 @@ more details on error handling and when to use which function.
 ``revert(string memory reason)``
     abort execution and revert state changes, providing an explanatory string
 
-.. index:: keccak256, sha256, depositroot, addmod, mulmod, cryptography,
+.. index:: keccak256, sha256, depositroot, xmssverify, addmod, mulmod, cryptography,
 
 .. _mathematical-and-cryptographic-functions:
 
@@ -189,12 +189,19 @@ Mathematical and Cryptographic Functions
 ``sha256(bytes memory) returns (bytes32)``
     compute the SHA-256 hash of the input
 
-``depositroot(bytes memory pubkey, bytes memory withdrawal_credentials, bytes memory amount, bytes memory sig) returns (bytes32)``
-    compute the deposit root
+``depositroot(bytes memory pubkey, bytes memory withdrawal_recipient, bytes memory amount, bytes memory randao_commitment, bytes memory sig) returns (bytes32)``
+    compute the SSZ hash tree root of the beacon chain ``DepositData`` container (2592-byte ML-DSA-87 public key, 64-byte withdrawal recipient, 8-byte little-endian amount, 32-byte RANDAO commitment, 4627-byte signature); implemented by the precompiled contract at address ``1``
+
+``xmssverify(bytes memory message, bytes memory signature, bytes memory extendedPublicKey) returns (bool)``
+    verify an XMSS signature produced by a legacy QRL wallet, with the semantics of ``XmssBase::verify`` of `qrllib <https://github.com/theQRL/qrllib>`_: ``extendedPublicKey`` is the 67-byte qrllib extended public key (3-byte QRL descriptor, 32-byte root, 32-byte public seed), ``signature`` the ``2180 + 32 * height`` byte XMSS signature (4-byte index, 32-byte randomness, 67 x 32-byte WOTS+ signature with ``w = 16``, ``height`` x 32-byte authentication path) and ``message`` the signed data, of arbitrary length. SHA2-256, SHAKE-128 and SHAKE-256 keys with tree heights 4 to 30 are supported. Returns ``false`` (instead of reverting) for malformed keys or signatures; implemented by the precompiled contract at address ``7``
 
 .. note::
 
-    When running ``sha256`` or ``depositroot`` on a *private blockchain*, you might encounter Out-of-Gas. This is because these functions are implemented as "precompiled contracts" and only really exist after they receive the first message (although their contract code is hardcoded). Messages to non-existing contracts are more expensive and thus the execution might run into an Out-of-Gas error. A workaround for this problem is to first send Planck (1 for example) to each of the contracts before you use them in your actual contracts. This is not an issue on the main or test net.
+    The ``xmssverify`` precompiled contract at address ``7`` receives ``uint32 message_length || message || signature || extendedPublicKey`` (a 4-byte big-endian message length followed by the three byte strings without padding) and returns a single word that is ``1`` if the signature is valid and ``0`` otherwise. The precompiled contract takes the trailing 67 bytes of its input as the key, so the compiler only calls it when ``extendedPublicKey`` is exactly 67 bytes long and yields ``false`` for any other key length. A QRL address is ``descriptor || sha256(extendedPublicKey) || checksum``, so a contract can bind a key to a known ``Q`` address by comparing ``sha256(extendedPublicKey)`` with bytes 3 to 34 of that address. Note that XMSS is a stateful one-time-signature scheme: every signature reveals a tree leaf, so a contract should bind the signed message to its own context (e.g. the caller and a nonce) to prevent replays.
+
+.. note::
+
+    When running ``sha256``, ``depositroot`` or ``xmssverify`` on a *private blockchain*, you might encounter Out-of-Gas. This is because these functions are implemented as "precompiled contracts" and only really exist after they receive the first message (although their contract code is hardcoded). Messages to non-existing contracts are more expensive and thus the execution might run into an Out-of-Gas error. A workaround for this problem is to first send Planck (1 for example) to each of the contracts before you use them in your actual contracts. This is not an issue on the main or test net.
 
 .. index:: balance, codehash, send, transfer, call, delegatecall, staticcall
 

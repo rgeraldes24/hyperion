@@ -208,6 +208,7 @@
 "x * 2**y"
 "x / 2**y"
 "x << y"
+"xmssverify("
 "{ uint x; }"
 "{"
 "{salt: "salt", value: 10}"

@@ -310,29 +310,13 @@ MemberList const& Type::members(ASTNode const* _currentScope) const
 	return *m_members[_currentScope];
 }
 
-Type const* Type::fullEncodingType(bool _inLibraryCall, bool _encoderV2, bool) const
+Type const* Type::fullEncodingType(bool _inLibraryCall) const
 {
 	Type const* encodingType = mobileType();
 	if (encodingType)
 		encodingType = encodingType->interfaceType(_inLibraryCall);
 	if (encodingType)
 		encodingType = encodingType->encodingType();
-	// Structs are fine in the following circumstances:
-	// - ABIv2 or,
-	// - storage struct for a library
-	if (_inLibraryCall && encodingType && encodingType->dataStoredIn(DataLocation::Storage))
-		return encodingType;
-	Type const* baseType = encodingType;
-	while (auto const* arrayType = dynamic_cast<ArrayType const*>(baseType))
-	{
-		baseType = arrayType->baseType();
-
-		auto const* baseArrayType = dynamic_cast<ArrayType const*>(baseType);
-		if (!_encoderV2 && baseArrayType && baseArrayType->isDynamicallySized())
-			return nullptr;
-	}
-	if (!_encoderV2 && dynamic_cast<StructType const*>(baseType))
-		return nullptr;
 
 	return encodingType;
 }
@@ -3062,6 +3046,7 @@ std::string FunctionType::richIdentifier() const
 	case Kind::Revert: id += "revert"; break;
 	case Kind::DepositRoot: id += "depositroot"; break;
 	case Kind::SHA256: id += "sha256"; break;
+	case Kind::XMSSVerify: id += "xmssverify"; break;
 	case Kind::GasLeft: id += "gasleft"; break;
 	case Kind::Event: id += "event"; break;
 	case Kind::Error: id += "error"; break;
@@ -3601,6 +3586,7 @@ bool FunctionType::isBareCall() const
 	case Kind::BareStaticCall:
 	case Kind::DepositRoot:
 	case Kind::SHA256:
+	case Kind::XMSSVerify:
 		return true;
 	default:
 		return false;
@@ -3663,6 +3649,7 @@ bool FunctionType::isPure() const
 		m_kind == Kind::KECCAK256 ||
 		m_kind == Kind::DepositRoot ||
 		m_kind == Kind::SHA256 ||
+		m_kind == Kind::XMSSVerify ||
 		m_kind == Kind::AddMod ||
 		m_kind == Kind::MulMod ||
 		m_kind == Kind::ObjectCreation ||
@@ -3792,6 +3779,7 @@ bool FunctionType::padArguments() const
 	case Kind::SHA256:
 	case Kind::KECCAK256:
 	case Kind::DepositRoot:
+	case Kind::XMSSVerify:
 	case Kind::ABIEncodePacked:
 		return false;
 	default:

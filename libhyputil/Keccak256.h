@@ -53,4 +53,13 @@ inline bytes shake256(bytes const& _input, size_t _outlen) { return shake256(byt
 /// Calculate SHAKE-256 of the given input (presented as a binary-filled string), returning @a _outlen bytes.
 inline bytes shake256(std::string const& _input, size_t _outlen) { return shake256(bytesConstRef(_input), _outlen); }
 
+/// Calculate SHAKE-128 of the given input, returning @a _outlen bytes.
+bytes shake128(bytesConstRef _input, size_t _outlen);
+
+/// Calculate SHAKE-128 of the given input, returning @a _outlen bytes.
+inline bytes shake128(bytes const& _input, size_t _outlen) { return shake128(bytesConstRef(&_input), _outlen); }
+
+/// Calculate SHAKE-128 of the given input (presented as a binary-filled string), returning @a _outlen bytes.
+inline bytes shake128(std::string const& _input, size_t _outlen) { return shake128(bytesConstRef(_input), _outlen); }
+
 }

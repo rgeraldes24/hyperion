@@ -378,7 +378,7 @@ public:
 	/// when used for e.g. abi.encode(...) or the empty pointer if the object
 	/// cannot be encoded.
 	/// This is different from encodingType since it takes implicit conversions into account.
-	Type const* fullEncodingType(bool _inLibraryCall, bool _encoderV2, bool _packed) const;
+	Type const* fullEncodingType(bool _inLibraryCall) const;
 	/// @returns a (simpler) type that is used when decoding this type in calldata.
 	virtual Type const* decodingType() const { return encodingType(); }
 	/// @returns a type that will be used outside of Hyperion for e.g. function signatures.
@@ -1261,6 +1261,7 @@ public:
 		Revert, ///< REVERT
 		DepositRoot, ///< CALL to special contract for depositroot
 		SHA256, ///< CALL to special contract for sha256
+		XMSSVerify, ///< CALL to special contract for xmssverify
 		Event, ///< syntactic sugar for LOG*
 		Error, ///< creating an error instance in revert or require
 		Wrap, ///< customType.wrap(...) for user defined value types

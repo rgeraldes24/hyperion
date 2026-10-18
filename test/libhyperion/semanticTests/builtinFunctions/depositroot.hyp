@@ -1,0 +1,50 @@
+contract C {
+    // Field sizes of the beacon chain DepositData container.
+    uint constant PUBKEY_LENGTH = 2592;
+    uint constant WITHDRAWAL_RECIPIENT_LENGTH = 64;
+    uint constant AMOUNT_LENGTH = 8;
+    uint constant RANDAO_COMMITMENT_LENGTH = 32;
+    uint constant SIGNATURE_LENGTH = 4627;
+
+    function pattern(uint length, uint8 offset) internal pure returns (bytes memory b) {
+        b = new bytes(length);
+        for (uint i = 0; i < length; i++)
+            b[i] = bytes1(uint8(i + offset));
+    }
+
+    function zero() public returns (bytes32) {
+        return depositroot(
+            new bytes(PUBKEY_LENGTH),
+            new bytes(WITHDRAWAL_RECIPIENT_LENGTH),
+            new bytes(AMOUNT_LENGTH),
+            new bytes(RANDAO_COMMITMENT_LENGTH),
+            new bytes(SIGNATURE_LENGTH)
+        );
+    }
+
+    function patterned() public returns (bytes32) {
+        return depositroot(
+            pattern(PUBKEY_LENGTH, 1),
+            pattern(WITHDRAWAL_RECIPIENT_LENGTH, 2),
+            pattern(AMOUNT_LENGTH, 3),
+            pattern(RANDAO_COMMITMENT_LENGTH, 4),
+            pattern(SIGNATURE_LENGTH, 5)
+        );
+    }
+
+    function wrongCommitmentLength() public returns (bytes32) {
+        return depositroot(
+            new bytes(PUBKEY_LENGTH),
+            new bytes(WITHDRAWAL_RECIPIENT_LENGTH),
+            new bytes(AMOUNT_LENGTH),
+            new bytes(RANDAO_COMMITMENT_LENGTH - 1),
+            new bytes(SIGNATURE_LENGTH)
+        );
+    }
+}
+// ====
+// compileViaYul: also
+// ----
+// zero() -> 0xbcb6ecde083205e1b9fcc36d10c8bb58f5a44140ee59a5e005d4b341420f008b0000000000000000000000000000000000000000000000000000000000000000
+// patterned() -> 0xf03581650f8417b532c9de4954cc01b41aa38e9a2d605d640e92ae9893b5286b0000000000000000000000000000000000000000000000000000000000000000
+// wrongCommitmentLength() -> FAILURE
