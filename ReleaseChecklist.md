@@ -64,9 +64,10 @@ At least a day before the release:
  - [ ] Create the ``prerelease.txt`` file: (``echo -n > prerelease.txt``).
  - [ ] Run ``scripts/create_source_tarball.sh`` while being on the tag to create the source tarball. This will create the tarball in a directory called ``upload``.
  - [ ] Take the tarball from the upload directory (its name should be ``hyperion_x.x.x.tar.gz``, otherwise ``prerelease.txt`` was missing in the step before) and upload the source tarball to the release page.
- - [ ] Take the ``github-binaries.tar`` tarball from ``c_release_binaries`` run of the tagged commit in circle-ci and add all binaries from it to the release page.
-       Make sure it contains four binaries: ``hypc-windows.exe``, ``hypc-macos``, ``hypc-static-linux`` and ``hypjson.js``.
- - [ ] Take the ``hypc-bin-binaries.tar`` tarball from ``c_release_binaries`` run of the tagged commit in circle-ci and add all binaries from it to hypc-bin.
+ - [ ] Wait for GitHub Actions to publish the tagged build's release assets after all checks pass.
+       Verify that the release contains ``hypc-windows.exe``, ``hypc-macos``, ``hypc-static-linux`` (AMD64),
+       ``hypc-static-linux-arm`` (ARM64), ``hypjson.js`` and ``SHA256SUMS``.
+ - [ ] Update hypc-bin separately using the binaries from the same tagged GitHub Release.
  - [ ] Run ``npm run update -- --reuse-hashes`` in ``hypc-bin`` and verify that the script has updated ``list.js``, ``list.txt`` and ``list.json`` files correctly and that symlinks to the new release have been added in ``hypc-bin/wasm/`` and ``hypc-bin/emscripten-wasm32/``.
  - [ ] Create a pull request in hypc-bin and merge.
 

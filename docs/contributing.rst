@@ -184,15 +184,20 @@ GitHub Actions workflows live in ``.github/workflows/``:
 
 * ``ci.yml`` runs on pull requests, pushes to ``main``, ``develop`` and ``release``,
   version tags, and manual dispatches. It checks source and scripts, builds and
-  tests GCC, Clang, macOS Intel, Windows x64 and WebAssembly targets, and retains
+  tests Linux AMD64 (GCC and Clang), Linux ARM64 (GCC), macOS Intel, Windows x64
+  and WebAssembly targets, and retains
   compiler artifacts and JUnit reports.
 * ``linux.yml`` is the reusable Linux build/test workflow. The pinned dependency
-  images provide Boost and Z3 4.12.1. QRVM execution tests use a separately built,
-  pinned ``theQRL/qrvmone`` revision on each native platform.
+  AMD64 images provide Boost and Z3 4.12.1. ARM64 builds run natively on
+  ``ubuntu-22.04-arm`` using a pinned Ubuntu 22.04 container, distro Boost and a
+  cached static Z3 4.12.1 build from checksum-verified source. Dependency caches
+  and artifacts are separate for each architecture. QRVM execution tests use a
+  separately built, pinned ``theQRL/qrvmone`` revision on each native platform.
 * ``sanitizers.yml`` runs Clang address and undefined-behavior sanitizers weekly
-  and on manual dispatch. macOS and Windows runs omit SMT tests; Linux runs them.
+  and on manual dispatch on AMD64. SMT snapshots run on the Linux AMD64 GCC
+  reference build; the other builds omit them.
 
-The bytecode gate compares a shared fixture across all five builds, using the
+The bytecode gate compares a shared fixture across all six builds, using the
 legacy and IR code generators with optimization both enabled and disabled.
 It checks bytecode, metadata and library link references. This is a focused
 portability check, not the old full-corpus bytecode-report matrix. Native compiler
@@ -210,12 +215,16 @@ Every build derives its commit hash and development date from the checked-out
 commit, so native and WebAssembly metadata agree. After all regular checks and
 the bytecode comparison succeed, Actions publishes a GitHub Release containing:
 
-* ``hypc-static-linux`` (statically linked C++ and solver dependencies; requires
-  a glibc compatible with Ubuntu 22.04 or newer)
+* ``hypc-static-linux`` (Linux AMD64/x86-64)
+* ``hypc-static-linux-arm`` (Linux ARM64/AArch64)
 * ``hypc-macos`` (Intel)
 * ``hypc-windows.exe``
 * ``hypjson.js`` (packed WebAssembly compiler)
 * ``SHA256SUMS``
+
+Both Linux binaries target 64-bit systems and statically link their C++ and
+solver dependencies. They require a glibc compatible with Ubuntu 22.04 or newer.
+CI verifies each binary's ELF architecture and includes both in ``SHA256SUMS``.
 
 Tags with a suffix create prereleases. The release job alone receives
 ``contents: write`` through ``GITHUB_TOKEN``; PR builds need no publishing secrets.
@@ -228,8 +237,10 @@ are never silently replaced. Publishing ``@theqrl/hypc`` to npm and updating
 Rerunning an old workflow uses the code at its original tag. If that tag predates
 the existing-release handling, use ``scripts/ci/publish_release.sh`` from an updated
 checkout with ``GH_REPO`` and ``RELEASE_TAG`` set and a directory containing the
-original tag run's four release assets and ``SHA256SUMS``. Do not use binaries
-from a different commit or move the tag to pick up a workflow fix.
+original tag run's five release assets and ``SHA256SUMS``. For older tags with
+only four release assets, use the helper from commit ``ef6e6b34``, before ARM64
+became required. Do not use binaries from a different commit or move the tag to
+pick up a workflow fix.
 
 When enabling Actions, replace any required CircleCI status checks in repository
 branch protection with the new Actions checks and disconnect the old CircleCI

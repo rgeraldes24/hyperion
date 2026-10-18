@@ -70,16 +70,21 @@ jobs:
         run: bash scripts/test_antlr_grammar.sh
 
   linux:
-    name: Linux (${{ matrix.compiler }})
+    name: Linux (${{ matrix.compiler }}, ${{ matrix.architecture }})
     strategy:
       fail-fast: false
       matrix:
         compiler: [gcc, clang]
+        architecture: [amd64]
+        include:
+          - compiler: gcc
+            architecture: arm64
     uses: ./.github/workflows/linux.yml
     with:
       compiler: ${{ matrix.compiler }}
-      # Keep solver snapshots on one reference image; both compilers run semantic tests.
-      run-smt: ${{ matrix.compiler == 'gcc' }}
+      architecture: ${{ matrix.architecture }}
+      # Keep solver snapshots on one reference image; every native build runs semantic tests.
+      run-smt: ${{ matrix.compiler == 'gcc' && matrix.architecture == 'amd64' }}
 
   portable:
     name: ${{ matrix.platform }} build and tests
@@ -250,7 +255,7 @@ jobs:
           merge-multiple: true
       - name: Require matching reports from every build
         run: |
-          for platform in linux-gcc linux-clang macos windows emscripten; do
+          for platform in linux-gcc linux-clang linux-gcc-arm64 macos windows emscripten; do
             test -s "reports/$platform.json"
             diff -u reports/linux-gcc.json "reports/$platform.json"
           done
@@ -275,11 +280,11 @@ jobs:
       - name: Verify assets and calculate checksums
         run: |
           cd release
-          for asset in hypc-static-linux hypc-macos hypc-windows.exe hypjson.js; do
+          for asset in hypc-static-linux hypc-static-linux-arm hypc-macos hypc-windows.exe hypjson.js; do
             test -s "$asset"
           done
-          chmod +x hypc-static-linux hypc-macos
-          sha256sum hypc-static-linux hypc-macos hypc-windows.exe hypjson.js > SHA256SUMS
+          chmod +x hypc-static-linux hypc-static-linux-arm hypc-macos
+          sha256sum hypc-static-linux hypc-static-linux-arm hypc-macos hypc-windows.exe hypjson.js > SHA256SUMS
       - name: Publish tagged release
         env:
           GH_TOKEN: ${{ github.token }}

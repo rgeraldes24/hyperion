@@ -11,7 +11,7 @@ set -euo pipefail
 
 asset_dir=${1:-release}
 assets=()
-for name in hypc-static-linux hypc-macos hypc-windows.exe hypjson.js SHA256SUMS; do
+for name in hypc-static-linux hypc-static-linux-arm hypc-macos hypc-windows.exe hypjson.js SHA256SUMS; do
     asset="$asset_dir/$name"
     [[ -s $asset ]] || { echo "Missing or empty release asset: $asset" >&2; exit 1; }
     assets+=("$asset")
