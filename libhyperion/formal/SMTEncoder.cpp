@@ -868,6 +868,23 @@ void SMTEncoder::visitCryptoFunction(FunctionCall const& _funCall)
 	}
 	else if (kind == FunctionType::Kind::MLDSA87Verify)
 	{
+		auto const& digestArgument = *_funCall.arguments().at(0);
+		auto const& digestType = dynamic_cast<FixedBytesType const&>(*funType.parameterTypes().at(0));
+		// Convert literals to numbers and right-pad narrower fixed bytes, as in code generation.
+		auto digest = expr(digestArgument, &digestType);
+		if (auto const* argumentType = dynamic_cast<FixedBytesType const*>(digestArgument.annotation().type))
+		{
+			hypAssert(argumentType->numBytes() <= digestType.numBytes(), "");
+			unsigned const paddingBits = (digestType.numBytes() - argumentType->numBytes()) * 8;
+			if (paddingBits > 0)
+			{
+				unsigned const bitWidth = digestType.numBytes() * 8;
+				digest = smtutil::Expression::bv2int(
+					smtutil::Expression::int2bv(digest, bitWidth) <<
+					smtutil::Expression::int2bv(paddingBits, bitWidth)
+				);
+			}
+		}
 		auto e = state().cryptoFunction("mldsa87verify");
 		auto arg1 = expr(*_funCall.arguments().at(1));
 		auto arg2 = expr(*_funCall.arguments().at(2));
@@ -875,7 +892,7 @@ void SMTEncoder::visitCryptoFunction(FunctionCall const& _funCall)
 		auto inputSort = dynamic_cast<smtutil::ArraySort&>(*e.sort).domain;
 		auto verifyInput = smtutil::Expression::tuple_constructor(
 			smtutil::Expression(std::make_shared<smtutil::SortSort>(inputSort), ""),
-			{arg0, arg1, arg2, arg3}
+			{digest, arg1, arg2, arg3}
 		);
 		result = smtutil::Expression::select(e, verifyInput);
 	}
