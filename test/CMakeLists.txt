@@ -1,3 +1,5 @@
+include(mldsa-native)
+
 set(sources
     hyptest.cpp
     Common.cpp
@@ -84,6 +86,7 @@ set(libhyperion_sources
     libhyperion/Metadata.cpp
     libhyperion/MemoryGuardTest.cpp
     libhyperion/MemoryGuardTest.h
+    libhyperion/MLDSA87Verify.cpp
     libhyperion/NatspecJSONTest.cpp
     libhyperion/NatspecJSONTest.h
     libhyperion/SemanticTest.cpp
@@ -204,7 +207,7 @@ add_executable(hyptest ${sources}
     ${hypcli_sources}
     ${yul_phaser_sources}
 )
-target_link_libraries(hyptest PRIVATE hypcli libhypc yul hyperion smtutil hyputil phaser Boost::boost yulInterpreter qrvmasm Boost::filesystem Boost::program_options Boost::unit_test_framework qrvmc)
+target_link_libraries(hyptest PRIVATE hypcli libhypc yul hyperion smtutil hyputil phaser Boost::boost yulInterpreter qrvmasm Boost::filesystem Boost::program_options Boost::unit_test_framework qrvmc mldsa87)
 
 
 # Special compilation flag for Visual Studio (version 2019 at least affected)

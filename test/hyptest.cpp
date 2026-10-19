@@ -282,6 +282,7 @@ test_suite* init_unit_test_suite(int /*argc*/, char* /*argv*/[])
 				"GasMeterTests",
 				"GasCostTests",
 				"HyperionEndToEndTest",
+				"MLDSA87Verify",
 				"HyperionOptimizer"
 			})
 				removeTestSuite(suite);
