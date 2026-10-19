@@ -276,6 +276,19 @@ private:
 					}
 				),
 				smtSort(*TypeProvider::boolean())
+			)},
+			{"mldsa87verify", std::make_shared<smtutil::ArraySort>(
+				std::make_shared<smtutil::TupleSort>(
+					"mldsa87verify_input_type",
+					std::vector<std::string>{"digest", "signature", "public_key", "context"},
+					std::vector<smtutil::SortPointer>{
+						smt::smtSort(*TypeProvider::fixedBytes(64)),
+						smt::smtSort(*TypeProvider::bytesStorage()),
+						smt::smtSort(*TypeProvider::bytesStorage()),
+						smt::smtSort(*TypeProvider::bytesStorage())
+					}
+				),
+				smtutil::SortProvider::boolSort
 			)}
 		},
 		m_context

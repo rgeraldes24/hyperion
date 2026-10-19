@@ -667,6 +667,7 @@ void SMTEncoder::endVisit(FunctionCall const& _funCall)
 	case FunctionType::Kind::DepositRoot:
 	case FunctionType::Kind::SHA256:
 	case FunctionType::Kind::XMSSVerify:
+	case FunctionType::Kind::MLDSA87Verify:
 		visitCryptoFunction(_funCall);
 		break;
 	case FunctionType::Kind::BlockHash:
@@ -864,6 +865,19 @@ void SMTEncoder::visitCryptoFunction(FunctionCall const& _funCall)
 			{arg0, arg1, arg2}
 		);
 		result = smtutil::Expression::select(e, xmssverifyInput);
+	}
+	else if (kind == FunctionType::Kind::MLDSA87Verify)
+	{
+		auto e = state().cryptoFunction("mldsa87verify");
+		auto arg1 = expr(*_funCall.arguments().at(1));
+		auto arg2 = expr(*_funCall.arguments().at(2));
+		auto arg3 = expr(*_funCall.arguments().at(3));
+		auto inputSort = dynamic_cast<smtutil::ArraySort&>(*e.sort).domain;
+		auto verifyInput = smtutil::Expression::tuple_constructor(
+			smtutil::Expression(std::make_shared<smtutil::SortSort>(inputSort), ""),
+			{arg0, arg1, arg2, arg3}
+		);
+		result = smtutil::Expression::select(e, verifyInput);
 	}
 	else
 		hypAssert(false, "");

@@ -449,6 +449,14 @@ public:
 
 	std::string packedHashFunction(std::vector<Type const*> const& _givenTypes, std::vector<Type const*> const& _targetTypes);
 
+	/// @returns the name of a function that packs the 64-byte digest, public key, signature,
+	/// context length and context at the free memory pointer and calls the ML-DSA-87
+	/// verification precompile. Only the exact 64-byte success word yields true. A signature
+	/// or public key of the wrong length, or a context longer than 255 bytes, is sent as a
+	/// malformed frame and yields false.
+	/// signature: (digest, signature, publicKey, context) -> result
+	std::string mldsa87VerifyFunction();
+
 	/// @returns the name of a function that reverts and uses returndata (if available)
 	/// as reason string.
 	std::string forwardingRevertFunction();

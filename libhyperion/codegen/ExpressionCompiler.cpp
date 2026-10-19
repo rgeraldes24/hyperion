@@ -1074,6 +1074,18 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 				m_context << Instruction::MULMOD;
 			break;
 		}
+		case FunctionType::Kind::MLDSA87Verify:
+		{
+			hypAssert(arguments.size() == function.parameterTypes().size(), "");
+			// Evaluate the arguments left to right, as the IR code generator does.
+			for (size_t i = 0; i < arguments.size(); ++i)
+				acceptAndConvert(*arguments[i], *function.parameterTypes()[i]);
+			// The Yul function takes its first argument from the top of the stack.
+			for (unsigned i = 1; i < arguments.size(); ++i)
+				utils().moveToStackTop(i);
+			m_context.callYulFunction(m_context.utilFunctions().mldsa87VerifyFunction(), 4, 1);
+			break;
+		}
 		case FunctionType::Kind::DepositRoot:
 		case FunctionType::Kind::SHA256:
 		{
@@ -1704,6 +1716,7 @@ bool ExpressionCompiler::visit(MemberAccess const& _memberAccess)
 					case FunctionType::Kind::DepositRoot:
 					case FunctionType::Kind::SHA256:
 					case FunctionType::Kind::XMSSVerify:
+					case FunctionType::Kind::MLDSA87Verify:
 					default:
 						hypAssert(false, "unsupported member function");
 					}

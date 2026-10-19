@@ -1616,6 +1616,15 @@ void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 
 		break;
 	}
+	case FunctionType::Kind::MLDSA87Verify:
+	{
+		hypAssert(arguments.size() == parameterTypes.size());
+		std::string args;
+		for (size_t i = 0; i < arguments.size(); ++i)
+			args += (args.empty() ? "" : ", ") + expressionAsType(*arguments[i], *parameterTypes[i]);
+		define(_functionCall) << m_utils.mldsa87VerifyFunction() << "(" << args << ")\n";
+		break;
+	}
 	case FunctionType::Kind::DepositRoot:
 	case FunctionType::Kind::SHA256:
 	{
@@ -2195,6 +2204,7 @@ void IRGeneratorForStatements::endVisit(MemberAccess const& _memberAccess)
 				case FunctionType::Kind::DepositRoot:
 				case FunctionType::Kind::SHA256:
 				case FunctionType::Kind::XMSSVerify:
+				case FunctionType::Kind::MLDSA87Verify:
 				default:
 					hypAssert(false, "unsupported member function");
 				}
