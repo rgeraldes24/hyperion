@@ -161,7 +161,8 @@ public:
 	void newCrypto() { hypAssert(m_crypto, ""); m_crypto->newVar(); }
 	smtutil::Expression cryptoFunction(std::string const& _member) const { hypAssert(m_crypto, ""); return m_crypto->member(_member); }
 	/// Builds one crypto tuple for all sources before either engine starts encoding.
-	/// Optional builtins are included for every reference to their magic declarations.
+	/// Keeps keccak256, sha256, depositroot, xmssverify and mldsa87verify, and adds
+	/// shake256 only for calls to its magic declaration, including parenthesized callees.
 	void prepareCryptoFunctions(std::vector<std::shared_ptr<SourceUnit>> const& _sources);
 	//@}
 

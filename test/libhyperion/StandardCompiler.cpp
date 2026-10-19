@@ -178,45 +178,49 @@ BOOST_AUTO_TEST_SUITE(StandardCompiler)
 
 BOOST_AUTO_TEST_CASE(smt_optional_crypto_references_and_calls)
 {
-	std::vector<std::string> const optional{"mldsa87verify", "shake256", "xmssverify"};
+	std::vector<std::string> const builtins{"mldsa87verify", "shake256", "xmssverify"};
 	std::vector<std::string> const arguments{"(bytes64(0), \"\", \"\", \"\")", "(\"\")", "(\"\", \"\", \"\")"};
 	std::string const baseTuple =
 		"(declare-datatypes ((|crypto_type| 0)) (((|crypto_type| "
 		"(|depositroot| (Array |depositroot_input_type| Int)) "
 		"(|keccak256| (Array |bytes_tuple| Int)) "
-		"(|sha256| (Array |bytes_tuple| Int))))))";
+		"(|mldsa87verify| (Array |mldsa87verify_input_type| Bool)) "
+		"(|sha256| (Array |bytes_tuple| Int)) "
+		"(|xmssverify| (Array |xmssverify_input_type| Bool))))))";
 	for (auto const& engine: {"chc", "bmc"})
 		for (auto const& form: {"bare"s, "tuple"s, "call"s, "parenthesized_call"s})
 			for (unsigned mask = 0; mask < 8; ++mask)
 			{
-				BOOST_TEST_CONTEXT("engine=" << engine << ", form=" << form << ", optional mask=" << mask)
+				BOOST_TEST_CONTEXT("engine=" << engine << ", form=" << form << ", builtin mask=" << mask)
 				{
 					Json::Value sources;
 					sources["a.hyp"]["content"] = "contract C { function f(uint x) public pure { assert(x > 0); } }";
 					std::string references;
-					for (unsigned i = 0; i < optional.size(); ++i)
+					for (unsigned i = 0; i < builtins.size(); ++i)
 						if (mask & (1u << i))
 						{
 							if (form == "tuple")
-								references += "(" + optional[i] + ", " + optional[i] + ");";
+								references += "(" + builtins[i] + ", " + builtins[i] + ");";
 							else if (form == "call")
-								references += optional[i] + arguments[i] + ";";
+								references += builtins[i] + arguments[i] + ";";
 							else if (form == "parenthesized_call")
-								references += "((" + optional[i] + "))" + arguments[i] + ";";
+								references += "((" + builtins[i] + "))" + arguments[i] + ";";
 							else
-								references += optional[i] + ";";
+								references += builtins[i] + ";";
 						}
-					// Every source shares the optional members used by these expressions.
+					// Every source shares SHAKE256 when these references include a call to it.
 					sources["b.hyp"]["content"] = "function references() pure { " + references + " } "
 						"contract D { function f(uint x) public pure { assert(x > 0); } }";
+					unsigned const calledMask = (form == "call" || form == "parenthesized_call") ? mask : 0;
+					unsigned const expectedMask = calledMask | 5; // Both signature verifiers are always present.
 					auto queries = smtQueries(sources, engine);
 					BOOST_REQUIRE_GE(queries.size(), 2);
 					for (auto const& query: queries)
 					{
-						if (mask == 0)
+						if (expectedMask == 5)
 							BOOST_CHECK(query.find(baseTuple) != std::string::npos);
-						for (unsigned i = 0; i < optional.size(); ++i)
-							BOOST_CHECK_EQUAL(query.find("(|" + optional[i] + "| (Array ") != std::string::npos, bool(mask & (1u << i)));
+						for (unsigned i = 0; i < builtins.size(); ++i)
+							BOOST_CHECK_EQUAL(query.find("(|" + builtins[i] + "| (Array ") != std::string::npos, bool(expectedMask & (1u << i)));
 					}
 				}
 			}
@@ -236,7 +240,7 @@ BOOST_AUTO_TEST_CASE(smt_optional_crypto_shadowed_names)
 	for (auto const& engine: {"chc", "bmc"})
 		for (auto const& query: smtQueries(sources, engine))
 			for (auto const& name: {"shake256", "xmssverify", "mldsa87verify"})
-				BOOST_CHECK(query.find("(|"s + name + "| (Array ") == std::string::npos);
+				BOOST_CHECK_EQUAL(query.find("(|"s + name + "| (Array ") != std::string::npos, name != "shake256"s);
 }
 
 BOOST_AUTO_TEST_CASE(assume_object_input)

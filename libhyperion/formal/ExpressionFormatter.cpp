@@ -51,7 +51,7 @@ std::string formatDatatypeAccessor(smtutil::Expression const& _expr, std::vector
 	// - arrays/mappings as the tuple (array, length)
 	// - structs as the tuple (<member1>, ..., <memberK>)
 	// - hash and signature functions as a tuple with named members, each an array emulating an UF.
-	//   Optional builtins are present when referenced in the analyzed sources.
+	//   SHAKE256 is present when called in the analyzed sources.
 	// - abi.* functions as the tuple (<abiCall1>, ..., <abiCallK>).
 	if (op == "dt_accessor_keccak256")
 		return "keccak256";

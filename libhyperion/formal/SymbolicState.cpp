@@ -262,10 +262,12 @@ void SymbolicState::prepareCryptoFunctions(std::vector<std::shared_ptr<SourceUni
 {
 	struct CryptoFunctions: public ASTConstVisitor
 	{
-		void endVisit(Identifier const& _identifier) override
+		void endVisit(FunctionCall const& _call) override
 		{
-			if (auto const* declaration = dynamic_cast<MagicVariableDeclaration const*>(_identifier.annotation().referencedDeclaration))
-				functions.insert(declaration->name());
+			auto const* callee = SMTEncoder::innermostTuple(_call.expression());
+			if (auto const* identifier = dynamic_cast<Identifier const*>(callee))
+				if (auto const* declaration = dynamic_cast<MagicVariableDeclaration const*>(identifier->annotation().referencedDeclaration))
+					functions.insert(declaration->name());
 		}
 
 		std::set<std::string> functions;
@@ -275,6 +277,7 @@ void SymbolicState::prepareCryptoFunctions(std::vector<std::shared_ptr<SourceUni
 		if (source)
 			source->accept(cryptoFunctions);
 
+	// Preserve the five-member crypto tuple for sources without SHAKE256 calls.
 	std::map<std::string, SortPointer> functions{
 		{"keccak256", std::make_shared<smtutil::ArraySort>(
 			smt::smtSort(*TypeProvider::bytesStorage()),
@@ -297,17 +300,8 @@ void SymbolicState::prepareCryptoFunctions(std::vector<std::shared_ptr<SourceUni
 				}
 			),
 			smtSort(*TypeProvider::fixedBytes(32))
-		)}
-	};
-
-	if (cryptoFunctions.functions.count("shake256"))
-		functions.emplace("shake256", std::make_shared<smtutil::ArraySort>(
-			smt::smtSort(*TypeProvider::bytesStorage()),
-			smtSort(*TypeProvider::fixedBytes(64))
-		));
-
-	if (cryptoFunctions.functions.count("xmssverify"))
-		functions.emplace("xmssverify", std::make_shared<smtutil::ArraySort>(
+		)},
+		{"xmssverify", std::make_shared<smtutil::ArraySort>(
 			std::make_shared<smtutil::TupleSort>(
 				"xmssverify_input_type",
 				std::vector<std::string>{"message", "signature", "extended_pk"},
@@ -318,10 +312,8 @@ void SymbolicState::prepareCryptoFunctions(std::vector<std::shared_ptr<SourceUni
 				}
 			),
 			smtSort(*TypeProvider::boolean())
-		));
-
-	if (cryptoFunctions.functions.count("mldsa87verify"))
-		functions.emplace("mldsa87verify", std::make_shared<smtutil::ArraySort>(
+		)},
+		{"mldsa87verify", std::make_shared<smtutil::ArraySort>(
 			std::make_shared<smtutil::TupleSort>(
 				"mldsa87verify_input_type",
 				std::vector<std::string>{"digest", "signature", "public_key", "context"},
@@ -333,6 +325,13 @@ void SymbolicState::prepareCryptoFunctions(std::vector<std::shared_ptr<SourceUni
 				}
 			),
 			smtutil::SortProvider::boolSort
+		)}
+	};
+
+	if (cryptoFunctions.functions.count("shake256"))
+		functions.emplace("shake256", std::make_shared<smtutil::ArraySort>(
+			smt::smtSort(*TypeProvider::bytesStorage()),
+			smtSort(*TypeProvider::fixedBytes(64))
 		));
 
 	m_crypto = std::make_unique<BlockchainVariable>("crypto", std::move(functions), m_context);
