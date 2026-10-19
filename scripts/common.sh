@@ -26,18 +26,18 @@ set -e
 # changes directory. The paths returned by `caller` are relative to it.
 _initial_work_dir=$(pwd)
 
-if [[ -n ${CIRCLECI:-} ]]
+# CI logs and redirected output do not need terminal styling.
+if [[ -t 1 && -n ${TERM:-} && ${TERM:-} != dumb ]] && tput sgr0 > /dev/null 2>&1
 then
-    export TERM="${TERM:-xterm}"
-    function printTask { echo -e "$(tput bold)$(tput setaf 2)${1:-}$(tput setaf 7)"; }
-    function printError { >&2 echo -e "$(tput setaf 1)${1:-}$(tput setaf 7)"; }
-    function printWarning { >&2 echo -e "$(tput setaf 11)${1:-}$(tput setaf 7)"; }
-    function printLog { echo -e "$(tput setaf 3)${1:-}$(tput setaf 7)"; }
-else
     function printTask { echo -e "$(tput bold)$(tput setaf 2)${1:-}$(tput sgr0)"; }
     function printError { >&2 echo -e "$(tput setaf 1)${1:-}$(tput sgr0)"; }
     function printWarning { >&2 echo -e "$(tput setaf 11)${1:-}$(tput sgr0)"; }
     function printLog { echo -e "$(tput setaf 3)${1:-}$(tput sgr0)"; }
+else
+    function printTask { echo -e "${1:-}"; }
+    function printError { >&2 echo -e "${1:-}"; }
+    function printWarning { >&2 echo -e "${1:-}"; }
+    function printLog { echo -e "${1:-}"; }
 fi
 
 function checkDputEntries
@@ -257,27 +257,26 @@ function safe_kill
     fi
 }
 
-function circleci_select_steps
+function ci_select_steps
 {
     # We expect multiple lines in $all_steps, one step per line
     local all_steps="$1"
     (( $# == 1 )) || assertFail
 
-    if (( CIRCLE_NODE_TOTAL )) && (( CIRCLE_NODE_TOTAL > 1 ))
-    then
-        echo "$all_steps" | circleci tests split | xargs
-    else
-        echo "$all_steps" | xargs
-    fi
+    local total=${CI_NODE_TOTAL:-1}
+    local index=${CI_NODE_INDEX:-0}
+    [[ $total =~ ^[1-9][0-9]*$ && $index =~ ^[0-9]+$ ]] || assertFail "Invalid CI shard"
+    (( index < total )) || assertFail "CI shard is out of range"
+    printf '%s\n' "$all_steps" | awk -v total="$total" -v shard="$index" '(NR - 1) % total == shard' | xargs
 }
 
-function circleci_select_steps_multiarg
+function ci_select_steps_multiarg
 {
     # We expect multiple arguments, one step per argument.
-    circleci_select_steps "$(printf '%s\n' "$@")"
+    ci_select_steps "$(printf '%s\n' "$@")"
 }
 
-function circleci_step_selected
+function ci_step_selected
 {
     local selected_steps="$1"
     local step="$2"

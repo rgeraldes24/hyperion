@@ -1,4 +1,9 @@
-### 0.8.24
+### Unreleased
+
+Breaking changes:
+ * ABI coder: Remove v1 support. All contracts use ABI coder v2; `pragma abicoder v1` is rejected.
 
 Bugfixes:
  * SMTChecker: Apply digest conversions to `bytes64` when modeling `mldsa87verify`, preventing incorrect proofs and errors on string literals.
+
+### 0.8.24

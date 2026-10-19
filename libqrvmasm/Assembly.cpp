@@ -230,7 +230,7 @@ bytes parseAssemblyHexBytes(std::string const& _value, std::string const& _field
 	return fromHex(_value, WhenError::Throw);
 }
 
-[[maybe_unused]] h256 parseAssemblyDataHash(std::string const& _value, std::string const& _field)
+h256 parseAssemblyDataHash(std::string const& _value, std::string const& _field)
 {
 	solRequire(
 		_value.size() == h256::size * 2 && isHexDigits(_value),
@@ -5265,7 +5265,8 @@ void refineIsZeroTestedValueToZero(AbstractStackState& _state, AbstractStackValu
 	{
 		if (pendingError)
 			return pendingError;
-		auto const [itemIndex, stateIndex] = worklist[worklistIndex];
+		size_t const itemIndex = worklist[worklistIndex].first;
+		size_t const stateIndex = worklist[worklistIndex].second;
 		if (stateIndex >= states[itemIndex].size())
 			continue;
 		AbstractStackState state = states[itemIndex][stateIndex];
@@ -6796,7 +6797,7 @@ AssemblyItem const& Assembly::append(bytes const& _data)
 	AssemblyItem item(PushData, u512(u256(h)));
 	auto [data, inserted] = m_data.emplace(h, _data);
 	bool appended = false;
-	ScopeGuard rollbackOnFailure([&]() {
+	ScopeGuard rollbackOnFailure([&, inserted = inserted]() {
 		if (!appended && inserted)
 			m_data.erase(h);
 	});
@@ -6813,7 +6814,7 @@ void Assembly::appendLibraryAddress(std::string const& _identifier)
 	AssemblyItem item{PushLibraryAddress, u512(u256(h))};
 	auto [library, inserted] = m_libraries.emplace(h, _identifier);
 	bool appended = false;
-	ScopeGuard rollbackOnFailure([&]() {
+	ScopeGuard rollbackOnFailure([&, inserted = inserted]() {
 		if (!appended && inserted)
 			m_libraries.erase(h);
 	});
@@ -6829,7 +6830,7 @@ void Assembly::appendImmutable(std::string const& _identifier)
 	AssemblyItem item{PushImmutable, u512(u256(h))};
 	auto [immutable, inserted] = m_immutables.emplace(h, _identifier);
 	bool appended = false;
-	ScopeGuard rollbackOnFailure([&]() {
+	ScopeGuard rollbackOnFailure([&, inserted = inserted]() {
 		if (!appended && inserted)
 			m_immutables.erase(h);
 	});
@@ -6845,7 +6846,7 @@ void Assembly::appendImmutableAssignment(std::string const& _identifier)
 	AssemblyItem item{AssignImmutable, u512(u256(h))};
 	auto [immutable, inserted] = m_immutables.emplace(h, _identifier);
 	bool appended = false;
-	ScopeGuard rollbackOnFailure([&]() {
+	ScopeGuard rollbackOnFailure([&, inserted = inserted]() {
 		if (!appended && inserted)
 			m_immutables.erase(h);
 	});
@@ -8007,12 +8008,12 @@ std::pair<std::shared_ptr<Assembly>, std::vector<std::string>> Assembly::fromJSO
 			Json::Value const& dataItem = data[dataItemID];
 			if (dataItem.isString())
 			{
-				h256 const dataHash(fromHex(dataItemID));
 				bytes dataBytes = parseAssemblyHexBytes(
 					dataItem.asString(),
 					"The value for " + dataItemDescription,
 					true
 				);
+				h256 const dataHash = parseAssemblyDataHash(dataItemID, dataItemDescription);
 				result->m_data[dataHash] = std::move(dataBytes);
 			}
 			else if (dataItem.isObject())
@@ -8037,7 +8038,11 @@ std::pair<std::shared_ptr<Assembly>, std::vector<std::string>> Assembly::fromJSO
 				);
 				hypAssert(subAssembly);
 				hypAssert(emptySourceList.empty());
-				subAssemblies[index] = subAssembly;
+				solRequire(
+					subAssemblies.emplace(index, std::move(subAssembly)).second,
+					AssemblyImportException,
+					"The " + dataItemDescription + " duplicates an existing subassembly index."
+				);
 			}
 			else
 				hypThrow(AssemblyImportException, "The value of " + dataItemDescription + " is neither a hex string nor an object.");

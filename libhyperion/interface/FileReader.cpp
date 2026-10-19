@@ -253,10 +253,16 @@ boost::filesystem::path FileReader::normalizeCLIPathForVFS(
 		// directory included in the path actually exists.
 		normalizedPath = boost::filesystem::weakly_canonical(absolutePath);
 
-		// The three corner cases in which lexically_normal() includes a trailing slash in the
-		// normalized path but weakly_canonical() does not. Note that the trailing slash is not
-		// ignored when comparing paths with ==.
-		if ((_path == "." || _path == "./" || _path == "../") && !boost::ends_with(normalizedPath.generic_string(), "/"))
+		// Resolving an existing directory can discard a trailing dot. Preserve the trailing
+		// slash required by the input syntax, just as lexically_normal() does.
+		// Root-name-only paths such as "//" do not contain a trailing directory separator.
+		// Older Boost versions already represent a trailing separator as a dot filename.
+		if (
+			_path.has_relative_path() &&
+			(_path.filename() == "." || boost::ends_with(_path.generic_string(), "/")) &&
+			!normalizedPath.filename_is_dot() &&
+			!boost::ends_with(normalizedPath.generic_string(), "/")
+		)
 			normalizedPath = normalizedPath.parent_path() / (normalizedPath.filename().string() + "/");
 	}
 	else

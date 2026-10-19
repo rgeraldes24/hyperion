@@ -1230,7 +1230,7 @@ void IRGeneratorForStatements::endVisit(FunctionCall const& _functionCall)
 		}
 		else
 			for (auto const& argument: argumentsOfEncodeFunction)
-				targetTypes.emplace_back(type(*argument).fullEncodingType(false, true, isPacked));
+				targetTypes.emplace_back(type(*argument).fullEncodingType(false));
 
 
 		if (functionType->kind() == FunctionType::Kind::ABIEncodeCall)
@@ -2716,8 +2716,8 @@ void IRGeneratorForStatements::appendExternalFunctionCall(
 	else
 	{
 		templ("gas", "gas()");
-	}	
-	
+	}
+
 	// Order is important here, STATICCALL might overlap with DELEGATECALL.
 	if (isDelegateCall)
 		templ("call", "delegatecall");
