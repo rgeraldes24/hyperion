@@ -92,7 +92,17 @@ void ModelChecker::checkRequestedSourcesAndContracts(std::vector<std::shared_ptr
 	}
 }
 
-void ModelChecker::analyze(SourceUnit const& _source)
+void ModelChecker::analyze(std::vector<std::shared_ptr<SourceUnit>> const& _sources)
+{
+	if (m_settings.engine.any())
+		m_context.state().prepareCryptoFunctions(_sources);
+
+	for (auto const& source: _sources)
+		if (source)
+			analyzeSource(*source);
+}
+
+void ModelChecker::analyzeSource(SourceUnit const& _source)
 {
 	// TODO This should be removed for 0.9.0.
 	if (_source.annotation().experimentalFeatures.count(ExperimentalFeature::SMTChecker))

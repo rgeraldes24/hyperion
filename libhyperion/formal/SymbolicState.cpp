@@ -72,7 +72,8 @@ void SymbolicState::reset()
 	m_error.resetIndex();
 	m_thisAddress.resetIndex();
 	m_tx.reset();
-	m_crypto.reset();
+	if (m_crypto)
+		m_crypto->reset();
 	if (m_abi)
 		m_abi->reset();
 	/// We don't reset nor clear these pointers on purpose,
@@ -255,6 +256,86 @@ smtutil::Expression SymbolicState::txFunctionConstraints(FunctionDefinition cons
 	}
 
 	return conj;
+}
+
+void SymbolicState::prepareCryptoFunctions(std::vector<std::shared_ptr<SourceUnit>> const& _sources)
+{
+	struct CryptoFunctions: public ASTConstVisitor
+	{
+		void endVisit(Identifier const& _identifier) override
+		{
+			if (auto const* declaration = dynamic_cast<MagicVariableDeclaration const*>(_identifier.annotation().referencedDeclaration))
+				functions.insert(declaration->name());
+		}
+
+		std::set<std::string> functions;
+	} cryptoFunctions;
+
+	for (auto const& source: _sources)
+		if (source)
+			source->accept(cryptoFunctions);
+
+	std::map<std::string, SortPointer> functions{
+		{"keccak256", std::make_shared<smtutil::ArraySort>(
+			smt::smtSort(*TypeProvider::bytesStorage()),
+			smtSort(*TypeProvider::fixedBytes(32))
+		)},
+		{"sha256", std::make_shared<smtutil::ArraySort>(
+			smt::smtSort(*TypeProvider::bytesStorage()),
+			smtSort(*TypeProvider::fixedBytes(32))
+		)},
+		{"depositroot", std::make_shared<smtutil::ArraySort>(
+			std::make_shared<smtutil::TupleSort>(
+				"depositroot_input_type",
+				std::vector<std::string>{"pubkey", "withdrawal_recipient", "amount", "randao_commitment", "signature"},
+				std::vector<smtutil::SortPointer>{
+					smt::smtSort(*TypeProvider::bytesStorage()),
+					smt::smtSort(*TypeProvider::bytesStorage()),
+					smt::smtSort(*TypeProvider::bytesStorage()),
+					smt::smtSort(*TypeProvider::bytesStorage()),
+					smt::smtSort(*TypeProvider::bytesStorage())
+				}
+			),
+			smtSort(*TypeProvider::fixedBytes(32))
+		)}
+	};
+
+	if (cryptoFunctions.functions.count("shake256"))
+		functions.emplace("shake256", std::make_shared<smtutil::ArraySort>(
+			smt::smtSort(*TypeProvider::bytesStorage()),
+			smtSort(*TypeProvider::fixedBytes(64))
+		));
+
+	if (cryptoFunctions.functions.count("xmssverify"))
+		functions.emplace("xmssverify", std::make_shared<smtutil::ArraySort>(
+			std::make_shared<smtutil::TupleSort>(
+				"xmssverify_input_type",
+				std::vector<std::string>{"message", "signature", "extended_pk"},
+				std::vector<smtutil::SortPointer>{
+					smt::smtSort(*TypeProvider::bytesStorage()),
+					smt::smtSort(*TypeProvider::bytesStorage()),
+					smt::smtSort(*TypeProvider::bytesStorage())
+				}
+			),
+			smtSort(*TypeProvider::boolean())
+		));
+
+	if (cryptoFunctions.functions.count("mldsa87verify"))
+		functions.emplace("mldsa87verify", std::make_shared<smtutil::ArraySort>(
+			std::make_shared<smtutil::TupleSort>(
+				"mldsa87verify_input_type",
+				std::vector<std::string>{"digest", "signature", "public_key", "context"},
+				std::vector<smtutil::SortPointer>{
+					smt::smtSort(*TypeProvider::fixedBytes(64)),
+					smt::smtSort(*TypeProvider::bytesStorage()),
+					smt::smtSort(*TypeProvider::bytesStorage()),
+					smt::smtSort(*TypeProvider::bytesStorage())
+				}
+			),
+			smtutil::SortProvider::boolSort
+		));
+
+	m_crypto = std::make_unique<BlockchainVariable>("crypto", std::move(functions), m_context);
 }
 
 void SymbolicState::prepareForSourceUnit(SourceUnit const& _source, bool _storage)

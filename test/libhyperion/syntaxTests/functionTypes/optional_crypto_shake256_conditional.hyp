@@ -1,0 +1,8 @@
+contract C {
+	function shake256_value(bool b) public pure {
+		b ? shake256 : shake256;
+	}
+}
+// ----
+// TypeError 9717: (66-74): Invalid mobile type in true expression.
+// TypeError 3703: (77-85): Invalid mobile type in false expression.

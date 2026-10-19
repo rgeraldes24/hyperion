@@ -1,0 +1,17 @@
+contract C {
+	function xmssverify_value() public pure returns (uint) {
+		(, uint value) = (xmssverify, 1);
+		return value;
+	}
+
+	function shake256_value() public pure returns (uint) {
+		(, uint value) = (shake256, 1);
+		return value;
+	}
+
+	function mldsa87verify_value() public pure returns (uint) {
+		(, uint value) = (mldsa87verify, 1);
+		return value;
+	}
+}
+// ----

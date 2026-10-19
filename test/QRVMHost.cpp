@@ -192,6 +192,8 @@ qrvmc::Result QRVMHost::call(qrvmc_message const& _message) noexcept
 		return precompileModExp(_message);
 	else if (_message.recipient == "Q00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007"_address)
 		return precompileXmssVerify(_message);
+	else if (_message.recipient == "Q00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006"_address)
+		return precompileShake256(_message);
 
 	auto const stateBackup = accounts;
 
@@ -534,13 +536,29 @@ qrvmc::Result QRVMHost::precompileSha256(qrvmc_message const& _message) noexcept
 		_message.input_data,
 		_message.input_data + _message.input_size
 	));
-	// Pad to 64 bytes (VMWordBytes), bytes32 left-aligned in upper 32 bytes.
 	hash = rawHash;
-	hash.resize(64, 0);
 
-	// Base 60 gas + 12 gas / word.
-	int64_t gas_cost = 60 + 12 * ((static_cast<int64_t>(_message.input_size) + 31) / 32);
+	// Base 60 gas + 12 gas / 64-byte VM word.
+	int64_t gas_cost = 60 + 12 * ((static_cast<int64_t>(_message.input_size) + 63) / 64);
 
+	return resultWithGas(_message.gas, gas_cost, hash);
+}
+
+qrvmc::Result QRVMHost::precompileShake256(qrvmc_message const& _message) noexcept
+{
+	bytes static const shortOutputMarker = asBytes("QRL-SHAKE256-SHORT-OUTPUT");
+	bytes static const shortOutput(63, 0);
+	if (
+		_message.input_size == shortOutputMarker.size() &&
+		std::equal(shortOutputMarker.begin(), shortOutputMarker.end(), _message.input_data)
+	)
+		return resultWithGas(_message.gas, 288, shortOutput);
+
+	bytes static hash;
+	hash = shake256(bytesConstRef(_message.input_data, _message.input_size), 64);
+
+	// Base 240 gas + 48 gas / 64-byte VM word.
+	int64_t gas_cost = 240 + 48 * ((static_cast<int64_t>(_message.input_size) + 63) / 64);
 	return resultWithGas(_message.gas, gas_cost, hash);
 }
 
@@ -550,8 +568,8 @@ qrvmc::Result QRVMHost::precompileIdentity(qrvmc_message const& _message) noexce
 	bytes static data;
 	data = bytes(_message.input_data, _message.input_data + _message.input_size);
 
-	// Base 15 gas + 3 gas / word.
-	int64_t gas_cost = 15 + 3 * ((static_cast<int64_t>(_message.input_size) + 31) / 32);
+	// Base 15 gas + 3 gas / 64-byte VM word.
+	int64_t gas_cost = 15 + 3 * ((static_cast<int64_t>(_message.input_size) + 63) / 64);
 
 	return resultWithGas(_message.gas, gas_cost, data);
 }

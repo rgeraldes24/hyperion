@@ -928,7 +928,7 @@ the arguments.
 +-----------------------------------+--------------------------------------+
 |``gasleft``, ``blockhash``,        |Abstracted with UF.                   |
 |``keccak256``, ``depositroot``,    |                                      |
-|``xmssverify``, ``mldsa87verify``  |                                      |
+|``xmssverify``                     |                                      |
 +-----------------------------------+--------------------------------------+
 |pure functions without             |Abstracted with UF                    |
 |implementation (external or        |                                      |

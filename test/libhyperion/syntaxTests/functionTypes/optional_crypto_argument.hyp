@@ -1,0 +1,23 @@
+contract C {
+	function consume_xmssverify(function (bytes memory, bytes memory, bytes memory) pure returns (bool)) internal pure {}
+
+	function xmssverify_value() public pure {
+		consume_xmssverify(xmssverify);
+	}
+
+	function consume_shake256(function (bytes memory) pure returns (bytes64)) internal pure {}
+
+	function shake256_value() public pure {
+		consume_shake256(shake256);
+	}
+
+	function consume_mldsa87verify(function (bytes64, bytes memory, bytes memory, bytes memory) pure returns (bool)) internal pure {}
+
+	function mldsa87verify_value() public pure {
+		consume_mldsa87verify(mldsa87verify);
+	}
+}
+// ----
+// TypeError 9553: (197-207): Invalid type for argument in function call. Invalid implicit conversion from function (bytes memory,bytes memory,bytes memory) pure returns (bool) to function (bytes memory,bytes memory,bytes memory) pure returns (bool) requested. Special functions cannot be converted to function types.
+// TypeError 9553: (367-375): Invalid type for argument in function call. Invalid implicit conversion from function (bytes memory) pure returns (bytes64) to function (bytes memory) pure returns (bytes64) requested. Special functions cannot be converted to function types.
+// TypeError 9553: (584-597): Invalid type for argument in function call. Invalid implicit conversion from function (bytes64,bytes memory,bytes memory,bytes memory) pure returns (bool) to function (bytes64,bytes memory,bytes memory,bytes memory) pure returns (bool) requested. Special functions cannot be converted to function types.

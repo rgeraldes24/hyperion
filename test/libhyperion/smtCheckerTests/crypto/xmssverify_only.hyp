@@ -1,0 +1,11 @@
+contract C {
+	function f(bytes memory message, bytes memory signature, bytes memory publicKey) public pure {
+		bool first = xmssverify(message, signature, publicKey);
+		bool second = xmssverify(message, signature, publicKey);
+		assert(first == second);
+	}
+}
+// ====
+// SMTEngine: all
+// ----
+// Info 1391: CHC: 1 verification condition(s) proved safe! Enable the model checker option "show proved safe" to see all of them.

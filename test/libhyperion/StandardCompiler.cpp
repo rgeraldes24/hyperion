@@ -150,9 +150,94 @@ Json::Value compile(std::string _input)
 	return ret;
 }
 
+std::vector<std::string> smtQueries(Json::Value const& _sources, std::string const& _engine)
+{
+	std::vector<std::string> queries;
+	frontend::StandardCompiler compiler([&](std::string const& _kind, std::string const& _query) -> ReadCallback::Result {
+		if (_kind == ReadCallback::kindString(ReadCallback::Kind::SMTQuery))
+		{
+			queries.push_back(_query);
+			return {true, "unknown\n"};
+		}
+		return {false, "Unexpected source request."};
+	});
+	Json::Value input;
+	input["language"] = "Hyperion";
+	input["sources"] = _sources;
+	input["settings"]["outputSelection"]["*"][""].append("ast");
+	input["settings"]["modelChecker"]["engine"] = _engine;
+	input["settings"]["modelChecker"]["solvers"].append("smtlib2");
+	BOOST_REQUIRE(containsAtMostWarnings(compiler.compile(input)));
+	BOOST_REQUIRE(!queries.empty());
+	return queries;
+}
+
 } // end anonymous namespace
 
 BOOST_AUTO_TEST_SUITE(StandardCompiler)
+
+BOOST_AUTO_TEST_CASE(smt_optional_crypto_references_and_calls)
+{
+	std::vector<std::string> const optional{"mldsa87verify", "shake256", "xmssverify"};
+	std::vector<std::string> const arguments{"(bytes64(0), \"\", \"\", \"\")", "(\"\")", "(\"\", \"\", \"\")"};
+	std::string const baseTuple =
+		"(declare-datatypes ((|crypto_type| 0)) (((|crypto_type| "
+		"(|depositroot| (Array |depositroot_input_type| Int)) "
+		"(|keccak256| (Array |bytes_tuple| Int)) "
+		"(|sha256| (Array |bytes_tuple| Int))))))";
+	for (auto const& engine: {"chc", "bmc"})
+		for (auto const& form: {"bare"s, "tuple"s, "call"s, "parenthesized_call"s})
+			for (unsigned mask = 0; mask < 8; ++mask)
+			{
+				BOOST_TEST_CONTEXT("engine=" << engine << ", form=" << form << ", optional mask=" << mask)
+				{
+					Json::Value sources;
+					sources["a.hyp"]["content"] = "contract C { function f(uint x) public pure { assert(x > 0); } }";
+					std::string references;
+					for (unsigned i = 0; i < optional.size(); ++i)
+						if (mask & (1u << i))
+						{
+							if (form == "tuple")
+								references += "(" + optional[i] + ", " + optional[i] + ");";
+							else if (form == "call")
+								references += optional[i] + arguments[i] + ";";
+							else if (form == "parenthesized_call")
+								references += "((" + optional[i] + "))" + arguments[i] + ";";
+							else
+								references += optional[i] + ";";
+						}
+					// Every source shares the optional members used by these expressions.
+					sources["b.hyp"]["content"] = "function references() pure { " + references + " } "
+						"contract D { function f(uint x) public pure { assert(x > 0); } }";
+					auto queries = smtQueries(sources, engine);
+					BOOST_REQUIRE_GE(queries.size(), 2);
+					for (auto const& query: queries)
+					{
+						if (mask == 0)
+							BOOST_CHECK(query.find(baseTuple) != std::string::npos);
+						for (unsigned i = 0; i < optional.size(); ++i)
+							BOOST_CHECK_EQUAL(query.find("(|" + optional[i] + "| (Array ") != std::string::npos, bool(mask & (1u << i)));
+					}
+				}
+			}
+}
+
+BOOST_AUTO_TEST_CASE(smt_optional_crypto_shadowed_names)
+{
+	Json::Value sources;
+	sources["a.hyp"]["content"] = R"(
+		contract C {
+			function f(uint shake256, uint xmssverify, uint mldsa87verify) public pure {
+				assert(shake256 > xmssverify);
+				assert(mldsa87verify > 0);
+			}
+		}
+	)";
+	for (auto const& engine: {"chc", "bmc"})
+		for (auto const& query: smtQueries(sources, engine))
+			for (auto const& name: {"shake256", "xmssverify", "mldsa87verify"})
+				BOOST_CHECK(query.find("(|"s + name + "| (Array ") == std::string::npos);
+}
 
 BOOST_AUTO_TEST_CASE(assume_object_input)
 {

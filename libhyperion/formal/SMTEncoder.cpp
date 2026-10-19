@@ -667,6 +667,7 @@ void SMTEncoder::endVisit(FunctionCall const& _funCall)
 	case FunctionType::Kind::DepositRoot:
 	case FunctionType::Kind::SHA256:
 	case FunctionType::Kind::XMSSVerify:
+	case FunctionType::Kind::SHAKE256:
 	case FunctionType::Kind::MLDSA87Verify:
 		visitCryptoFunction(_funCall);
 		break;
@@ -839,6 +840,8 @@ void SMTEncoder::visitCryptoFunction(FunctionCall const& _funCall)
 		result = smtutil::Expression::select(state().cryptoFunction("keccak256"), arg0);
 	else if (kind == FunctionType::Kind::SHA256)
 		result = smtutil::Expression::select(state().cryptoFunction("sha256"), arg0);
+	else if (kind == FunctionType::Kind::SHAKE256)
+		result = smtutil::Expression::select(state().cryptoFunction("shake256"), arg0);
 	else if (kind == FunctionType::Kind::DepositRoot)
 	{
 		auto e = state().cryptoFunction("depositroot");

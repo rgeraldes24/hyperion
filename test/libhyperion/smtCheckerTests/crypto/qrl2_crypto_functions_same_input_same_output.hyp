@@ -1,4 +1,11 @@
 contract C {
+	function shake(bytes memory input0) public pure {
+		bytes memory input1 = input0;
+		bytes64 output0 = shake256(input0);
+		bytes64 output1 = shake256(input1);
+		assert(output0 == output1);
+	}
+
 	function verify(
 		bytes64 digest0,
 		bytes memory signature0,
@@ -17,4 +24,4 @@ contract C {
 // ====
 // SMTEngine: all
 // ----
-// Info 1391: CHC: 1 verification condition(s) proved safe! Enable the model checker option "show proved safe" to see all of them.
+// Info 1391: CHC: 2 verification condition(s) proved safe! Enable the model checker option "show proved safe" to see all of them.
