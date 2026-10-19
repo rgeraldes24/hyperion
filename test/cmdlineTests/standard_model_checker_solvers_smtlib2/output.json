@@ -3,12 +3,13 @@
     {
         "smtlib2queries":
         {
-            "0x060d0266ce8aac5ab6ebece09c7afae98dbd8fbdd2391ceb5b91b27fbf43db68": "(set-logic HORN)
+            "0xa26e2648ad38b262cef2fe24f51c7936b7c949e8ae34c122e1d0e643781b79f2": "(set-logic HORN)
 (declare-datatypes ((|bytes_tuple| 0)) (((|bytes_tuple| (|bytes_tuple_accessor_array| (Array Int Int)) (|bytes_tuple_accessor_length| Int)))))
 (declare-datatypes ((|tx_type| 0)) (((|tx_type| (|block.basefee| Int) (|block.chainid| Int) (|block.coinbase| Int) (|block.gaslimit| Int) (|block.number| Int) (|block.prevrandao| Int) (|block.timestamp| Int) (|blockhash| (Array Int Int)) (|msg.data| |bytes_tuple|) (|msg.sender| Int) (|msg.sig| Int) (|msg.value| Int) (|tx.gasprice| Int) (|tx.origin| Int)))))
 (declare-datatypes ((|depositroot_input_type| 0)) (((|depositroot_input_type| (|pubkey| |bytes_tuple|) (|withdrawal_recipient| |bytes_tuple|) (|amount| |bytes_tuple|) (|randao_commitment| |bytes_tuple|) (|signature| |bytes_tuple|)))))
+(declare-datatypes ((|mldsa87verify_input_type| 0)) (((|mldsa87verify_input_type| (|digest| Int) (|signature| |bytes_tuple|) (|public_key| |bytes_tuple|) (|context| |bytes_tuple|)))))
 (declare-datatypes ((|xmssverify_input_type| 0)) (((|xmssverify_input_type| (|message| |bytes_tuple|) (|signature| |bytes_tuple|) (|extended_pk| |bytes_tuple|)))))
-(declare-datatypes ((|crypto_type| 0)) (((|crypto_type| (|depositroot| (Array |depositroot_input_type| Int)) (|keccak256| (Array |bytes_tuple| Int)) (|sha256| (Array |bytes_tuple| Int)) (|xmssverify| (Array |xmssverify_input_type| Bool))))))
+(declare-datatypes ((|crypto_type| 0)) (((|crypto_type| (|depositroot| (Array |depositroot_input_type| Int)) (|keccak256| (Array |bytes_tuple| Int)) (|mldsa87verify| (Array |mldsa87verify_input_type| Bool)) (|sha256| (Array |bytes_tuple| Int)) (|xmssverify| (Array |xmssverify_input_type| Bool))))))
 (declare-datatypes ((|abi_type| 0)) (((|abi_type|))))
 (declare-datatypes ((|state_type| 0)) (((|state_type| (|balances| (Array Int Int))))))
 (declare-fun |interface_0_C_14_0| (Int |abi_type| |crypto_type| |state_type| ) Bool)
@@ -127,7 +128,7 @@
 (=> error_target_3_0 false)))
 (check-sat)
 ",
-            "0x306860367fdf5e47e700d8da3bd9f958733f0f56f6e20bfb51baee0dbdaef1d0": "(set-option :produce-models true)
+            "0xd79d57aa7c44a4c95cfdb0e332d27f3436c3db4b4db465fee98ac6ef14f78b7b": "(set-option :produce-models true)
 (set-logic ALL)
 (declare-fun |x_3_3| () Int)
 (declare-fun |error_0| () Int)
@@ -136,8 +137,9 @@
 (declare-datatypes ((|tx_type| 0)) (((|tx_type| (|block.basefee| Int) (|block.chainid| Int) (|block.coinbase| Int) (|block.gaslimit| Int) (|block.number| Int) (|block.prevrandao| Int) (|block.timestamp| Int) (|blockhash| (Array Int Int)) (|msg.data| |bytes_tuple|) (|msg.sender| Int) (|msg.sig| Int) (|msg.value| Int) (|tx.gasprice| Int) (|tx.origin| Int)))))
 (declare-fun |tx_0| () |tx_type|)
 (declare-datatypes ((|depositroot_input_type| 0)) (((|depositroot_input_type| (|pubkey| |bytes_tuple|) (|withdrawal_recipient| |bytes_tuple|) (|amount| |bytes_tuple|) (|randao_commitment| |bytes_tuple|) (|signature| |bytes_tuple|)))))
+(declare-datatypes ((|mldsa87verify_input_type| 0)) (((|mldsa87verify_input_type| (|digest| Int) (|signature| |bytes_tuple|) (|public_key| |bytes_tuple|) (|context| |bytes_tuple|)))))
 (declare-datatypes ((|xmssverify_input_type| 0)) (((|xmssverify_input_type| (|message| |bytes_tuple|) (|signature| |bytes_tuple|) (|extended_pk| |bytes_tuple|)))))
-(declare-datatypes ((|crypto_type| 0)) (((|crypto_type| (|depositroot| (Array |depositroot_input_type| Int)) (|keccak256| (Array |bytes_tuple| Int)) (|sha256| (Array |bytes_tuple| Int)) (|xmssverify| (Array |xmssverify_input_type| Bool))))))
+(declare-datatypes ((|crypto_type| 0)) (((|crypto_type| (|depositroot| (Array |depositroot_input_type| Int)) (|keccak256| (Array |bytes_tuple| Int)) (|mldsa87verify| (Array |mldsa87verify_input_type| Bool)) (|sha256| (Array |bytes_tuple| Int)) (|xmssverify| (Array |xmssverify_input_type| Bool))))))
 (declare-fun |crypto_0| () |crypto_type|)
 (declare-datatypes ((|abi_type| 0)) (((|abi_type|))))
 (declare-fun |abi_0| () |abi_type|)
