@@ -45,7 +45,7 @@ int magicVariableToID(std::string const& _name)
 	else if (_name == "depositroot") return -6;
 	else if (_name == "gasleft") return -7;
 	else if (_name == "keccak256") return -8;
-	else if (_name == "mldsa87verify") return -29;
+	else if (_name == "mldsa87verify") return -30;
 	else if (_name == "msg") return -15;
 	else if (_name == "mulmod") return -16;
 	else if (_name == "require") return -18;
