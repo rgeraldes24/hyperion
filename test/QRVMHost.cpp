@@ -139,7 +139,7 @@ void QRVMHost::reset()
 	// A lot of precompile addresses had a balance before they became valid addresses for precompiles.
 	// For example all the precompile addresses allocated in Byzantium had a 1 planck balance sent to them
 	// roughly 22 days before the update went live.
-	for (unsigned precompiledAddress = 1; precompiledAddress <= 8; precompiledAddress++)
+	for (unsigned precompiledAddress = 1; precompiledAddress <= 7; ++precompiledAddress)
 	{
 		qrvmc::address address{precompiledAddress};
 		// 1planck
