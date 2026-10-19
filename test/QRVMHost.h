@@ -60,7 +60,7 @@ public:
 	using MockedHost::access_storage;
 
 	// Modified features of MockedHost.
-	qrvmc::Result call(qrvmc_message const& _message) noexcept final;
+	qrvmc::Result call(qrvmc_message const& _message) noexcept override;
 	qrvmc::bytes64 get_block_hash(int64_t number) const noexcept final;
 
 	// Hyperion testing specific features.

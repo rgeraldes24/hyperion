@@ -93,6 +93,13 @@ For running all compiler tests you may want to optionally install a few
 dependencies (`qrvmone <https://github.com/theQRL/qrvmone/releases>`_,
 `libz3 <https://github.com/Z3Prover/z3>`_).
 
+Native test builds also download a pinned, hash-checked version of
+`mldsa-native <https://github.com/pq-code-package/mldsa-native>`_ through CMake.
+The test host uses its portable C verifier for real ML-DSA-87 signatures and
+applies go-qrl's public-key validation rule. The semantic-test signatures can be
+regenerated with ``scripts/generate_mldsa87_fixtures.go`` using go-qrllib v0.10.0;
+Go is only needed to regenerate these fixtures.
+
 On macOS systems, some of the testing scripts expect GNU coreutils to be installed.
 This can be easiest accomplished using Homebrew: ``brew install coreutils``.
 
