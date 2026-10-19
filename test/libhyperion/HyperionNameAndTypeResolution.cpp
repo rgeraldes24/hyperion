@@ -25,12 +25,14 @@
 
 #include <test/Common.h>
 
+#include <libhyperion/analysis/GlobalContext.h>
 #include <libhyperion/ast/AST.h>
 
 #include <libhyputil/Keccak256.h>
 
 #include <boost/test/unit_test.hpp>
 
+#include <map>
 #include <string>
 
 using namespace hyperion::langutil;
@@ -39,6 +41,25 @@ namespace hyperion::frontend::test
 {
 
 BOOST_FIXTURE_TEST_SUITE(HyperionNameAndTypeResolution, AnalysisFramework)
+
+BOOST_AUTO_TEST_CASE(builtin_declaration_ids_distinguish_names)
+{
+	GlobalContext context;
+	auto declarations = context.declarations();
+	declarations.push_back(context.currentThis());
+	declarations.push_back(context.currentSuper());
+	std::map<int64_t, std::string> namesById;
+	for (auto const* declaration: declarations)
+	{
+		auto [entry, inserted] = namesById.emplace(declaration->id(), declaration->name());
+		// Overloads of the same builtin share an ID.
+		BOOST_CHECK_MESSAGE(
+			inserted || entry->second == declaration->name(),
+			"Builtin declarations " << entry->second << " and " << declaration->name() <<
+			" share ID " << declaration->id()
+		);
+	}
+}
 
 BOOST_AUTO_TEST_CASE(function_no_implementation)
 {

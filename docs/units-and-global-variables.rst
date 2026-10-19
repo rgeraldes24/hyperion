@@ -170,7 +170,7 @@ more details on error handling and when to use which function.
 ``revert(string memory reason)``
     abort execution and revert state changes, providing an explanatory string
 
-.. index:: keccak256, sha256, depositroot, xmssverify, addmod, mulmod, cryptography,
+.. index:: keccak256, sha256, mldsa87verify, depositroot, xmssverify, addmod, mulmod, cryptography,
 
 .. _mathematical-and-cryptographic-functions:
 
@@ -189,6 +189,9 @@ Mathematical and Cryptographic Functions
 ``sha256(bytes memory) returns (bytes32)``
     compute the SHA-256 hash of the input
 
+``mldsa87verify(bytes64 digest, bytes memory signature, bytes memory publicKey, bytes memory context) returns (bool)``
+    verify a FIPS 204 ML-DSA-87 signature over the 64-byte message representative ``digest``; implemented by the precompiled contract at address ``3``. The compiler sends ``digest || publicKey || signature || uint8(context.length) || context``. The signature must be 4627 bytes, the public key 2592 bytes and the context at most 255 bytes. Arguments of other lengths are sent as a malformed input, which costs the same gas and returns ``false``. Only exactly 64 bytes of return data holding the value ``1`` map to ``true``. Any other return data maps to ``false``, including the empty data the precompile returns for an invalid signature. If the precompile call fails, for example because it runs out of gas, the call reverts.
+
 ``depositroot(bytes memory pubkey, bytes memory withdrawal_recipient, bytes memory amount, bytes memory randao_commitment, bytes memory sig) returns (bytes32)``
     compute the SSZ hash tree root of the beacon chain ``DepositData`` container (2592-byte ML-DSA-87 public key, 64-byte withdrawal recipient, 8-byte little-endian amount, 32-byte RANDAO commitment, 4627-byte signature); implemented by the precompiled contract at address ``1``
 
@@ -201,7 +204,7 @@ Mathematical and Cryptographic Functions
 
 .. note::
 
-    When running ``sha256``, ``depositroot`` or ``xmssverify`` on a *private blockchain*, you might encounter Out-of-Gas. This is because these functions are implemented as "precompiled contracts" and only really exist after they receive the first message (although their contract code is hardcoded). Messages to non-existing contracts are more expensive and thus the execution might run into an Out-of-Gas error. A workaround for this problem is to first send Planck (1 for example) to each of the contracts before you use them in your actual contracts. This is not an issue on the main or test net.
+    When running ``sha256``, ``mldsa87verify``, ``depositroot`` or ``xmssverify`` on a *private blockchain*, you might encounter Out-of-Gas. This is because these functions are implemented as "precompiled contracts" and only really exist after they receive the first message (although their contract code is hardcoded). Messages to non-existing contracts are more expensive and thus the execution might run into an Out-of-Gas error. A workaround for this problem is to first send Planck (1 for example) to each of the contracts before you use them in your actual contracts. This is not an issue on the main or test net.
 
 .. index:: balance, codehash, send, transfer, call, delegatecall, staticcall
 

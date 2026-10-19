@@ -117,6 +117,7 @@ private:
 	static qrvmc::Result precompileSha256(qrvmc_message const& _message) noexcept;
 	static qrvmc::Result precompileIdentity(qrvmc_message const& _message) noexcept;
 	static qrvmc::Result precompileModExp(qrvmc_message const& _message) noexcept;
+	static qrvmc::Result precompileMLDSA87Verify(qrvmc_message const& _message) noexcept;
 	static qrvmc::Result precompileGeneric(qrvmc_message const& _message, std::map<bytes, QRVMPrecompileOutput> const& _inOut) noexcept;
 	/// @returns a result object with gas usage and result data taken from @a _data.
 	/// The outcome will be a failure if the limit < required.

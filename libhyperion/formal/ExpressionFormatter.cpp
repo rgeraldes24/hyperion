@@ -50,7 +50,7 @@ std::string formatDatatypeAccessor(smtutil::Expression const& _expr, std::vector
 	// In our encoding, datatypes are used to encode:
 	// - arrays/mappings as the tuple (array, length)
 	// - structs as the tuple (<member1>, ..., <memberK>)
-	// - hash and signature functions as the tuple (keccak256, sha256, depositroot, xmssverify),
+	// - hash and signature functions as the tuple (keccak256, sha256, depositroot, xmssverify, mldsa87verify),
 	//   where each element is an array emulating an UF
 	// - abi.* functions as the tuple (<abiCall1>, ..., <abiCallK>).
 	if (op == "dt_accessor_keccak256")
@@ -61,6 +61,8 @@ std::string formatDatatypeAccessor(smtutil::Expression const& _expr, std::vector
 		return "depositroot";
 	if (op == "dt_accessor_xmssverify")
 		return "xmssverify";
+	if (op == "dt_accessor_mldsa87verify")
+		return "mldsa87verify";
 
 	std::string accessorStr = "accessor_";
 	// Struct members have suffix "accessor_<memberName>".
@@ -101,7 +103,7 @@ std::string formatArrayOp(smtutil::Expression const& _expr, std::vector<std::str
 	if (_expr.name == "select")
 	{
 		auto const& a0 = _args.at(0);
-		static std::set<std::string> const ufs{"keccak256", "sha256", "depositroot", "xmssverify"};
+		static std::set<std::string> const ufs{"keccak256", "sha256", "depositroot", "xmssverify", "mldsa87verify"};
 		if (ufs.count(a0) || starts_with(a0, "t_function_abi"))
 			return _args.at(0) + "(" + _args.at(1) + ")";
 		return _args.at(0) + "[" + _args.at(1) + "]";
