@@ -841,7 +841,16 @@ void SMTEncoder::visitCryptoFunction(FunctionCall const& _funCall)
 	else if (kind == FunctionType::Kind::SHA256)
 		result = smtutil::Expression::select(state().cryptoFunction("sha256"), arg0);
 	else if (kind == FunctionType::Kind::SHAKE256)
-		result = smtutil::Expression::select(state().cryptoFunction("shake256"), arg0);
+	{
+		auto digest = smtutil::Expression::select(state().cryptoFunction("shake256"), arg0);
+		auto high = smtutil::Expression::tuple_get(digest, 0);
+		auto low = smtutil::Expression::tuple_get(digest, 1);
+		auto halfType = TypeProvider::fixedBytes(32);
+		// Each pair represents exactly one unsigned 64-byte value.
+		m_context.addAssertion(smt::symbolicUnknownConstraints(high, halfType));
+		m_context.addAssertion(smt::symbolicUnknownConstraints(low, halfType));
+		result = high * smtutil::Expression(bigint(1) << 256) + low;
+	}
 	else if (kind == FunctionType::Kind::DepositRoot)
 	{
 		auto e = state().cryptoFunction("depositroot");

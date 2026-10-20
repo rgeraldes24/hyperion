@@ -329,9 +329,19 @@ void SymbolicState::prepareCryptoFunctions(std::vector<std::shared_ptr<SourceUni
 	};
 
 	if (cryptoFunctions.functions.count("shake256"))
+		// A single Int-valued array can stall Z3 4.12.1's CHC answer reconstruction,
+		// even when the SHAKE256 call is unreachable. Keep the deterministic result
+		// as two 256-bit halves and combine them at each call.
 		functions.emplace("shake256", std::make_shared<smtutil::ArraySort>(
 			smt::smtSort(*TypeProvider::bytesStorage()),
-			smtSort(*TypeProvider::fixedBytes(64))
+			std::make_shared<smtutil::TupleSort>(
+				"shake256_result_type",
+				std::vector<std::string>{"shake256_high", "shake256_low"},
+				std::vector<smtutil::SortPointer>{
+					smtSort(*TypeProvider::fixedBytes(32)),
+					smtSort(*TypeProvider::fixedBytes(32))
+				}
+			)
 		));
 
 	m_crypto = std::make_unique<BlockchainVariable>("crypto", std::move(functions), m_context);
