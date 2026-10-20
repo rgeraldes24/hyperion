@@ -448,7 +448,7 @@ contract C {
 // gas legacy: 157244
 // gas legacyOptimized: 156142
 // calldataArguments() -> true
-// gas irOptimized: 175472
+// gas irOptimized: 175505
 // gas legacy: 175464
 // gas legacyOptimized: 171873
 // rawFrame(uint8,bool): 11, false -> true, 64
@@ -496,10 +496,10 @@ contract C {
 // gas legacy: 173156
 // gas legacyOptimized: 171930
 // callVerifyCalldata(uint256): 300000 -> true, true
-// gas irOptimized: 179325
+// gas irOptimized: 179358
 // gas legacy: 194055
 // gas legacyOptimized: 188209
 // callVerifyCalldata(uint256): 100000 -> false, false
-// gas irOptimized: 141745
+// gas irOptimized: 141746
 // gas legacy: 155016
 // gas legacyOptimized: 150565
