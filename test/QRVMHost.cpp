@@ -544,19 +544,22 @@ qrvmc::Result QRVMHost::precompileSha256(qrvmc_message const& _message) noexcept
 
 qrvmc::Result QRVMHost::precompileShake256(qrvmc_message const& _message) noexcept
 {
+	// Base 240 gas + 48 gas / 64-byte VM word.
+	int64_t const gas_cost = 240 + 48 * ((static_cast<int64_t>(_message.input_size) + 63) / 64);
+	if (_message.gas < gas_cost)
+		return resultWithGas(_message.gas, gas_cost, {});
+
 	bytes static const shortOutputMarker = asBytes("QRL-SHAKE256-SHORT-OUTPUT");
 	bytes static const shortOutput(63, 0);
 	if (
 		_message.input_size == shortOutputMarker.size() &&
 		std::equal(shortOutputMarker.begin(), shortOutputMarker.end(), _message.input_data)
 	)
-		return resultWithGas(_message.gas, 288, shortOutput);
+		return resultWithGas(_message.gas, gas_cost, shortOutput);
 
 	bytes static hash;
 	hash = shake256(bytesConstRef(_message.input_data, _message.input_size), 64);
 
-	// Base 240 gas + 48 gas / 64-byte VM word.
-	int64_t gas_cost = 240 + 48 * ((static_cast<int64_t>(_message.input_size) + 63) / 64);
 	return resultWithGas(_message.gas, gas_cost, hash);
 }
 
