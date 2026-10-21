@@ -1,0 +1,21 @@
+contract C {
+    bytes signature;
+
+    function change(bytes memory c) internal returns (bytes memory) {
+        signature = hex"00";
+        return c;
+    }
+
+    function f(bytes64 d, bytes memory s, bytes memory p, bytes memory c) public returns (bool, bool, bool) {
+        signature = s;
+        bool beforeChange = mldsa87verify(d, signature, p, c);
+        // Copy the storage signature before the context argument overwrites it.
+        bool duringChange = mldsa87verify(d, signature, p, change(c));
+        assert(beforeChange == duringChange);
+        return (beforeChange, duringChange, mldsa87verify(d, signature, p, c));
+    }
+}
+// ====
+// SMTEngine: chc
+// ----
+// Info 1391: CHC: 1 verification condition(s) proved safe! Enable the model checker option "show proved safe" to see all of them.

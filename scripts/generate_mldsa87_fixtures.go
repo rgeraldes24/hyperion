@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
-// Generate the real signatures used by the mldsa87verify semantic test.
+// Generate the real signatures used by the mldsa87verify semantic tests.
 // Run in a temporary Go module requiring github.com/theQRL/go-qrllib v0.10.0:
 //
 //	go mod init fixtures
 //	go get github.com/theQRL/go-qrllib@v0.10.0
 //	go run /path/to/hyperion/scripts/generate_mldsa87_fixtures.go
 //
+// Pass -digest with 64 hex-encoded bytes to sign a different digest.
 // The JSON output contains hex-encoded fields; the seed is public test data.
 package main
 
@@ -13,12 +14,16 @@ import (
 	"bytes"
 	"encoding/hex"
 	"encoding/json"
+	"flag"
 	"os"
 
 	mldsa "github.com/theQRL/go-qrllib/crypto/ml_dsa_87"
 )
 
 func main() {
+	digestHex := flag.String("digest", "", "Override the default 00..3f digest with 64 hex-encoded bytes")
+	flag.Parse()
+
 	var seed [mldsa.SEED_BYTES]byte
 	for i := range seed {
 		seed[i] = byte(i)
@@ -30,6 +35,15 @@ func main() {
 	digest := make([]byte, 64)
 	for i := range digest {
 		digest[i] = byte(i)
+	}
+	if *digestHex != "" {
+		digest, err = hex.DecodeString(*digestHex)
+		if err != nil {
+			panic(err)
+		}
+		if len(digest) != 64 {
+			panic("digest must be exactly 64 bytes")
+		}
 	}
 	pk := key.GetPK()
 	result := map[string]string{
