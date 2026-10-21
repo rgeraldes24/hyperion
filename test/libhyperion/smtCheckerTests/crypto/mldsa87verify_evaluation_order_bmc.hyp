@@ -1,0 +1,22 @@
+contract C {
+	uint value;
+
+	function digest() internal returns (bytes64) {
+		value = 1;
+		return bytes64(0);
+	}
+
+	function context() internal returns (bytes memory) {
+		value = 2;
+		return "";
+	}
+
+	function f() public {
+		mldsa87verify(digest(), "", "", context());
+		assert(value == 2);
+	}
+}
+// ====
+// SMTEngine: bmc
+// ----
+// Info 6002: BMC: 1 verification condition(s) proved safe! Enable the model checker option "show proved safe" to see all of them.

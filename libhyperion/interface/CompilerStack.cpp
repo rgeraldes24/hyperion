@@ -637,9 +637,7 @@ bool CompilerStack::analyzeLegacy(bool _noErrorsSoFar)
 
 		ModelChecker modelChecker(m_errorReporter, *this, m_smtlib2Responses, m_modelCheckerSettings, m_readFile);
 		modelChecker.checkRequestedSourcesAndContracts(allSources);
-		for (Source const* source: m_sourceOrder)
-			if (source->ast)
-				modelChecker.analyze(*source->ast);
+		modelChecker.analyze(allSources);
 		m_unhandledSMTLib2Queries += modelChecker.unhandledQueries();
 	}
 

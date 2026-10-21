@@ -1262,6 +1262,7 @@ public:
 		DepositRoot, ///< CALL to special contract for depositroot
 		SHA256, ///< CALL to special contract for sha256
 		XMSSVerify, ///< CALL to special contract for xmssverify
+		SHAKE256, ///< CALL to special contract for SHAKE256-512
 		MLDSA87Verify, ///< CALL to special contract for ML-DSA-87 verification
 		Event, ///< syntactic sugar for LOG*
 		Error, ///< creating an error instance in revert or require
@@ -1489,6 +1490,7 @@ public:
 		{
 		case FunctionType::Kind::KECCAK256:
 		case FunctionType::Kind::SHA256:
+		case FunctionType::Kind::SHAKE256:
 		case FunctionType::Kind::BareCall:
 		case FunctionType::Kind::BareDelegateCall:
 		case FunctionType::Kind::BareStaticCall:

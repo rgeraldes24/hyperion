@@ -1,0 +1,8 @@
+contract C {
+	function mldsa87verify_value(bool b) public pure returns (bool) {
+		return (b ? mldsa87verify : mldsa87verify)(bytes64(0), "", "", "");
+	}
+}
+// ----
+// TypeError 9717: (94-107): Invalid mobile type in true expression.
+// TypeError 3703: (110-123): Invalid mobile type in false expression.

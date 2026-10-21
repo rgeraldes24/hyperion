@@ -1,0 +1,17 @@
+contract C {
+	function xmssverify_value() internal pure returns (function (bytes memory, bytes memory, bytes memory) pure returns (bool)) {
+		return xmssverify;
+	}
+
+	function shake256_value() internal pure returns (function (bytes memory) pure returns (bytes64)) {
+		return shake256;
+	}
+
+	function mldsa87verify_value() internal pure returns (function (bytes64, bytes memory, bytes memory, bytes memory) pure returns (bool)) {
+		return mldsa87verify;
+	}
+}
+// ----
+// TypeError 6359: (149-159): Return argument type function (bytes memory,bytes memory,bytes memory) pure returns (bool) is not implicitly convertible to expected type (type of first return variable) function (bytes memory,bytes memory,bytes memory) pure returns (bool). Special functions cannot be converted to function types.
+// TypeError 6359: (274-282): Return argument type function (bytes memory) pure returns (bytes64) is not implicitly convertible to expected type (type of first return variable) function (bytes memory) pure returns (bytes64). Special functions cannot be converted to function types.
+// TypeError 6359: (436-449): Return argument type function (bytes64,bytes memory,bytes memory,bytes memory) pure returns (bool) is not implicitly convertible to expected type (type of first return variable) function (bytes64,bytes memory,bytes memory,bytes memory) pure returns (bool). Special functions cannot be converted to function types.

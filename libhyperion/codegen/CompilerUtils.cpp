@@ -200,6 +200,13 @@ void CompilerUtils::storeInMemory(unsigned _offset)
 		m_context << u256(_offset) << Instruction::MSTORE;
 }
 
+void CompilerUtils::storeInMemory(unsigned _offset, Type const& _type)
+{
+	unsigned numBytes = prepareMemoryStore(_type, true);
+	if (numBytes > 0)
+		m_context << u256(_offset) << Instruction::MSTORE;
+}
+
 void CompilerUtils::storeInMemoryDynamic(Type const& _type, bool _padToWordBoundaries, bool _cleanup)
 {
 	// process special types (Reference, StringLiteral, Function)

@@ -1,0 +1,17 @@
+contract C {
+	function xmssverify_value() public pure {
+		(function (bytes memory, bytes memory, bytes memory) pure returns (bool) pointer, uint x) = (xmssverify, 1);
+	}
+
+	function shake256_value() public pure {
+		(function (bytes memory) pure returns (bytes64) pointer, uint x) = (shake256, 1);
+	}
+
+	function mldsa87verify_value() public pure {
+		(function (bytes64, bytes memory, bytes memory, bytes memory) pure returns (bool) pointer, uint x) = (mldsa87verify, 1);
+	}
+}
+// ----
+// TypeError 9574: (58-165): Type function (bytes memory,bytes memory,bytes memory) pure returns (bool) is not implicitly convertible to expected type function (bytes memory,bytes memory,bytes memory) pure returns (bool). Special functions cannot be converted to function types.
+// TypeError 9574: (214-294): Type function (bytes memory) pure returns (bytes64) is not implicitly convertible to expected type function (bytes memory) pure returns (bytes64). Special functions cannot be converted to function types.
+// TypeError 9574: (348-467): Type function (bytes64,bytes memory,bytes memory,bytes memory) pure returns (bool) is not implicitly convertible to expected type function (bytes64,bytes memory,bytes memory,bytes memory) pure returns (bool). Special functions cannot be converted to function types.

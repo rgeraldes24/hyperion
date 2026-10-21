@@ -1,0 +1,25 @@
+==== Source: a.hyp ====
+import "b.hyp";
+contract C is Base {
+	function check(bytes memory data) public pure {
+		assert(hash(data) == shake256(data));
+	}
+}
+==== Source: b.hyp ====
+library L {
+	function hash(bytes memory data) internal pure returns (bytes64) {
+		return shake256(data);
+	}
+}
+function freeHash(bytes memory data) pure returns (bytes64) {
+	return L.hash(data);
+}
+contract Base {
+	function hash(bytes memory data) internal pure returns (bytes64) {
+		return freeHash(data);
+	}
+}
+// ====
+// SMTEngine: all
+// ----
+// Info 1391: CHC: 1 verification condition(s) proved safe! Enable the model checker option "show proved safe" to see all of them.

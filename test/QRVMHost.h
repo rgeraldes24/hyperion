@@ -115,6 +115,7 @@ private:
 	static qrvmc::Result precompileDepositRoot(qrvmc_message const& _message) noexcept;
 	static qrvmc::Result precompileXmssVerify(qrvmc_message const& _message) noexcept;
 	static qrvmc::Result precompileSha256(qrvmc_message const& _message) noexcept;
+	static qrvmc::Result precompileShake256(qrvmc_message const& _message) noexcept;
 	static qrvmc::Result precompileIdentity(qrvmc_message const& _message) noexcept;
 	static qrvmc::Result precompileModExp(qrvmc_message const& _message) noexcept;
 	static qrvmc::Result precompileMLDSA87Verify(qrvmc_message const& _message) noexcept;

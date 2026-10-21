@@ -64,7 +64,7 @@ that accesses storage, blockchain data (e.g. ``block.timestamp``, ``address(this
 execution data (``msg.value`` or ``gasleft()``) or makes calls to external contracts is disallowed. Expressions
 that might have a side-effect on memory allocation are allowed, but those that
 might have a side-effect on other memory objects are not. The built-in functions
-``keccak256``, ``sha256``, ``mldsa87verify``, ``depositroot``, ``xmssverify``, ``addmod`` and ``mulmod``
+``keccak256``, ``sha256``, ``shake256``, ``mldsa87verify``, ``depositroot``, ``xmssverify``, ``addmod`` and ``mulmod``
 are allowed (even though, with the exception of ``keccak256``, they do call external contracts).
 
 The reason behind allowing side-effects on the memory allocator is that it

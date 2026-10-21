@@ -154,11 +154,16 @@ public:
 	/// Crypto functions.
 	//@{
 	/// @returns the crypto functions represented as a tuple of arrays.
-	smtutil::Expression crypto() const { return m_crypto.value(); }
-	smtutil::Expression crypto(unsigned _idx) const { return m_crypto.value(_idx); }
-	smtutil::SortPointer const& cryptoSort() const { return m_crypto.sort(); }
-	void newCrypto() { m_crypto.newVar(); }
-	smtutil::Expression cryptoFunction(std::string const& _member) const { return m_crypto.member(_member); }
+	smtutil::Expression crypto() const { hypAssert(m_crypto, ""); return m_crypto->value(); }
+	/// @param _idx is the SSA index of the whole tuple.
+	smtutil::Expression crypto(unsigned _idx) const { hypAssert(m_crypto, ""); return m_crypto->value(_idx); }
+	smtutil::SortPointer const& cryptoSort() const { hypAssert(m_crypto, ""); return m_crypto->sort(); }
+	void newCrypto() { hypAssert(m_crypto, ""); m_crypto->newVar(); }
+	smtutil::Expression cryptoFunction(std::string const& _member) const { hypAssert(m_crypto, ""); return m_crypto->member(_member); }
+	/// Builds one crypto tuple for all sources before either engine starts encoding.
+	/// Keeps keccak256, sha256, depositroot, xmssverify and mldsa87verify, and adds
+	/// shake256 only for calls to its magic declaration, including parenthesized callees.
+	void prepareCryptoFunctions(std::vector<std::shared_ptr<SourceUnit>> const& _sources);
 	//@}
 
 	/// Calls the internal methods that build
@@ -240,59 +245,8 @@ private:
 		m_context
 	};
 
-	BlockchainVariable m_crypto{
-		"crypto",
-		{
-			{"keccak256", std::make_shared<smtutil::ArraySort>(
-				smt::smtSort(*TypeProvider::bytesStorage()),
-				smtSort(*TypeProvider::fixedBytes(32))
-			)},
-			{"sha256", std::make_shared<smtutil::ArraySort>(
-				smt::smtSort(*TypeProvider::bytesStorage()),
-				smtSort(*TypeProvider::fixedBytes(32))
-			)},
-			{"depositroot", std::make_shared<smtutil::ArraySort>(
-				std::make_shared<smtutil::TupleSort>(
-					"depositroot_input_type",
-					std::vector<std::string>{"pubkey", "withdrawal_recipient", "amount", "randao_commitment", "signature"},
-					std::vector<smtutil::SortPointer>{
-						smt::smtSort(*TypeProvider::bytesStorage()),
-						smt::smtSort(*TypeProvider::bytesStorage()),
-						smt::smtSort(*TypeProvider::bytesStorage()),
-						smt::smtSort(*TypeProvider::bytesStorage()),
-						smt::smtSort(*TypeProvider::bytesStorage())
-					}
-				),
-				smtSort(*TypeProvider::fixedBytes(32))
-			)},
-			{"xmssverify", std::make_shared<smtutil::ArraySort>(
-				std::make_shared<smtutil::TupleSort>(
-					"xmssverify_input_type",
-					std::vector<std::string>{"message", "signature", "extended_pk"},
-					std::vector<smtutil::SortPointer>{
-						smt::smtSort(*TypeProvider::bytesStorage()),
-						smt::smtSort(*TypeProvider::bytesStorage()),
-						smt::smtSort(*TypeProvider::bytesStorage())
-					}
-				),
-				smtSort(*TypeProvider::boolean())
-			)},
-			{"mldsa87verify", std::make_shared<smtutil::ArraySort>(
-				std::make_shared<smtutil::TupleSort>(
-					"mldsa87verify_input_type",
-					std::vector<std::string>{"digest", "signature", "public_key", "context"},
-					std::vector<smtutil::SortPointer>{
-						smt::smtSort(*TypeProvider::fixedBytes(64)),
-						smt::smtSort(*TypeProvider::bytesStorage()),
-						smt::smtSort(*TypeProvider::bytesStorage()),
-						smt::smtSort(*TypeProvider::bytesStorage())
-					}
-				),
-				smtutil::SortProvider::boolSort
-			)}
-		},
-		m_context
-	};
+	/// Analysis-wide tuple of crypto functions, unchanged by external calls.
+	std::unique_ptr<BlockchainVariable> m_crypto;
 
 	/// Tuple containing all used ABI functions.
 	std::unique_ptr<BlockchainVariable> m_abi;

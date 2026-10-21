@@ -1,0 +1,14 @@
+interface I {
+	function callMe() external;
+}
+contract C {
+	function f(I target, bytes memory data) public {
+		bytes64 first = shake256(data);
+		target.callMe();
+		assert(first == shake256(data));
+	}
+}
+// ====
+// SMTEngine: all
+// ----
+// Info 1391: CHC: 1 verification condition(s) proved safe! Enable the model checker option "show proved safe" to see all of them.

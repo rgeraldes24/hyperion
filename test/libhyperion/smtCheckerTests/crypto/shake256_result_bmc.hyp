@@ -1,0 +1,23 @@
+contract C {
+	function sameInput(bytes memory data) public pure {
+		bytes64 first = shake256(data);
+		assert(first == shake256(data));
+	}
+
+	function fullWidth(bytes memory data) public pure {
+		bytes64 result = shake256(data);
+		// All 64 bytes are unconstrained by the hash abstraction.
+		assert(uint512(result) <= type(uint256).max);
+	}
+	function maximum(bytes memory data) public pure {
+		require(shake256(data) == bytes64(type(uint512).max));
+		assert(false);
+	}
+}
+// ====
+// SMTEngine: bmc
+// SMTTargets: assert
+// ----
+// Warning 4661: (290-334): BMC: Assertion violation happens here.
+// Warning 4661: (449-462): BMC: Assertion violation happens here.
+// Info 6002: BMC: 1 verification condition(s) proved safe! Enable the model checker option "show proved safe" to see all of them.

@@ -927,8 +927,9 @@ the arguments.
 |``addmod``, ``mulmod``             |Supported precisely.                  |
 +-----------------------------------+--------------------------------------+
 |``gasleft``, ``blockhash``,        |Abstracted with UF.                   |
-|``keccak256``, ``depositroot``,    |                                      |
-|``xmssverify``, ``mldsa87verify``  |                                      |
+|``keccak256``, ``sha256``,         |                                      |
+|``depositroot``, ``xmssverify``,   |                                      |
+|``mldsa87verify``, ``shake256``    |                                      |
 +-----------------------------------+--------------------------------------+
 |pure functions without             |Abstracted with UF                    |
 |implementation (external or        |                                      |
@@ -953,6 +954,12 @@ Abstracting a function call with an UF can be done for functions known to be
 deterministic, and can be easily done for pure functions.  It is however
 difficult to do this with general external functions, since they might depend
 on state variables.
+
+``shake256`` is modelled as a deterministic UF returning two unsigned 256-bit
+integer halves, each constrained to its full range. The halves are combined as
+``high * 2**256 + low`` to represent the complete 64-byte result. Equal arguments
+produce equal results, including across function calls. Concrete digest values
+and collision resistance are not modelled.
 
 Reference Types and Aliasing
 ============================

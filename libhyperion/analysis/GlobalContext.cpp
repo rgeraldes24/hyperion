@@ -51,6 +51,7 @@ int magicVariableToID(std::string const& _name)
 	else if (_name == "require") return -18;
 	else if (_name == "revert") return -19;
 	else if (_name == "sha256") return -22;
+	else if (_name == "shake256") return -31;
 	else if (_name == "super") return -25;
 	else if (_name == "tx") return -26;
 	else if (_name == "type") return -27;
@@ -83,6 +84,7 @@ inline std::vector<std::shared_ptr<MagicVariableDeclaration const>> constructMag
 		magicVarDecl("revert", TypeProvider::function(strings(), strings(), FunctionType::Kind::Revert, StateMutability::Pure)),
 		magicVarDecl("revert", TypeProvider::function(strings{"string memory"}, strings(), FunctionType::Kind::Revert, StateMutability::Pure)),
 		magicVarDecl("sha256", TypeProvider::function(strings{"bytes memory"}, strings{"bytes32"}, FunctionType::Kind::SHA256, StateMutability::Pure)),
+		magicVarDecl("shake256", TypeProvider::function(strings{"bytes memory"}, strings{"bytes64"}, FunctionType::Kind::SHAKE256, StateMutability::Pure)),
 		magicVarDecl("tx", TypeProvider::magic(MagicType::Kind::Transaction)),
 		// Accepts a MagicType that can be any contract type or an Integer type and returns a
 		// MagicType. The TypeChecker handles the correctness of the input and output types.

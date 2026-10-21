@@ -181,7 +181,8 @@ std::vector<SideEffectHook> SemanticTest::makeSideEffectHooks() const
 	};
 }
 
-std::string SemanticTest::formatEventParameter(std::optional<AnnotatedEventSignature> _signature, bool _indexed, size_t _index, bytes const& _data)
+std::string SemanticTest::formatEventParameter(
+	std::optional<AnnotatedEventSignature> _signature, bool _indexed, size_t _index, bytes const& _data)
 {
 	auto isPrintableASCII = [](bytes const& s)
 	{
@@ -193,32 +194,47 @@ std::string SemanticTest::formatEventParameter(std::optional<AnnotatedEventSigna
 				zeroes = false;
 				if (static_cast<unsigned>(c) <= 0x1f || static_cast<unsigned>(c) >= 0x7f)
 					return false;
-			} else
+			}
+			else
 				break;
 		}
 		return !zeroes;
 	};
 
 	ABIType abiType(ABIType::Type::Hex);
-	if (isPrintableASCII(_data))
-		abiType = ABIType(ABIType::Type::String);
+	bytes data = _data;
+	std::optional<std::string> parameterType;
 	if (_signature.has_value())
 	{
 		std::vector<std::string> const& types = _indexed ? _signature->indexedTypes : _signature->nonIndexedTypes;
-		if (_index < types.size())
-		{
-			if (types.at(_index) == "bool")
-				abiType = ABIType(ABIType::Type::Boolean);
-		}
 		if (_indexed)
-			_index = _index - 1;
-
-		if (_index < types.size()) {
-			if (types.at(_index) == "address")
-				abiType = ABIType(ABIType::Type::Address);
+		{
+			hyptestAssert(_index > 0, "");
+			--_index;
 		}
+
+		if (_index < types.size())
+			parameterType = types.at(_index);
 	}
-	return BytesUtils::formatBytes(_data, abiType);
+
+	bool const parameterIsAddress = parameterType == "address" || parameterType == "address payable";
+	if (_indexed && parameterIsAddress)
+		return "Q" + util::toHex(data);
+
+	if (_indexed && data.size() == h512::size && parameterType.has_value()
+		&& (parameterType->rfind("bytes", 0) == 0 || parameterType->rfind("struct ", 0) == 0
+			|| *parameterType == "string" || parameterType->find('[') != std::string::npos
+			|| (!parameterType->empty() && parameterType->front() == '(')))
+		data.resize(h256::size);
+
+	if (isPrintableASCII(data))
+		abiType = ABIType(ABIType::Type::String);
+	if (parameterType == "bool")
+		abiType = ABIType(ABIType::Type::Boolean);
+	if (parameterIsAddress)
+		abiType = ABIType(ABIType::Type::Address);
+
+	return BytesUtils::formatBytes(data, abiType);
 }
 
 std::vector<std::string> SemanticTest::eventSideEffectHook(FunctionCall const&) const
@@ -242,7 +258,7 @@ std::vector<std::string> SemanticTest::eventSideEffectHook(FunctionCall const&) 
 
 		std::vector<std::string> eventStrings;
 		size_t index{0};
-		for (h256 const& topic: log.topics)
+		for (h512 const& topic: log.topics)
 		{
 			if (!eventSignature.has_value() || index != 0)
 				eventStrings.push_back("#" + formatEventParameter(eventSignature, true, index, topic.asBytes()));
@@ -265,7 +281,7 @@ std::vector<std::string> SemanticTest::eventSideEffectHook(FunctionCall const&) 
 	return sideEffects;
 }
 
-std::optional<AnnotatedEventSignature> SemanticTest::matchEvent(util::h256 const& hash) const
+std::optional<AnnotatedEventSignature> SemanticTest::matchEvent(util::h512 const& hash) const
 {
 	std::optional<AnnotatedEventSignature> result;
 	for (std::string& contractName: m_compiler.contractNames())
@@ -274,15 +290,26 @@ std::optional<AnnotatedEventSignature> SemanticTest::matchEvent(util::h256 const
 		for (EventDefinition const* event: contract.events() + contract.usedInterfaceEvents())
 		{
 			FunctionTypePointer eventFunctionType = event->functionType(true);
-			if (!event->isAnonymous() && keccak256(eventFunctionType->externalSignature()) == hash)
+			if (!event->isAnonymous()
+				&& h512(keccak256(eventFunctionType->externalSignature()), h512::AlignLeft) == hash)
 			{
 				AnnotatedEventSignature eventInfo;
 				eventInfo.signature = eventFunctionType->externalSignature();
 				for (auto const& param: event->parameters())
+				{
+					Type const* parameterType = param->type();
 					if (param->isIndexed())
-						eventInfo.indexedTypes.emplace_back(param->type()->toString(true));
+					{
+						if (auto const* userDefinedType = dynamic_cast<UserDefinedValueType const*>(parameterType))
+							parameterType = &userDefinedType->underlyingType();
+						std::string parameterTypeName = parameterType->toString(true);
+						if (parameterType->category() == Type::Category::Contract)
+							parameterTypeName = "address";
+						eventInfo.indexedTypes.emplace_back(parameterTypeName);
+					}
 					else
-						eventInfo.nonIndexedTypes.emplace_back(param->type()->toString(true));
+						eventInfo.nonIndexedTypes.emplace_back(parameterType->toString(true));
+				}
 				result = eventInfo;
 			}
 		}

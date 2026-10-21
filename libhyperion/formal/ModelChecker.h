@@ -64,7 +64,7 @@ public:
 	/// do not exist.
 	void checkRequestedSourcesAndContracts(std::vector<std::shared_ptr<SourceUnit>> const& _sources);
 
-	void analyze(SourceUnit const& _sources);
+	void analyze(std::vector<std::shared_ptr<SourceUnit>> const& _sources);
 
 	/// This is used if the SMT solver is not directly linked into this binary.
 	/// @returns a list of inputs to the SMT solver that were not part of the argument to
@@ -79,6 +79,8 @@ public:
 	static smtutil::SMTSolverChoice checkRequestedSolvers(smtutil::SMTSolverChoice _enabled, langutil::ErrorReporter& _errorReporter);
 
 private:
+	void analyzeSource(SourceUnit const& _source);
+
 	/// Error reporter from CompilerStack.
 	/// We need to append m_uniqueErrorReporter
 	/// to this one when the analysis is done.

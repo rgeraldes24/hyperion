@@ -1,0 +1,14 @@
+contract C {
+	function xmssverify_value() public pure returns (bool) {
+		return ((xmssverify))("", "", "");
+	}
+
+	function shake256_value() public pure returns (bytes64) {
+		return ((shake256))("");
+	}
+
+	function mldsa87verify_value() public pure returns (bool) {
+		return ((mldsa87verify))(bytes64(0), "", "", "");
+	}
+}
+// ----

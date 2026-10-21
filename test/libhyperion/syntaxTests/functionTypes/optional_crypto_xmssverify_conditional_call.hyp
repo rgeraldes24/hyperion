@@ -1,0 +1,8 @@
+contract C {
+	function xmssverify_value(bool b) public pure returns (bool) {
+		return (b ? xmssverify : xmssverify)("", "", "");
+	}
+}
+// ----
+// TypeError 9717: (91-101): Invalid mobile type in true expression.
+// TypeError 3703: (104-114): Invalid mobile type in false expression.

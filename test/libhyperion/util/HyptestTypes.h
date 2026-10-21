@@ -327,20 +327,18 @@ struct LogRecord
 {
 	util::h512 creator;
 	bytes data;
-	std::vector<util::h256> topics;
+	std::vector<util::h512> topics;
 
-	LogRecord(util::h512 _creator, bytes _data, std::vector<util::h256> _topics):
-		creator(std::move(_creator)), data(std::move(_data)), topics(std::move(_topics)) {}
+	LogRecord(util::h512 _creator, bytes _data, std::vector<util::h512> _topics)
+		: creator(std::move(_creator)), data(std::move(_data)), topics(std::move(_topics))
+	{
+	}
 
 	bool operator==(LogRecord const& other) const noexcept
 	{
 		return creator == other.creator && data == other.data && topics == other.topics;
 	}
 
-	bool operator!=(LogRecord const& other) const noexcept
-	{
-		return !operator==(other);
-	}
+	bool operator!=(LogRecord const& other) const noexcept { return !operator==(other); }
 };
-
 }
