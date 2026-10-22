@@ -221,8 +221,22 @@ std::string SemanticTest::formatEventParameter(
 	if (_indexed && parameterIsAddress)
 		return "Q" + util::toHex(data);
 
+	// Reference types are logged as the left-aligned 32-byte keccak256 hash of their encoding and bytesN
+	// values are left-aligned as well, so the second half of the topic is padding for both, unless the
+	// value itself is wider than 32 bytes (bytes33 ... bytes64).
+	auto const isBytesFittingHalfTopic = [](std::string const& _type) -> bool
+	{
+		if (_type.rfind("bytes", 0) != 0)
+			return false;
+		std::string const width = _type.substr(5);
+		if (width.empty())
+			return true;
+		if (width.size() > 2 || width.find_first_not_of("0123456789") != std::string::npos)
+			return false;
+		return std::stoul(width) <= h256::size;
+	};
 	if (_indexed && data.size() == h512::size && parameterType.has_value()
-		&& (parameterType->rfind("bytes", 0) == 0 || parameterType->rfind("struct ", 0) == 0
+		&& (isBytesFittingHalfTopic(*parameterType) || parameterType->rfind("struct ", 0) == 0
 			|| *parameterType == "string" || parameterType->find('[') != std::string::npos
 			|| (!parameterType->empty() && parameterType->front() == '(')))
 		data.resize(h256::size);

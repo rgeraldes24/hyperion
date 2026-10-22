@@ -1,0 +1,18 @@
+contract C {
+    // An indexed bytesN parameter is logged as the left-aligned value itself, not as a hash,
+    // so a bytes33 ... bytes64 value fills more than the first 32 bytes of the 64-byte topic.
+    event Wide(bytes64 indexed wide, bytes40 indexed middle, bytes32 indexed narrow);
+
+    function emitWide() public {
+        emit Wide(
+            hex"1111111111111111111111111111111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            hex"ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccdddddddddddddddd",
+            hex"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        );
+    }
+}
+// ====
+// compileViaYul: also
+// ----
+// emitWide() ->
+// ~ emit Wide(bytes64,bytes40,bytes32): #0x1111111111111111111111111111111111111111111111111111111111111111aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, #0xccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccdddddddddddddddd000000000000000000000000000000000000000000000000, #0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
