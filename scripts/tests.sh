@@ -93,7 +93,8 @@ then
     "$REPO_ROOT/test/cmdlineTests.sh" &
     CMDLINE_PID=$!
 else
-    if ! "$REPO_ROOT/test/cmdlineTests.sh" "$no_smt"
+    # An empty argument would be read as a test name pattern that matches nothing.
+    if ! "$REPO_ROOT/test/cmdlineTests.sh" ${no_smt:+"$no_smt"}
     then
         printError "Commandline tests FAILED"
         exit 1
